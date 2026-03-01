@@ -31,6 +31,13 @@
 
 **不需要编程基础，只需要会打字。**
 
+<details>
+<summary><strong>📖 来源声明</strong></summary>
+
+本仓库基于 [awesome-openclaw-usecases](https://github.com/hesamsheikh/awesome-openclaw-usecases) 翻译和扩展，面向中文用户。感谢原作者 [hesamsheikh](https://github.com/hesamsheikh) 和所有社区贡献者。
+
+</details>
+
 > **新手？** 推荐从这些零门槛用例开始：[健康追踪](usecases/health-symptom-tracker.md) · [个人知识库](usecases/knowledge-base-rag.md) · [第二大脑](usecases/second-brain.md) · [早间简报](usecases/custom-morning-brief.md) · [收件箱整理](usecases/inbox-declutter.md)
 >
 > **中国用户？** 直接看 [中国特色用例](#-中国特色用例)，使用飞书/微信/小红书等国内工具。
