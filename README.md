@@ -86,7 +86,7 @@
 
 ```
 1️⃣  安装 OpenClaw → github.com/openclaw/openclaw
-2️⃣  连接你的 Telegram / Discord / iMessage
+2️⃣  连接你的 Telegram / Discord / iMessage / 飞书 / 钉钉 / 企业微信
 3️⃣  从下方选一个用例，复制提示词，粘贴给你的 OpenClaw
 ```
 
