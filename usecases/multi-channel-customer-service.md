@@ -1,5 +1,7 @@
 # 多渠道 AI 客户服务平台
 
+> 含国内适配：企业微信 / 抖音 / 小红书
+
 小型企业需要在多个应用间同时处理 WhatsApp、Instagram 私信、电子邮件和 Google 评价。客户期望全天候即时响应，但雇佣员工进行 24/7 覆盖成本高昂。
 
 本用例将所有客户触点整合到一个由 AI 驱动的统一收件箱中，代表你进行智能回复。
@@ -87,6 +89,78 @@
 - [WhatsApp Business API](https://developers.facebook.com/docs/whatsapp)
 - [Instagram Messaging API](https://developers.facebook.com/docs/instagram-api/guides/messaging)
 - [Google Business Profile API](https://developers.google.com/my-business)
+
+## 中国用户适配
+
+国内企业的客户触达渠道与海外完全不同。以下是针对国内主流渠道的适配方案。
+
+### 渠道对照表
+
+| 原版渠道 | 国内替代 | 可行性 |
+|---------|---------|--------|
+| WhatsApp Business | 企业微信客服 | 已验证可行 |
+| Instagram DM | 抖音企业号私信 | 理论可行，需企业资质 |
+| Gmail | 企业邮箱 | 直接可用，无需适配 |
+| Google 评价 | 美团/大众点评 | 暂不可行（API 未开放） |
+
+### P0 核心渠道：企业微信客服 API（已验证可行）
+
+OpenClaw 社区已有成熟的企业微信插件生态：
+
+- [openclaw-plugin-wecom](https://github.com/sunnoy/openclaw-plugin-wecom) — 支持多机器人、流式输出
+- [openclaw-wechat](https://github.com/dingxiang-me/OpenClaw-Wechat) — 企业微信自建应用 + 个人微信桥接
+- [openclaw-china](https://github.com/BytePioneer-AI/openclaw-china) — 中国生态插件合集
+
+**配置要点**：
+
+1. 在企业微信管理后台创建自建应用，获取 Token 和 EncodingAESKey
+2. 配置回调 URL 指向 OpenClaw 服务地址
+3. 支持文本、图片、视频、文件等多种消息类型
+4. 风险等级：低，使用官方 API
+
+### P1 扩展渠道：抖音企业号私信（理论可行，需验证）
+
+抖音开放平台提供企业号私信自动回复接口，可用于客服场景。
+
+**关键限制**：
+
+- 仅支持企业号，个人号不支持
+- 回复私信不能发送链接
+- 客户最后沟通后 48 小时内才能发消息
+- 欢迎语每小时最多触发一次
+
+**参考实现**：[ChatGPT-On-CS](https://github.com/cs-lazy-tools/ChatGPT-On-CS)（开源 AGPL-3.0），支持抖音等多平台客服自动回复。
+
+### P1 扩展渠道：小红书私信通（理论可行，需验证）
+
+小红书官方提供一站式线索经营平台[私信通](https://sxt.xiaohongshu.com/)。
+
+**关键限制**：
+
+- 需已认证的企业号 + 聚光平台认证
+- 蓝 V 每日限 20 个陌生人主动消息，每人最多 3 条
+- 语聚 AI 已成为首批接入的第三方客服工具
+
+### 暂不可行：美团/大众点评评价回复
+
+美团开放平台支持查询评价，但评价自动回复 API 未公开。不满足"真实跑通"准入门槛，暂不收录。
+
+### 已有统一多渠道参考方案
+
+如果需要同时覆盖多个国内渠道，可参考以下已验证的方案：
+
+- **语聚 AI**（yuju-ai.com）：商业 SaaS，已支持抖音/小红书/微信/快手/企微/飞书/钉钉
+- **ChatGPT-On-CS**（开源 AGPL-3.0）：支持微信/拼多多/千牛/B 站/抖音/小红书/知乎
+
+这些方案验证了多渠道客服的技术可行性，可作为 OpenClaw 集成的参考。
+
+### 安全提醒
+
+- 企业微信 API 凭证（Token、EncodingAESKey）通过环境变量配置，不要硬编码
+- 抖音/小红书回复内容需遵守平台社区规范，避免触发风控
+- 自动回复建议设置人工兜底机制，复杂问题及时转人工
+
+> **安全提示**：所有平台的 API 密钥和 Token 属于敏感信息，请通过环境变量或 `.env` 文件配置，确保 `.env` 已加入 `.gitignore`。
 
 ---
 
