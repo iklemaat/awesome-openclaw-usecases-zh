@@ -4,6 +4,8 @@
 
 这个用例把 OpenClaw 直接部署为飞书机器人。在飞书对话中发消息就能触发 AI 任务，结果直接回复到对话里，不需要切换任何工具。
 
+> **2026.3 更新**：飞书官方推出了 OpenClaw 飞书插件，支持以用户身份操作文档、日历、任务等。目前飞书接入 OpenClaw 有两种主流方式可选，详见下方[选择建议](#选择建议两种插件怎么选)。
+
 ## 它能做什么
 
 - **对话式 AI 助手**：在飞书私聊或群聊中直接与 OpenClaw 对话
@@ -15,9 +17,32 @@
 
 ## 所需技能
 
-使用 OpenClaw 2026.2+ 版本内置的飞书官方渠道插件，基础消息功能无需额外安装。进阶的文档自动化技能需单独安装（见下方"进阶"章节）。
+基础消息功能无需额外安装——OpenClaw 2026.2+ 已内置飞书渠道插件。如果需要 AI 操作飞书文档、日历、任务等，可改用飞书官方插件（两者二选一，不能同时启用，见下方选择建议）。
+
+## 选择建议：两种插件怎么选
+
+| 维度 | 飞书官方插件 | OpenClaw 内置插件 |
+|---|---|---|
+| **操作身份** | 以**你本人**身份（OAuth 授权） | 以**机器人**身份 |
+| **消息收发** | ✅ | ✅ |
+| **文档操作** | ✅ 创建 + 编辑 + 读取 | 读取为主 |
+| **多维表格** | ✅ 完整操作 | 基础读写 |
+| **日历 / 任务** | ✅ | ❌ |
+| **安装复杂度** | 需额外安装 CLI 工具 + OAuth | 内置即用，`openclaw channels add` |
+| **维护方** | 飞书团队 | OpenClaw 社区 |
+
+**简单说**：主要用飞书做聊天入口 → 选内置插件（简单）；需要 AI 帮你操作文档、建表、约会议 → 选飞书官方插件（功能强）。
+
+> ⚠️ **两种插件互斥，只能启用一个。** 安装飞书官方插件时会自动禁用内置插件。如果两个都装了，会出现 `duplicate plugin id` 报错导致飞书功能不可用。遇到这种情况，删除用户目录下的副本即可：
+> ```bash
+> rm -rf ~/.openclaw/extensions/feishu
+> openclaw gateway restart
+> ```
+> 详细对比和迁移指南见 [openclaw-feishu 社区指南](https://github.com/AlexAnys/openclaw-feishu)。
 
 ## 如何设置
+
+> 以下步骤适用于 **OpenClaw 内置插件**（方案 b）。如果选择飞书官方插件（方案 a），请参考 [飞书官方插件安装指南](https://github.com/AlexAnys/openclaw-feishu/blob/main/docs/feishu-official-plugin.md)。
 
 完整的保姆级教程请参考 [openclaw-feishu 配置指南](https://github.com/AlexAnys/openclaw-feishu)，以下是核心步骤概要（约 15-20 分钟）：
 
@@ -62,7 +87,9 @@ openclaw gateway install
 
 ## 进阶：文档自动化与权限管理
 
-基础的飞书 AI 助手接入后，你可以进一步安装飞书文档相关技能，实现"会后一句话整理纪要到飞书"等进阶场景。
+> **如果你使用的是飞书官方插件**：文档、多维表格、日历、任务等操作已内置，不需要下面的额外安装步骤。
+
+基础的飞书 AI 助手接入后（内置插件用户），你可以进一步安装飞书文档相关技能，实现"会后一句话整理纪要到飞书"等进阶场景。
 
 ### 安装飞书文档技能
 
@@ -96,7 +123,9 @@ npx playbooks add skill openclaw/openclaw --skill feishu-perm
 
 ## 相关链接
 
-- [feishu-openclaw 完整配置指南与社区支持](https://github.com/AlexAnys/openclaw-feishu)
+- [feishu-openclaw 完整配置指南与社区支持](https://github.com/AlexAnys/openclaw-feishu) — 含官方 vs 内置插件对比、迁移指南、常见问题排查
+- [飞书官方插件安装指南](https://github.com/AlexAnys/openclaw-feishu/blob/main/docs/feishu-official-plugin.md)
+- [飞书官方图文教程](https://www.feishu.cn/content/article/7613711414611463386) — 飞书团队出品
 - [OpenClaw 官方飞书文档](https://docs.openclaw.ai/zh-CN/channels/feishu)
 - [腾讯云 - 保姆级教程：OpenClaw 接入飞书](https://cloud.tencent.com/developer/article/2626160)
 - [腾讯云 - 5 分钟玩转飞书全家桶](https://cloud.tencent.com/developer/article/2631667)
