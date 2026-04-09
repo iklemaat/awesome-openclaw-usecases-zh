@@ -1,34 +1,34 @@
-# 竞争对手分析与价格监控
+# Análisis de Competencia y Monitoreo de Precios
 
-> 含国内适配：百度指数 / 微信指数 / 飞书推送 / SerpAPI 替代方案
+> Incluye adaptación local: Índice Baidu / Índice WeChat / Push Feishu / Esquemas alternativos para SerpAPI
 
-用 Perplexity MCP（联网搜索）和 Firecrawl MCP（网页抓取）构建一个持续运行的竞品监控智能体。它每周自动扫描竞品动态，也支持按专题随时深挖，把原来每月 $150+ 的竞品分析订阅和 10 小时人工调研，压缩到每月约 $1.20 和 6 分钟。
+Construir un agente de monitoreo de competencia de ejecución continua con Perplexity MCP (búsqueda en línea) y Firecrawl MCP (web scraping). Escanea automáticamente la dinámica de competidores semanalmente, también soporta profundización instantánea por tema en cualquier momento, comprime suscripciones de análisis de competencia de $150+ mensuales y 10 horas de investigación manual a aprox. $1.20 mensuales y 6 minutos.
 
-## 功能介绍
+## Qué puede hacer
 
-- **周报模式**：每周自动扫描预设的竞品列表，输出定价变动、功能更新、内容策略等关键动态
-- **专题模式**：针对特定话题（如"竞品 AI 功能上线"）进行即时深度分析
-- **差距识别**：不只是罗列数据——自动对比竞品覆盖了什么、遗漏了什么，找出你的机会窗口
-- **结构化输出**：返回 JSON 格式的竞品分析报告，包含来源引用，可直接对接后续工作流
-- **成本极低**：Perplexity 免费层每天 5 次搜索，Firecrawl 每月 500 次免费抓取，日常监控基本零成本
+- **Modo informe semanal**: Escanea automáticamente lista de competidores predefinidos semanalmente, genera dinámica clave como cambios de precios, actualizaciones de funciones, estrategias de contenido, etc.
+- **Modo temático**: Análisis profundo instantáneo para temas específicos (como "lanzamiento de función AI de competidores")
+- **Identificación de brechas**: No solo lista datos — automáticamente compara qué cubren competidores, qué omitieron, encuentra tu ventana de oportunidad
+- **Salida estructurada**: Devuelve informe de análisis de competencia en formato JSON, incluye citaciones de fuentes, se puede对接 directamente con flujos de trabajo posteriores
+- **Costo extremadamente bajo**: Capa gratuita de Perplexity 5 búsquedas diarias, Firecrawl 500 capturas mensuales gratuitas, monitoreo diario básicamente costo cero
 
-## 痛点
+## Dolor
 
-你订阅了 Semrush、SimilarWeb 或 Crayon 等竞品分析工具，每月花费 $150 以上。但大部分功能你用不到，真正需要的只是"竞品这周做了什么"。你还得花几个小时手动浏览竞品的博客、定价页和更新日志，把发现整理成报告。这些工作重复、琐碎，而且一旦忙起来就容易断掉——竞品推出了重要功能，你可能一个月后才发现。
+Te suscribes a herramientas de análisis de competencia como Semrush, SimilarWeb o Crayon, gastas $150+ mensuales. Pero la mayoría de las funciones no las usas, lo que realmente necesitas es solo "¿qué hicieron los competidores esta semana?". También tienes que gastar varias horas navegando manualmente blogs de competidores, páginas de precios y registros de actualizaciones, organizar hallazgos en informes. Este trabajo es repetitivo, trivial, y una vez que estás ocupado es fácil interrumpir — competidores lanzaron funciones importantes, puedes darte cuenta un mes después.
 
-## 所需技能
+## Habilidades requeridas
 
-- [Perplexity MCP](https://github.com/ppl-ai/modelcontextprotocol) — 联网搜索，支持多源聚合和引用（需 API Key）
-- [Firecrawl MCP](https://github.com/mendableai/firecrawl-mcp-server) — 网页抓取与结构化提取（需 API Key）
+- [Perplexity MCP](https://github.com/ppl-ai/modelcontextprotocol) — Búsqueda en línea, soporta agregación multi-fuente y citaciones (necesita API Key)
+- [Firecrawl MCP](https://github.com/mendableai/firecrawl-mcp-server) — Web scraping y extracción estructurada (necesita API Key)
 
-## 如何设置
+## Cómo configurar
 
-### 1. 获取 API 密钥
+### 1. Obtener claves de API
 
-- Perplexity API Key：在 [perplexity.ai/settings/api](https://perplexity.ai/settings/api) 获取（免费层每天 5 次搜索）
-- Firecrawl API Key：在 [firecrawl.dev](https://www.firecrawl.dev/) 注册获取（免费层每月 500 次抓取）
+- Clave de API de Perplexity: Obtener en [perplexity.ai/settings/api](https://perplexity.ai/settings/api) (capa gratuita 5 búsquedas diarias)
+- Clave de API de Firecrawl: Registrar en [firecrawl.dev](https://www.firecrawl.dev/) para obtener (capa gratuita 500 capturas mensuales)
 
-### 2. 配置 MCP 服务器
+### 2. Configurar servidores MCP
 
 ```json
 {
@@ -51,35 +51,35 @@
 }
 ```
 
-> 将 API 密钥存放在环境变量中，不要硬编码在配置文件里。
+> Guardar claves de API en variables de entorno, no hardcodear en archivos de configuración.
 
-### 3. 创建竞品监控列表
+### 3. Crear lista de monitoreo de competidores
 
-在项目中创建 `.claude/research-profiles/competitor-watchlist.md`，定义你要监控的竞品：
+Crear `.claude/research-profiles/competitor-watchlist.md` en el proyecto, define competidores que quieres monitorear:
 
 ```markdown
-# 竞品监控列表
+# Lista de Monitoreo de Competidores
 
-## 直接竞品（Direct Competitors）
-- CompanyA — https://companya.com — 主要产品：XXX
-- CompanyB — https://companyb.com — 主要产品：YYY
+## Competidores Directos (Direct Competitors)
+- CompanyA — https://companya.com — Producto principal: XXX
+- CompanyB — https://companyb.com — Producto principal: YYY
 
-## 间接竞品（Indirect Competitors）
-- CompanyC — https://companyc.com — 切入角度：ZZZ
+## Competidores Indirectos (Indirect Competitors)
+- CompanyC — https://companyc.com — Ángulo de entrada: ZZZ
 
-## 工具类竞品（Tool Competitors）
-- ToolX — https://toolx.dev — 开发者工具
+## Competidores de Herramientas (Tool Competitors)
+- ToolX — https://toolx.dev — Herramientas para desarrolladores
 
-## 监控重点
-- 定价页变动（/pricing）
-- 产品更新日志（/changelog, /blog）
-- 新功能公告
-- 招聘动态（可反映战略方向）
+## Puntos clave de monitoreo
+- Cambios en página de precios (/pricing)
+- Registros de actualizaciones de producto (/changelog, /blog)
+- Anuncios de nuevas funciones
+- Dinámica de contratación (puede reflejar dirección estratégica)
 ```
 
-### 4. 添加智能体指令
+### 4. Agregar instrucciones de agente
 
-创建 `/competitive-check` 命令，将以下内容添加到 OpenClaw 设置中：
+Crear comando `/competitive-check`, agregar el siguiente contenido a configuración de OpenClaw:
 
 ```text
 You are a competitive intelligence analyst. When I say /competitive-check,
@@ -109,9 +109,9 @@ Rules:
 - Keep the report actionable — every finding should have a suggested response
 ```
 
-### 5. 设置定时执行（可选）
+### 5. Configurar ejecución programada (opcional)
 
-如果需要每周自动执行，可以通过 OpenClaw 内置的定时任务功能触发：
+Si necesitas ejecutar automáticamente cada semana, se puede activar a través de la función de tareas programadas integradas de OpenClaw:
 
 ```bash
 openclaw cron add \
@@ -122,86 +122,86 @@ openclaw cron add \
   --message "/competitive-check"
 ```
 
-或者直接在对话中用自然语言设置：
+O directamente configurar en lenguaje natural en el chat:
 
 ```text
-帮我创建一个定时任务：每周一早上 9 点执行 /competitive-check，生成竞品周报。
-时区设为 Asia/Shanghai，使用独立会话。
+Ayúdame a crear una tarea programada: ejecutar /competitive-check cada lunes 9 AM, generar informe semanal de competencia.
+Configurar zona horaria a Asia/Shanghai, usar sesión aislada.
 ```
 
-## 真实案例
+## Casos reales
 
-**周报模式：**
+**Modo informe semanal:**
 
 ```
-你：/competitive-check
+Tú: /competitive-check
 ```
 
-OpenClaw 加载竞品列表，依次搜索和抓取，约 45 秒后返回：
+OpenClaw carga lista de competidores, busca y extrae secuencialmente, devuelve después de aprox. 45 segundos:
 
-> **竞品周报 — 2026-03-24**
+> **Informe de Competencia — 2026-03-24**
 >
 > **CompanyA**
-> - [定价变动] 专业版从 $49/月降至 $39/月（-20%） ⚠️ HIGH PRIORITY
-> - [新功能] 上线 AI 自动摘要功能
-> - 建议：评估是否跟进降价；AI 摘要功能我们已在开发中，考虑提前发布
+> - [Cambio de precios] Versión profesional bajó de $49/mes a $39/mes (-20%) ⚠️ ALTA PRIORIDAD
+> - [Nueva función] Lanzó función de resumen automático con AI
+> - Sugerencia: Evaluar si seguir con reducción de precio; función de resumen AI ya está en desarrollo, considerar lanzar anticipadamente
 >
 > **CompanyB**
-> - [内容策略] 发布了 3 篇关于"企业级安全"的博客
-> - [招聘] 在招 3 名后端工程师（Go），疑似在做基础设施重构
-> - 建议：我们尚未覆盖企业安全话题，建议产出一篇对标内容
+> - [Estrategia de contenido] Publicó 3 blogs sobre "seguridad a nivel empresarial"
+> - [Contratación] Reclutando 3 ingenieros backend (Go), sospecha de refactorización de infraestructura
+> - Sugerencia: Aún no cubrimos tema de seguridad empresarial, se recomienda producir un artículo de referencia
 >
-> **内容差距：** 本周竞品覆盖了"SOC 2 合规"和"数据驻留"话题，我们均未涉及。
+> **Brechas de contenido:** Esta semana competidores cubrieron temas "cumplimiento SOC 2" y "residencia de datos", no estamos involucrados.
 >
-> 来源：[12 条引用链接]
+> Fuentes: [12 enlaces de citación]
 
-**专题模式：**
+**Modo temático:**
 
 ```
-你：/competitive-check --topic "AI 定价策略"
+Tú: /competitive-check --topic "estrategia de precios de AI"
 ```
 
-> 针对 AI 定价策略的竞品分析：
+> Análisis de competencia para estrategia de precios de AI:
 >
-> - CompanyA：按 token 计费，GPT-4 调用 $0.03/次
-> - CompanyB：固定月费 + 用量上限，超出后按量计费
-> - CompanyC：完全免费增值模式，靠企业版盈利
+> - CompanyA: Cobro por token, llamada GPT-4 $0.03/vez
+> - CompanyB: Cuota mensual fija + límite de uso, cobro por uso después de exceder
+> - CompanyC: Modelo completamente gratis premium, gana con versión empresarial
 >
-> **我们的机会：** 目前没有竞品提供"按结果付费"模式（只为成功的 AI 输出计费）。这可能是一个差异化定价角度。
+> **Nuestra oportunidad:** Actualmente ningún competidor ofrece modelo de "pago por resultado" (cobro solo por salida exitosa de AI). Este puede ser un ángulo de precios diferenciado.
 
-## 实用建议
+## Consejos prácticos
 
-- **先窄后宽**：刚开始只监控 3-5 个直接竞品，跑顺之后再扩展到间接竞品和工具类竞品。
-- **定价页是金矿**：竞品定价变动往往比功能更新更能反映战略方向。用 Firecrawl 定期抓取定价页，对比历史快照。
-- **招聘信息是情报**：竞品在招什么人，往往暗示未来 3-6 个月的产品方向。
-- **输出对接后续动作**：将 JSON 报告接入飞书/Slack webhook，让团队第一时间看到关键变动。
-- **控制成本**：Perplexity 免费层每天 5 次搜索，监控 5 个竞品刚好够用。Firecrawl 免费层每月 500 次抓取，按周监控 10 个页面绰绰有余。
+- **Primero estrecho luego amplio**: Al inicio solo monitorear 3-5 competidores directos, después de que funcione expandir a competidores indirectos y competidores de herramientas.
+- **Página de precios es mina de oro**: Cambios de precios de competidores a menudo reflejan dirección estratégica más que actualizaciones de funciones. Usar Firecrawl para capturar páginas de precios regularmente, comparar con instantáneas históricas.
+- **Información de contratación es inteligencia**: Qué personas reclutan competidores, a menudo暗示 dirección de producto en próximos 3-6 meses.
+- **Salida对接acciones posteriores**: Conectar informe JSON a webhook de Feishu/Slack, dejar que equipo vea cambios clave第一时间.
+- **Controlar costo**: Capa gratuita de Perplexity 5 búsquedas diarias, monitorear 5 competidores justo suficiente. Capa gratuita de Firecrawl 500 capturas mensuales, monitoreo semanal de 10 páginas más que suficiente.
 
-## 中国用户适配
+## Adaptación para usuarios de China
 
-### 搜索能力替代
+### Sustitución de capacidad de búsqueda
 
-Perplexity 在国内访问可能不稳定。以下替代方案可以实现类似的联网搜索能力：
+Perplexity puede ser inestable al acceder en China. Los siguientes esquemas alternativos pueden lograr capacidad de búsqueda en línea similar:
 
-| 方案 | 适用场景 | 说明 |
+| Esquema | Escenario aplicable | Descripción |
 |------|---------|------|
-| [SerpAPI MCP](https://github.com/serpapi/serpapi-mcp-server) | 通用搜索 | 支持百度、Google 等多搜索引擎，有免费额度 |
-| [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) | AI 优化搜索 | 为 AI Agent 设计的搜索 API，结果质量高 |
-| 百度搜索 MCP | 国内搜索 | 社区有多个实现，搜索"baidu mcp server" |
+| [SerpAPI MCP](https://github.com/serpapi/serpapi-mcp-server) | Búsqueda universal | Soporta Baidu, Google y otros motores de búsqueda múltiples, tiene cuota gratuita |
+| [Tavily MCP](https://github.com/tavily-ai/tavily-mcp) | Búsqueda optimizada para AI | API de búsqueda diseñada para Agentes de AI, resultados de alta calidad |
+| Búsqueda de Baidu MCP | Búsqueda nacional | Hay múltiples implementaciones en comunidad, buscar "baidu mcp server" |
 
-### 国内数据源补充
+### Complemento de fuentes de datos nacionales
 
-在标准竞品监控之外，建议补充以下国内特有数据源：
+Además del monitoreo estándar de competencia, se recomienda complementar con las siguientes fuentes de datos únicas nacionales:
 
-- **百度指数**（index.baidu.com）：监控竞品品牌词搜索趋势，趋势突变往往意味着重大动作
-- **微信指数**：微信小程序内查看，反映竞品在微信生态的声量变化
-- **巨量算数**（trendinsight.oceanengine.com）：抖音/头条生态数据，适合 C 端产品竞品监控
-- **天眼查 / 企查查**：监控竞品融资、人员变动、专利申请等企业动态
-- **36氪 / IT桔子**：行业新闻和融资数据
+- **Índice Baidu** (index.baidu.com): Monitorear tendencias de búsqueda de palabras de marca de competidores, cambios de tendencia a menudo significan movimientos mayores
+- **Índice WeChat**: Ver en mini-programa de WeChat, refleja cambios de volumen de competidores en ecosistema WeChat
+- **巨量算数** (trendinsight.oceanengine.com): Datos de ecosistema Douyin/toutiao, adecuado para monitoreo de competencia de productos C-end
+- **Tianyancha / Qichacha**: Monitorear dinámica empresarial de competidores como financiamiento, cambios de personal, solicitudes de patentes, etc.
+- **36Kr / IT Juzi**: Noticias de la industria y datos de financiamiento
 
-### 推送渠道适配
+### Adaptación de canal de push
 
-将竞品周报推送到国内常用的团队协作工具：
+Enviar informe semanal de competencia a herramientas de colaboración de equipo comúnmente usadas nacionalmente:
 
 ```text
 After completing the competitive analysis, send the report summary
@@ -212,56 +212,56 @@ to our team channel:
 - Use Feishu/Lark webhook: ${FEISHU_WEBHOOK_URL}
 ```
 
-飞书 Webhook 推送示例：
+Ejemplo de push de webhook de Feishu:
 
 ```bash
-# 通过飞书自定义机器人推送竞品周报
+# Enviar informe semanal de competencia vía bot personalizado de Feishu
 curl -X POST "${FEISHU_WEBHOOK_URL}" \
   -H "Content-Type: application/json" \
   -d '{
     "msg_type": "interactive",
     "card": {
       "header": {
-        "title": {"tag": "plain_text", "content": "竞品周报 - 2026-03-24"},
+        "title": {"tag": "plain_text", "content": "Informe de Competencia - 2026-03-24"},
         "template": "orange"
       },
       "elements": [
         {
           "tag": "markdown",
-          "content": "**⚠️ CompanyA 专业版降价 20%**\n详情见完整报告"
+          "content": "**⚠️ CompanyA redujo precio de versión profesional 20%**\nVer detalles en informe completo"
         }
       ]
     }
   }'
 ```
 
-> 钉钉用户替换为钉钉 Webhook URL，消息格式类似。企业微信同理。
+> Usuarios de DingTalk reemplazar con URL de webhook de DingTalk, formato de mensaje similar. WeCom similarmente.
 
-### 国内竞品监控工具现状
+### Estado actual de herramientas de monitoreo de competencia nacionales
 
-目前国内的竞品监控工具（如鹰眼监测、新榜等）主要聚焦舆情和内容监控，在产品功能对比和定价追踪方面能力有限。用 OpenClaw + MCP 的方案优势在于：
+Actualmente las herramientas de monitoreo de competencia nacionales (como鹰眼监测，新榜等) se enfocan principalmente en monitoreo de opinión pública y contenido, capacidades limitadas en comparación de funciones de producto y seguimiento de precios. La ventaja del esquema con OpenClaw + MCP es:
 
-- **高度可定制**：你决定监控什么、怎么分析、输出什么格式
-- **成本可控**：免费层即可覆盖小团队需求，不用订阅昂贵的 SaaS
-- **可扩展**：轻松接入新数据源，不受平台功能限制
+- **Altamente personalizable**: Tú decides qué monitorear, cómo analizar, qué formato输出
+- **Costo controlable**: Capa gratuita cubre necesidades de equipos pequeños, no necesita suscripción de SaaS costoso
+- **Expandible**: Fácil接入 nuevas fuentes de datos, no limitado por funciones de plataforma
 
-## 与"市场调研与产品工厂"的区别
+## Diferencia con "Investigación de Mercados y Fábrica de Productos"
 
-| 维度 | 市场调研与产品工厂 | 竞争对手分析与价格监控 |
+| Dimensión | Investigación de Mercados y Fábrica de Productos | Análisis de Competencia y Monitoreo de Precios |
 |------|-------------------|----------------------|
-| 目标 | 从零发现产品机会并构建 MVP | 对已知竞品进行持续跟踪 |
-| 频率 | 一次性或偶尔执行 | 每周自动执行，持续运行 |
-| 数据源 | Reddit、X 上的用户痛点 | 竞品官网、定价页、更新日志 |
-| 输出 | 产品创意 + MVP 代码 | 结构化竞品情报报告 |
-| 适用阶段 | 产品从 0 到 1 | 产品上线后的持续竞争 |
+| Objetivo | Descubrir oportunidades de producto desde cero y construir MVP | Seguimiento continuo de competidores conocidos |
+| Frecuencia | Ejecución única u ocasional | Ejecución automática semanal, ejecución continua |
+| Fuente de datos | Puntos dolorosos de usuarios en Reddit, X | Sitio web oficial de competidores, página de precios, registro de actualizaciones |
+| Salida | Idea de producto + código MVP | Informe estructurado de inteligencia de competencia |
+| Etapa aplicable | Producto de 0 a 1 | Competencia continua después de lanzamiento de producto |
 
-## 相关链接
+## Enlaces relacionados
 
-- [Perplexity MCP Server](https://github.com/ppl-ai/modelcontextprotocol)
-- [Firecrawl MCP Server](https://github.com/mendableai/firecrawl-mcp-server)
-- [SerpAPI Competitive Intelligence Agent](https://github.com/serpapi/competitive-intelligence-agent) — SerpAPI 官方竞品分析 Agent 参考实现
-- [Competitive Repricing Agent MCP](https://github.com/ajeetraina/competitive-repricing-agent-mcp) — 价格监控与自动报告 MCP 示例
+- [Servidor MCP de Perplexity](https://github.com/ppl-ai/modelcontextprotocol)
+- [Servidor MCP de Firecrawl](https://github.com/mendableai/firecrawl-mcp-server)
+- [Agente de Inteligencia de Competencia de SerpAPI](https://github.com/serpapi/competitive-intelligence-agent) — Implementación de referencia de Agente de análisis de competencia oficial de SerpAPI
+- [MCP de Agente de Re-precios de Competencia](https://github.com/ajeetraina/competitive-repricing-agent-mcp) — Ejemplo de MCP de monitoreo de precios e informe automático
 
 ---
 
-**原文链接**：[The Claude AI Agent That Replaced My $150/Month Competitor Analysis Tool](https://genaiunplugged.substack.com/p/competitive-ai-analysis-agent)
+**Enlace original**: [El Agente de AI de Claude que Reemplazó mi Herramienta de Análisis de Competencia de $150/Mes](https://genaiunplugged.substack.com/p/competitive-ai-analysis-agent)

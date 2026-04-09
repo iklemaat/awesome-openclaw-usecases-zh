@@ -1,34 +1,34 @@
-# 开发前创意验证器
+# Validador de Ideas Pre-Desarrollo
 
-> 含国内适配：百度指数 / 微信指数 / V2EX / 少数派
+> Incluye adaptación local: Índice Baidu / Índice WeChat / V2EX / Minority
 
-在 OpenClaw 动手写代码之前，它会自动检查你的创意是否已经存在——扫描 GitHub、Hacker News、npm、PyPI 和 Product Hunt 五大数据源，根据竞争程度决定下一步行动。
+Antes de que OpenClaw comience a escribir código, automáticamente verifica si tu idea ya existe — escanea 5 fuentes de datos principales (GitHub, Hacker News, npm, PyPI y Product Hunt), decide el siguiente paso según el nivel de competencia.
 
-## 功能介绍
+## Qué puede hacer
 
-- 在编写任何代码之前，自动扫描 5 个真实数据源（GitHub、Hacker News、npm、PyPI、Product Hunt）
-- 返回 `reality_signal` 竞争度评分（0-100），直观显示该领域的拥挤程度
-- 展示头部竞品及其 Star 数和描述
-- 当领域饱和时，自动建议差异化方向
-- 作为开发前的"关卡"：高分 = 停下来讨论，低分 = 直接开干
+- Antes de escribir cualquier código, automáticamente escanea 5 fuentes de datos reales (GitHub, Hacker News, npm, PyPI, Product Hunt)
+- Devuelve puntuación de competencia `reality_signal` (0-100), muestra intuitivamente el nivel de congestión del área
+- Muestra competidores principales con su conteo de Stars y descripción
+- Cuando el área está saturada, automáticamente sugiere direcciones de diferenciación
+- Como "punto de control" antes del desarrollo: puntuación alta = detenerse a discutir, puntuación baja = comenzar directamente
 
-## 痛点
+## Dolor
 
-你告诉智能体"帮我做一个 AI 代码审查工具"，它高高兴兴地写了 6 个小时代码。然而 GitHub 上已有 143,000+ 个相关仓库——排名第一的有 53,000 颗 Star。智能体从不检查，因为你没让它查，它也不知道该查。你投入大量时间之后才发现竞争对手早已成熟。这个模式在每一个新项目中反复上演。
+Le dices al agente "ayúdame a hacer una herramienta de revisión de código con IA", felizmente escribe código por 6 horas. Sin embargo, ya hay 143,000+ repositorios relacionados en GitHub — el número uno tiene 53,000 Stars. El agente nunca verifica, porque no se lo pediste, no sabe que debe verificar. Después de invertir mucho tiempo descubres que los competidores ya son maduros. Este patrón se repite en cada nuevo proyecto.
 
-## 所需技能
+## Habilidades requeridas
 
-- [idea-reality-mcp](https://github.com/mnemox-ai/idea-reality-mcp) — 扫描真实数据源并返回竞争度评分的 MCP 服务器
+- [idea-reality-mcp](https://github.com/mnemox-ai/idea-reality-mcp) — Servidor MCP que escanea fuentes de datos reales y devuelve puntuación de competencia
 
-## 如何设置
+## Cómo configurar
 
-1. 安装 idea-reality-mcp：
+1. Instalar idea-reality-mcp:
 
 ```bash
 uvx idea-reality-mcp
 ```
 
-2. 在 OpenClaw 配置中添加 MCP 服务器：
+2. Agregar servidor MCP en configuración de OpenClaw:
 
 ```json
 {
@@ -41,7 +41,7 @@ uvx idea-reality-mcp
 }
 ```
 
-3. 将以下指令添加到你的 OpenClaw 智能体设置中：
+3. Agregar las siguientes instrucciones a tu configuración de agente OpenClaw:
 
 ```text
 Before starting any new project, feature, or tool, always run idea_check first.
@@ -56,103 +56,103 @@ Rules:
 - Always show the reality_signal score and top competitors before writing any code.
 ```
 
-## 真实案例
+## Casos reales
 
-**你：** "帮我做一个 AI 代码审查的 CLI 工具"
+**Tú:** "Ayúdame a hacer una herramienta CLI de revisión de código con AI"
 
-OpenClaw 运行 `idea_check("AI code review tool")` 并回复：
+OpenClaw ejecuta `idea_check("AI code review tool")` y responde:
 
-> **reality_signal: 90/100（非常高）**
+> **reality_signal: 90/100 (muy alto)**
 >
-> 头部竞品：
+> Competidores principales:
 > 1. Gitea — 53,940 stars
 > 2. reviewdog — 9,104 stars
 > 3. Danger (Ruby) — 5,649 stars
 >
-> 该领域有 143,000+ 个相关仓库，头部产品成熟且资金充裕。
+> Hay 143,000+ repositorios relacionados en esta área, productos principales maduros y bien financiados.
 >
-> **差异化建议：**
-> - 聚焦特定语言（Rust/Go 专用 AI 代码审查）
-> - 针对特定框架（React/Vue 组件审查）
-> - 针对特定行业（金融/医疗代码合规审查）
+> **Sugerencias de diferenciación:**
+> - Enfocarse en lenguaje específico (revisión de código AI para Rust/Go)
+> - Enfocarse en framework específico (revisión de componentes React/Vue)
+> - Enfocarse en industria específica (revisión de cumplimiento de código para finanzas/salud)
 >
-> 要继续做差异化版本，还是换一个方向？
+> ¿Quieres continuar con versión diferenciada, o cambiar de dirección?
 
-**你：** "那做一个开发前创意验证的 MCP 服务器呢？"
+**Tú:** "¿Y hacer un servidor MCP de validación de ideas pre-desarrollo?"
 
-> **reality_signal: 8/100（非常低）**
+> **reality_signal: 8/100 (muy bajo)**
 >
-> PyPI 和 npm 上没有直接竞品。GitHub 上有一些沾边的仓库，但没有一个解决完全相同的问题。
+> No hay competidores directos en PyPI y npm. Hay algunos repositorios relacionados en GitHub, pero ninguno resuelve exactamente el mismo problema.
 >
-> 这个领域完全空白。开始开发。
+> Esta área está completamente en blanco. Comienza el desarrollo.
 
-## 进阶玩法
+## Juego avanzado
 
-- **深度模式**：使用 `depth="deep"` 同时扫描全部 5 个数据源（GitHub + HN + npm + PyPI + Product Hunt），适合重大项目决策。
-- **批量验证**：在黑客马拉松前，给 OpenClaw 一份 10 个创意的清单，让它按 `reality_signal` 排名——分数最低的 = 最具原创性的机会。
-- **先试用 Web 版**：在 [mnemox.ai/check](https://mnemox.ai/check) 免费试用，看看这个工作流是否适合你的需求。
+- **Modo profundo**: Usar `depth="deep"` para escanear las 5 fuentes de datos simultáneamente (GitHub + HN + npm + PyPI + Product Hunt), adecuado para decisiones de proyectos mayores.
+- **Validación por lotes**: Antes de hackathon, dar a OpenClaw una lista de 10 ideas, dejar que clasifique por `reality_signal` — puntuación más baja = oportunidad más original.
+- **Primero prueba versión Web**: Prueba gratis en [mnemox.ai/check](https://mnemox.ai/check), ve si este flujo de trabajo se adapta a tus necesidades.
 
-## 关键洞察
+## Ideas clave
 
-- 这能防止开发中最昂贵的错误：**解决一个已经被解决的问题**。
-- `reality_signal` 基于真实数据（仓库数量、Star 分布、HN 讨论量），而不是 LLM 猜测。
-- 高分不意味着"别做"——而是"要么差异化，要么别白费力气"。
-- 低分意味着真正的蓝海。这才是个人开发者胜算最大的方向。
+- Esto previene el error más costoso en desarrollo: **resolver un problema que ya fue resuelto**.
+- `reality_signal` se basa en datos reales (cantidad de repositorios, distribución de Stars, volumen de discusiones en HN), no en suposiciones de LLM.
+- Puntuación alta no significa "no lo hagas" — sino "diferenciate o no pierdas tiempo".
+- Puntuación baja significa verdadero océano azul. Esta es la dirección donde desarrolladores individuales tienen mayor probabilidad de éxito.
 
-## 中国用户适配
+## Adaptación para usuarios de China
 
-### idea-reality-mcp 已支持中文
+### idea-reality-mcp ya soporta chino
 
-v0.3.0 版本新增了三阶段关键词提取管线，内置 150+ 中英术语映射（覆盖 15+ 领域），可以直接用中文描述你的创意。例如输入"宠物预约看诊 app"，会自动映射为"pet appointment veterinary booking app"进行搜索。
+La versión v0.3.0 agregó pipeline de extracción de palabras clave de tres etapas, incluye 150+ mapeos de términos chino-inglés (cubre 15+ áreas), puedes describir tu idea directamente en chino. Por ejemplo, ingresar "app de reserva de veterinaria para mascotas" se mapea automáticamente a "pet appointment veterinary booking app" para buscar.
 
-### 数据源说明
+### Descripción de fuentes de datos
 
-idea-reality-mcp 扫描的 5 个数据源（GitHub、Hacker News、npm、PyPI、Product Hunt）均为国际平台。对于面向国内市场的项目，建议补充以下国内数据源进行交叉验证：
+Las 5 fuentes de datos que escanea idea-reality-mcp (GitHub, Hacker News, npm, PyPI, Product Hunt) son todas plataformas internacionales. Para proyectos orientados al mercado nacional, se recomienda complementar con las siguientes fuentes de datos nacionales para validación cruzada:
 
-| 国际数据源 | 国内对应平台 | 用途 |
+| Fuente de datos internacional | Plataforma nacional correspondiente | Uso |
 |-----------|-------------|------|
-| Product Hunt | V2EX [创意] 板块、少数派 | 发现国内新产品和竞品 |
-| Hacker News | V2EX、掘金、CSDN | 技术社区讨论热度 |
-| GitHub | Gitee | 国内开源项目搜索 |
-| npm / PyPI | npm（通用）/ Gitee 镜像 | 包管理和依赖检索 |
+| Product Hunt | Sección [Creatividad] de V2EX, Minority | Descubrir nuevos productos y competidores nacionales |
+| Hacker News | V2EX, Juejin, CSDN | Calor de discusiones en comunidad técnica |
+| GitHub | Gitee | Búsqueda de proyectos open source nacionales |
+| npm / PyPI | npm (universal) / Espejo Gitee | Gestión de paquetes y búsqueda de dependencias |
 
-### 补充国内市场数据验证
+### Validación补充 de datos de mercado nacional
 
-在 idea-reality-mcp 给出国际竞争度评分后，建议进一步通过国内数据平台验证市场需求：
+Después de que idea-reality-mcp da puntuación de competencia internacional, se recomienda verificar adicionalmente la demanda del mercado a través de plataformas de datos nacionales:
 
-- **百度指数**（index.baidu.com）：查看关键词搜索趋势，判断用户是否在主动搜索你要解决的问题
-- **微信指数**：微信小程序内查看关键词在微信生态的热度，适合 C 端产品验证
-- **巨量算数**（trendinsight.oceanengine.com）：抖音/头条生态数据，了解短视频和内容领域的趋势
-- **阿里指数 / 生意参谋**：电商领域需求验证，查看商品搜索趋势和竞争程度
-- **36氪、IT桔子**：查看该领域是否已有融资项目，评估竞争格局
+- **Índice Baidu** (index.baidu.com): Ver tendencias de búsqueda de palabras clave, juzgar si usuarios buscan activamente el problema que quieres resolver
+- **Índice WeChat**: Ver calor de palabras clave en ecosistema WeChat dentro de mini-programa de WeChat, adecuado para validación de productos C-end
+- **巨量算数** (trendinsight.oceanengine.com): Datos de ecosistema Douyin/toutiao, entender tendencias en área de videos cortos y contenido
+- **Índice Alibaba / Consejero de negocios**: Validación de demanda en área de e-commerce, ver tendencias de búsqueda de productos y nivel de competencia
+- **36Kr, IT Juzi**: Ver si ya hay proyectos financiados en esta área, evaluar panorama competitivo
 
-### 建议补充的提示词
+### Prompt sugerido para complementar
 
-在原版提示词基础上，可以添加以下规则以覆盖国内市场：
+Sobre la base del prompt original, se pueden agregar las siguientes reglas para cubrir el mercado nacional:
 
 ```text
 After running idea_check, also help me research the Chinese market:
-- Search for similar products on V2EX, 少数派, and 36氪
+- Search for similar products on V2EX, 少数派，and 36 氪
 - Check Baidu Index trends for related keywords
 - Look for competing projects on Gitee
 - Summarize whether the idea has more or less competition in China vs. internationally
 ```
 
-### 适用场景
+### Escenarios aplicables
 
-这个用例对国内开发者和创业者的价值尤其突出：
+El valor de este caso de uso es especialmente prominente para desarrolladores y emprendedores nacionales:
 
-- **独立开发者**：在 Product Hunt 或国内社区发布前，快速验证创意的全球竞争度
-- **出海团队**：验证产品在国际市场的竞争空间，找到差异化角度
-- **黑客马拉松参赛者**：批量筛选最具原创性的选题
-- **产品经理**：在立项前用数据说话，避免重复造轮子
+- **Desarrolladores independientes**: Verificar rápidamente la competencia global de ideas antes de lanzar en Product Hunt o comunidades nacionales
+- **Equipos de salida al mar**: Verificar espacio competitivo en mercado internacional, encontrar ángulos de diferenciación
+- **Participantes de hackathon**: Filtrar temas más originales por lotes
+- **Gerentes de producto**: Hablar con datos antes de establecer proyecto, evitar reinventar la rueda
 
-## 相关链接
+## Enlaces relacionados
 
 - [idea-reality-mcp GitHub](https://github.com/mnemox-ai/idea-reality-mcp)
-- [Web 在线体验](https://mnemox.ai/check)（无需安装即可试用）
+- [Experiencia en línea Web](https://mnemox.ai/check) (se puede probar sin instalar)
 - [PyPI](https://pypi.org/project/idea-reality-mcp/)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/pre-build-idea-validator.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/pre-build-idea-validator.md)

@@ -1,26 +1,49 @@
-# X 账号分析
+# Análisis de Cuenta de X
 
-有很多网站专门为你提供 X 账号的定性分析。虽然 X 已经提供了一个**分析**板块，但它更侧重于展示你的数据表现。
+Hay muchos sitios web especializados que te proporcionan análisis cualitativo de tu cuenta de X. Aunque X ya proporciona un panel de **análisis**, se enfoca más en mostrar tu rendimiento de datos.
 
-而定性分析关注的是你帖子的质量，而不是表现统计。你可以从这类分析中获得的一些洞察包括：
-- 什么规律让我的帖子爆火？
-- 我谈论哪些话题能获得最多互动？
-- 为什么我有些帖子能获得 1000+ 点赞，但有时帖子只有不到 5 个赞？我做错了什么？
+El análisis cualitativo se enfoca en la calidad de tus publicaciones, no en estadísticas de rendimiento. Algunos insights que puedes obtener de este tipo de análisis incluyen:
+- ¿Qué patrones hacen que mis publicaciones se vuelvan virales?
+- ¿Sobre qué temas hablo para obtener más interacción?
+- ¿Por qué algunas de mis publicaciones obtienen 1000+ likes, pero a veces las publicaciones tienen menos de 5 likes? ¿Qué hice mal?
 
-有很多网站和应用提供 X 分析，但它们侧重于统计数据。可能只有 1-2 个网站允许你与 AI 对话来了解你的表现。
+Hay muchos sitios web y aplicaciones que ofrecen análisis de X, pero se enfocan en estadísticas. Puede que solo haya 1-2 sitios web que te permitan conversar con AI para entender tu rendimiento.
 
-但现在你可以使用 OpenClaw 来为你做这个分析，无需在这些网站上支付每月 10-50 美元的订阅费。
+Pero ahora puedes usar OpenClaw para hacer este análisis por ti, sin necesidad de pagar suscripciones mensuales de $10-50 en estos sitios web.
 
-## 所需技能
-Bird 技能。`clawhub install bird`（已预装）
+## Habilidades requeridas
 
-## 如何设置
-以下是流程：
-1. 确保 Bird 技能正常工作。
-2. 为了安全和隔离，最好为你的 ClawdBot 创建一个新账号。
-3. 使用你的 X 账号进行认证。在 Chrome/Brave 中登录 x.com，并提供正确的 cookie（网页凭证）信息（`auth-token`、`ct0`），以便 OpenClaw 可以访问你的账号。
-4. 让 OpenClaw 查看你的真实账号，获取最近 N 条推文，然后你可以随意提问。或者，你也可以让它为你编写特定的脚本。
+Skill Bird. `clawhub install bird` (ya preinstalado)
+
+## Cómo configurar
+
+Este es el flujo:
+1. Asegurar que el skill Bird funcione correctamente.
+2. Por seguridad y aislamiento, mejor crear una nueva cuenta para tu ClawdBot.
+3. Autenticar con tu cuenta de X. Iniciar sesión en x.com en Chrome/Brave, y proporcionar información correcta de cookie (credenciales web) (`auth-token`, `ct0`), para que OpenClaw pueda acceder a tu cuenta.
+4. Dejar que OpenClaw vea tu cuenta real, obtener las N tweets recientes, luego puedes preguntar libremente. O también puedes pedirle que escriba scripts específicos para ti.
+
+## Consejos prácticos
+
+- **Comienza con un subconjunto**: Primero analiza las últimas 50-100 publicaciones, identifica patrones antes de analizar todo el historial
+- **Enfócate en métricas accionables**: No solo mires likes — analiza tiempo de publicación, longitud del tweet, uso de hashtags, menciones, etc.
+- **Compara períodos**: Compara tu rendimiento antes/después de cambios en tu estrategia de contenido
+- **Identifica tu voz única**: ¿Qué te hace diferente de otros en tu nicho? El análisis puede ayudar a identificar esto
+
+## Preguntas que puedes hacer
+
+Después de que OpenClaw analiza tu cuenta, puedes hacer preguntas como:
+
+```text
+¿Cuáles son mis 5 tweets con mejor rendimiento del último mes? ¿Qué tienen en común?
+
+¿En qué días y horas obtengo más interacción?
+
+¿Qué temas debería evitar porque no resuenan con mi audiencia?
+
+Basado en mis datos, ¿qué debería publicar más?
+```
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/x-account-analysis.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/x-account-analysis.md)
