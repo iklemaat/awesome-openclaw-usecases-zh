@@ -1,58 +1,58 @@
-# 电商多 Agent 架构：从查数到全链路自动运营
+# Arquitectura Multi-Agente de E-commerce: Desde Consulta de Datos hasta Operación Automática de Cadena Completa
 
-> **技术要求分级**：单机版（飞书 + Skills）仅需基础命令行经验 ⭐⭐；SaaS（软件即服务）多租户部署需要 Kubernetes（容器编排平台）和云原生经验 ⭐⭐⭐。
+> **Niveles técnicos divididos**: Versión单机 (Feishu + Skills) solo necesita experiencia básica de línea de comandos ⭐⭐; Despliegue SaaS multi-tenant necesita experiencia en Kubernetes y cloud native ⭐⭐⭐.
 
-电商卖家的日常运营散落在销售查询、库存监控、客服处理等多个场景。传统平台内置助手功能由平台预定义、渠道锁死在后台、只能被动等你提问。AWS 中国团队用 OpenClaw 完成了一次完整的 PoC（概念验证）——用 4 个平台级 Skill（技能）覆盖核心场景，多 Agent（智能体）绑定不同飞书群实现角色分工，Cron（定时任务）主动推送运营洞察，将能力构建从"编译型"变成"解释型"——写了就能用，改了就生效。
+La operación diaria de vendedores de e-commerce se dispersa en múltiples escenarios como consultas de ventas, monitoreo de inventario, manejo de servicio al cliente. Las herramientas de asistencia integradas de plataformas tradicionales están predefinidas por la plataforma, los canales están bloqueados en el backend, solo pueden esperar pasivamente a que preguntes. El equipo de AWS China completó un PoC (prueba de concepto) completo con OpenClaw — cubrir escenarios principales con 4 Skills de nivel de plataforma, multi-Agente vinculados a diferentes grupos de Feishu logran división de roles, Cron envía activamente perspectivas operativas, convirtiendo la construcción de capacidades de "compilación" a "interpretación" — escrito y usado, modificado y生效.
 
-## 它能做什么
+## Qué puede hacer
 
-- **统一数据入口**：一个对话窗口覆盖销售、库存、客户、商品所有数据——"今天卖了多少？"直接回答，不用切换到后台
-- **Skill 即能力**：用 Markdown（标记语言）文件定义数据查询逻辑，运营人员会写 `curl + jq` 即可封装，分钟级上线
-- **多 Agent 角色分工**：销售助手绑定运营群、售后客服绑定客服群，各自只加载必要的 Skills 和人格，互不干扰
-- **主动通知**：库存快断货、退货率异常飙升——AI 通过 Cron 主动告诉你，不用你去问
-- **多渠道嵌入**：飞书、Slack、WebChat、Telegram 共享同一套 AI 引擎和 Skills
-- **成本可控**：简单查询约 $0.08/次，复杂分析约 $0.12/次（PoC 实测）
+- **Entrada de datos unificada**: Una ventana de conversación cubre todos los datos de ventas, inventario, clientes, productos — "¿Cuánto se vendió hoy?" responde directamente, no necesita cambiar a backend
+- **Skill es capacidad**: Usar archivos Markdown define lógica de consulta de datos, personal de operaciones que sabe escribir `curl + jq` puede encapsular, lanzar en minutos
+- **División de roles multi-Agente**: Asistente de ventas vinculado a grupo de operaciones, servicio postventa vinculado a grupo de servicio al cliente, cada uno solo carga Skills y personalidad necesarios, no interfieren
+- **Notificación activa**: Inventario casi agotado, tasa de devoluciones sube anormalmente — la IA te lo dice activamente a través de Cron, no necesitas preguntar
+- **Incrustación multicanal**: Feishu, Slack, WebChat, Telegram comparten el mismo motor de IA y Skills
+- **Costo controlable**: Consultas simples aprox. $0.08/vez, análisis complejos aprox. $0.12/vez (PoC real)
 
-## 所需技能
+## Habilidades requeridas
 
-| 技能 | 来源 | 用途 |
+| Skill | Fuente | Uso |
 |------|------|------|
-| sales-query | 自建 Skill | 销售概况、订单列表、退货分析、趋势图 |
-| product-ranking | 自建 Skill | 热销榜、滞销品、新品表现、品类分布 |
-| inventory-alert | 自建 Skill | 低库存预警、断货提醒、补货建议 |
-| customer-insight | 自建 Skill | 客户概览、新客/回头客分析、地域分布 |
-| 飞书渠道 | 内置 Channel（渠道） | 多群聊绑定、WebSocket（长连接）模式 |
-| Cron 定时任务 | 内置功能 | 库存预警、每日早报、异常监控 |
+| sales-query | Skill auto-construido | Panorama de ventas, lista de pedidos, análisis de devoluciones, gráficos de tendencias |
+| product-ranking | Skill auto-construido | Lista de más vendidos, productos estancados, rendimiento de nuevos productos, distribución por categoría |
+| inventory-alert | Skill auto-construido | Alerta de inventario bajo, recordatorio de agotamiento, sugerencias de reabastecimiento |
+| customer-insight | Skill auto-construido | Panorama de clientes, análisis de nuevos/clientes recurrentes, distribución geográfica |
+| Canal Feishu | Canal integrado | Vinculación de múltiples grupos, modo WebSocket (conexión larga) |
+| Tarea programada Cron | Función integrada | Alerta de inventario, informe diario matutino, monitoreo de anomalías |
 
-> 4 个 Skill 需要根据你的电商平台 API 自行开发。AWS PoC 提供了基于 Mock API（模拟接口）的完整参考实现，包含 12 个 SKU（库存单位）、50 个客户、20+ 个端点。
+> Los 4 Skills necesitan desarrollarse según la API de tu plataforma de e-commerce. El PoC de AWS proporciona una implementación de referencia completa basada en Mock API, incluye 12 SKUs, 50 clientes, 20+ endpoints.
 
-### API 接入现状
+### Estado actual de acceso a API
 
-**国内电商平台（京东/淘宝/拼多多）目前没有 1000+ stars 的开源 API SDK。** 官方 SDK 通过各平台开发者门户分发，不在 GitHub 上托管，且所有平台 API 均需商家认证、实名验证和应用审核：
+**Plataformas de e-commerce nacionales de China (JD/Taobao/Pinduoduo) actualmente no tienen SDKs de API open source de 1000+ stars.** Los SDKs oficiales se distribuyen a través de portales de desarrolladores de cada plataforma, no se alojan en GitHub, y todas las APIs de plataformas requieren autenticación de comerciante, verificación de nombre real y revisión de aplicaciones:
 
-| 平台 | 开发者门户 | API 准入要求 |
+| Plataforma | Portal de Desarrollador | Requisitos de Acceso a API |
 |------|-----------|-------------|
-| 京东 | [jos.jd.com](https://jos.jd.com/) | 企业资质 + 店铺绑定，自研应用仅限本公司店铺 |
-| 淘宝/天猫 | [open.taobao.com](https://open.taobao.com/) | 企业资质，交易类 API 需额外审核，部分类目已关闭 |
-| 拼多多 | [open.pinduoduo.com](https://open.pinduoduo.com/) | 6 种角色，大部分需企业资质，审核 1-3 个工作日 |
-| **Shopify** | [shopify.dev](https://shopify.dev/) | Partner 账号（免费），API 完全开放 |
+| JD | [jos.jd.com](https://jos.jd.com/) | Calificación empresarial + vinculación de tienda, aplicación auto-desarrollada solo para tiendas de esta empresa |
+| Taobao/Tmall | [open.taobao.com](https://open.taobao.com/) | Calificación empresarial, APIs de transacción necesitan revisión adicional, algunas categorías cerradas |
+| Pinduoduo | [open.pinduoduo.com](https://open.pinduoduo.com/) | 6 roles, mayoría necesita calificación empresarial, revisión 1-3 días hábiles |
+| **Shopify** | [shopify.dev](https://shopify.dev/) | Cuenta Partner (gratis), API completamente abierta |
 
-**跨境电商推荐 Shopify**：官方 Python SDK（[Shopify/shopify_python_api](https://github.com/Shopify/shopify_python_api)，1,400+ stars，活跃维护）可直接用于构建 OpenClaw Skill，是目前唯一有成熟开源生态的电商平台。
+**Recomendado para e-commerce transfronterizo: Shopify**: SDK oficial de Python ([Shopify/shopify_python_api](https://github.com/Shopify/shopify_python_api), 1,400+ stars, mantenimiento activo) se puede usar directamente para construir Skills de OpenClaw, es actualmente la única plataforma de e-commerce con ecosistema open source maduro.
 
-**国内平台的实际路径**：从各平台开发者门户下载官方 SDK → 完成商家认证和 OAuth 授权 → 基于 SDK 封装为 OpenClaw Skill。AWS PoC 的 Mock API 可作为开发阶段的替代，先跑通架构再对接真实 API。
+**Ruta real para plataformas nacionales**: Descargar SDKs oficiales desde portales de desarrolladores → completar autenticación de comerciante y autorización OAuth → encapsular como Skills de OpenClaw basado en SDKs. Mock API del PoC de AWS puede usarse como alternativa en fase de desarrollo, primero ejecutar la arquitectura, luego conectar APIs reales.
 
-## 如何设置
+## Cómo configurar
 
-### 1. 多 Agent 绑定配置
+### 1. Configuración de vinculación multi-Agente
 
-在 `openclaw.json` 中定义多个 Agent，每个通过 Binding（路由绑定）映射到对应的飞书群：
+Definir múltiples Agentes en `openclaw.json`, cada uno mapeado al grupo de Feishu correspondiente a través de Binding (enrutamiento):
 
 ```json
 {
   "agents": {
     "list": [
-      { "id": "sales", "name": "销售助手", "workspace": "/data/ws/sales" },
-      { "id": "support", "name": "售后客服", "workspace": "/data/ws/support" }
+      { "id": "sales", "name": "Asistente de Ventas", "workspace": "/data/ws/sales" },
+      { "id": "support", "name": "Servicio Postventa", "workspace": "/data/ws/support" }
     ]
   },
   "bindings": [
@@ -69,126 +69,126 @@
 }
 ```
 
-> `dmScope: per-peer` 表示每个用户（按 `senderOpenId`）拥有独立的 Session（会话），对话历史互相隔离。
+> `dmScope: per-peer` significa que cada usuario (por `senderOpenId`) tiene un Session (sesión) independiente, historiales de conversación aislados entre sí.
 
-**架构概览：**
+**Resumen de arquitectura:**
 
-| 群/渠道 | 绑定 Agent | 加载的 Skills | 人格（SOUL.md） |
+| Grupo/Canal | Agente Vinculado | Skills Cargadas | Personalidad (SOUL.md) |
 |---------|-----------|--------------|----------------|
-| 飞书 - 销售运营群 | sales | sales-query、product-ranking | 数据优先、结论先行 |
-| 飞书 - 售后客服群 | support | 退款处理、工单查询 | 耐心专业、安抚为主 |
-| 飞书 - 私聊 | main（默认） | 全部 Skills | 通用助手 |
+| Feishu - Grupo de Operaciones de Ventas | sales | sales-query, product-ranking | Datos primero, conclusiones al inicio |
+| Feishu - Grupo de Servicio Postventa | support | Manejo de reembolsos, consulta de tickets | Paciente y profesional, consuelo primero |
+| Feishu - Chat privado | main (por defecto) | Todos los Skills | Asistente general |
 
-每个 Agent 拥有独立的 Workspace（工作区）目录：
+Cada Agente posee directorio de Workspace independiente:
 
 ```
 workspace-{agentId}/
-├── AGENTS.md      ← 行为规则
-├── SOUL.md        ← 人格定义
-├── IDENTITY.md    ← 身份信息
-├── TOOLS.md       ← 工具权限
-├── MEMORY.md      ← 持久记忆
+├── AGENTS.md      ← Reglas de comportamiento
+├── SOUL.md        ← Definición de personalidad
+├── IDENTITY.md    ← Información de identidad
+├── TOOLS.md       ← Permisos de herramientas
+├── MEMORY.md      ← Memoria persistente
 └── skills/
     ├── sales-query.SKILL.md
     └── order-lookup.SKILL.md
 ```
 
-### 2. SOUL.md 人格定义
+### 2. Definición de personalidad SOUL.md
 
-**售后客服人格模板：**
-
-```markdown
-# 售后客服
-
-你是电商团队的售后处理助手。
-
-## 风格
-- 耐心，不急躁
-- 先确认问题，再给方案
-- 涉及退款金额时给出明确数字和操作步骤
-
-## 边界
-- 只处理售后相关：退款、换货、工单、客诉
-- 超过授权金额的退款，提醒用户找主管审批
-```
-
-**销售助手人格模板：**
+**Plantilla de personalidad de Servicio Postventa:**
 
 ```markdown
-# 销售助手
+# Servicio Postventa
 
-你是电商团队的数据分析助手。
+Eres asistente de manejo postventa del equipo de e-commerce.
 
-## 风格
-- 数据优先，结论先行
-- 主动给出同比/环比对比
-- 数据异常时主动标注并给出可能原因
+## Estilo
+- Paciente, no impaciente
+- Confirmar problema primero, luego dar solución
+- Dar números claros y pasos de operación cuando involucre montos de reembolso
 
-## 边界
-- 只处理销售和商品相关查询
-- 不执行退款、改价等写操作
+## Límites
+- Solo maneja relacionado con postventa: reembolsos, cambios, tickets, quejas de clientes
+- Para reembolsos que exceden monto autorizado, recordar al usuario buscar aprobación de supervisor
 ```
 
-### 3. 平台级 Skill 示例
+**Plantilla de personalidad de Asistente de Ventas:**
 
-Skill 文件是 Markdown 文档，描述数据查询逻辑。以下是 `sales-query` Skill 的示例：
+```markdown
+# Asistente de Ventas
 
-以下提示词定义了销售查询 Skill 的行为和输出格式（因面向中文用户，Skill 内容使用中文编写）：
+Eres asistente de análisis de datos del equipo de e-commerce.
+
+## Estilo
+- Datos primero, conclusiones al inicio
+- Activamente da comparación interanual/mensual
+- Activamente marca y da posibles causas cuando datos son anómalos
+
+## Límites
+- Solo maneja consultas relacionadas con ventas y productos
+- No ejecuta operaciones de escritura como reembolsos, cambio de precios
+```
+
+### 3. Ejemplo de Skill de nivel de plataforma
+
+Archivos Skill son documentos Markdown, describen lógica de consulta de datos. El siguiente es un ejemplo del Skill `sales-query`:
+
+El siguiente prompt define el comportamiento y formato de salida del Skill de consulta de ventas (dado que está orientado a usuarios chinos, el contenido del Skill se escribe en chino):
 
 ```markdown
 # sales-query
 
-查询销售数据。支持按日期范围、商品类别、地域等维度筛选。
+Consulta datos de ventas. Soporta filtrado por dimensiones como rango de fechas, categoría de producto, región, etc.
 
-## 工具
+## Herramientas
 
-使用 exec 工具执行以下命令获取数据：
+Usar herramienta exec para ejecutar los siguientes comandos para obtener datos:
 
-### 今日销售概况
+### Panorama de ventas de hoy
 
 curl -s -H "Authorization: Bearer $API_TOKEN" \
   "$API_ENDPOINT/v1/orders/stats?date=$(date +%Y-%m-%d)" | jq '.'
 
-### 指定日期范围的订单列表
+### Lista de pedidos en rango de fechas específico
 
 curl -s -H "Authorization: Bearer $API_TOKEN" \
   "$API_ENDPOINT/v1/orders?start_date={start}&end_date={end}&page=1" | jq '.orders'
 
-## 输出格式
-- 金额使用 ¥ 符号，保留两位小数
-- 百分比变化标注 ↑ 或 ↓
-- 超过 10 条数据时使用表格展示
+## Formato de salida
+- Montos usar símbolo ¥, dos decimales
+- Cambios porcentuales marcar ↑ o ↓
+- Usar tabla para mostrar cuando más de 10 datos
 ```
 
-> **关键洞察**：Skill 的能力边界由 API 决定——只要有 API，就可以封装成 Skill。从"工程师写代码、定义 Function Schema、测试发版"变成"运营人员写 Markdown、放到 skills 目录、立即生效"。
+> **Idea clave**: Los límites de capacidad del Skill los decide la API — mientras haya API, se puede encapsular como Skill. De "ingenieros escriben código, definen Function Schema, prueban y lanzan" a "personal de operaciones escribe Markdown, pone en directorio skills,生效 inmediatamente".
 
-### 4. Cron 定时库存预警
+### 4. Alerta de inventario programada con Cron
 
-以下配置实现每 30 分钟自动检查库存并推送预警：
+La siguiente configuración logra verificar inventario automáticamente cada 30 minutos y enviar alertas:
 
 ```json
 {
   "kind": "every",
   "interval": "30m",
-  "prompt": "检查库存状况，如果有断货或低库存商品，列出详情和补货建议",
+  "prompt": "Verificar estado de inventario, si hay productos agotados o de inventario bajo, listar detalles y sugerencias de reabastecimiento",
   "session": "isolated",
   "delivery": { "channel": "last" }
 }
 ```
 
-更多定时场景：
+Más escenarios programados:
 
-| 场景 | 调度配置 | 用途 |
+| Escenario | Configuración de programación | Uso |
 |------|---------|------|
-| 每日早报 | `cron: "0 8 * * *"` | 昨日销售概况 + 异常订单 + 补货提醒 |
-| 实时监控 | `every: "15m"` | 大额退款告警 |
-| 周报 | `cron: "0 9 * * 1"` | TOP 10 热销品 + 滞销品分析 |
+| Informe diario matutino | `cron: "0 8 * * *"` | Panorama de ventas de ayer + pedidos anómalos + recordatorio de reabastecimiento |
+| Monitoreo en tiempo real | `every: "15m"` | Alerta de reembolsos de gran monto |
+| Informe semanal | `cron: "0 9 * * 1"` | TOP 10 más vendidos + análisis de productos estancados |
 
-### 5. 安全边界配置
+### 5. Configuración de límites de seguridad
 
-电商场景的安全控制尤其重要——AI 能查数据，但不能随意退款改价。
+El control de seguridad en escenarios de e-commerce es especialmente importante — la IA puede consultar datos, pero no puede reembolsar o cambiar precios arbitrariamente.
 
-**工具执行白名单（safeBins）：**
+**Lista blanca de ejecución de herramientas (safeBins):**
 
 ```json
 {
@@ -203,7 +203,7 @@ curl -s -H "Authorization: Bearer $API_TOKEN" \
 }
 ```
 
-**Skill 级别开关：**
+**Interruptores a nivel de Skill:**
 
 ```json
 {
@@ -218,19 +218,19 @@ curl -s -H "Authorization: Bearer $API_TOKEN" \
 }
 ```
 
-> **重要**：`safeBins` 在可执行文件级别操作，无法区分 `curl GET`（查询）和 `curl POST`（退款）。因此**写操作的审批是业务 API 的职责，不是 AI 层的职责**——必须在 API 侧引入人工确认步骤。
+> **Importante**: `safeBins` opera a nivel de ejecutable, no puede distinguir `curl GET` (consulta) y `curl POST` (reembolso). Por lo tanto, **la aprobación de operaciones de escritura es responsabilidad de la API de negocio, no responsabilidad de la capa de IA** — se debe introducir un paso de confirmación manual en el lado de la API.
 
-**凭证管理——环境变量注入：**
+**Gestión de credenciales — Inyección de variables de entorno:**
 
 ```bash
-# API 凭证通过环境变量注入，绝不硬编码在脚本或配置文件中
-export API_TOKEN="your-api-token"
+# Credenciales de API se inyectan a través de variables de entorno, nunca hardcodeadas en scripts o archivos de configuración
+export API_TOKEN="tu-api-token"
 export API_ENDPOINT="https://api.your-platform.com"
 ```
 
-### 6. 飞书渠道配置
+### 6. Configuración de canal Feishu
 
-OpenClaw 使用 WebSocket 模式连接飞书，不需要公网入站端口：
+OpenClaw usa modo WebSocket para conectar a Feishu, no necesita puertos de entrada públicos:
 
 ```json
 {
@@ -247,75 +247,75 @@ OpenClaw 使用 WebSocket 模式连接飞书，不需要公网入站端口：
 }
 ```
 
-**配置步骤：**
+**Pasos de configuración:**
 
-1. 在[飞书开放平台](https://open.feishu.cn/)创建企业自建应用，获取 App ID 和 App Secret
-2. 配置权限：获取私聊/群聊消息、获取群信息、发送消息等
-3. 启用 Bot 能力
-4. 将凭证写入 `openclaw.json`
-5. 启动 OpenClaw 实例——它会主动向飞书发起 WebSocket 连接
-6. 回到飞书开放平台配置事件订阅并发布应用
+1. Crear aplicación auto-construida empresarial en [Plataforma Abierta de Feishu](https://open.feishu.cn/), obtener App ID y App Secret
+2. Configurar permisos: obtener mensajes de chat privado/grupal, obtener información de grupos, enviar mensajes, etc.
+3. Habilitar capacidad de Bot
+4. Escribir credenciales en `openclaw.json`
+5. Iniciar instancia de OpenClaw — se conectará activamente a Feishu vía WebSocket
+6. Volver a configurar suscripción de eventos en plataforma abierta de Feishu y lanzar aplicación
 
-> **注意顺序**：事件订阅必须在 WebSocket 连接成功之后配置，否则飞书会报错。
+> **Nota de orden**: La suscripción de eventos debe configurarse después de que la conexión WebSocket se establezca exitosamente, de lo contrario Feishu reportará error.
 
-## 效果与成本
+## Efecto y Costo
 
-### PoC 实测数据
+### Datos reales de PoC
 
-| 指标 | 数值 |
+| Indicador | Valor |
 |------|------|
-| 简单查询（"今天卖了多少"） | ~18K input token（词元） + 1.7K output token ≈ **$0.08** |
-| 复杂分析（"本周退货趋势 + 原因分析"） | ~22K input + 3K output ≈ **$0.12** |
-| 基础设施（100 商家分摊） | EKS + EFS（见下方 SaaS 部分）≈ **$17.74/商家/月** |
+| Consulta simple ("¿cuánto se vendió hoy?") | ~18K input token + 1.7K output token ≈ **$0.08** |
+| Análisis complejo ("tendencia de devoluciones esta semana + análisis de causas") | ~22K input + 3K output ≈ **$0.12** |
+| Infraestructura (100 comerciantes comparten) | EKS + EFS (ver sección SaaS abajo) ≈ **$17.74/comerciante/mes** |
 
-### 成本优化手段
+### Medios de optimización de costo
 
-- **Prompt Cache（提示词缓存）**：Bedrock（AWS 基础模型服务）的缓存可节省 80-90% 的 input token 费用
-- **模型分级**：简单查询用 Claude Haiku（成本约为 Sonnet 的 1/10），复杂分析才用 Sonnet
-- **优化后目标**：约 $45/商家/月（中等使用频率）
+- **Prompt Cache (caché de prompts)**: Caché de Bedrock (servicio de modelos base de AWS) puede ahorrar 80-90% de costo de input tokens
+- **Modelos por niveles**: Consultas simples usar Claude Haiku (costo aprox. 1/10 de Sonnet), análisis complejos usar Sonnet
+- **Objetivo después de optimizar**: Aprox. $45/comerciante/mes (frecuencia de uso media)
 
-### SaaS 多租户部署成本（进阶）
+### Costo de despliegue SaaS multi-tenant (avanzado)
 
-AWS PoC 验证了 Per-tenant Pod（每租户独立容器组）方案，使用 EKS（弹性容器服务） + EFS（弹性文件系统） + Envoy Gateway（API 网关）路由：
+El PoC de AWS verificó el esquema Per-tenant Pod (grupo de contenedores independiente por inquilino), usando EKS (servicio de contenedores elásticos) + EFS (sistema de archivos elástico) + Envoy Gateway (puerta de enlace de API) para enrutar:
 
-| 规模 | 节点配置 | 合计/月 | 分摊/商家/月 |
+| Escala | Configuración de nodos | Total/mes | Por/comerciante/mes |
 |------|---------|---------|-------------|
-| 10 商家 | 2x r7i.large | ~$190 | ~$19.0 |
-| 100 商家 | 5x r7i.xlarge | ~$656 | ~$6.6 |
-| 1000 商家 | 24x r7i.2xlarge | ~$5,671 | ~$5.7 |
+| 10 comerciantes | 2x r7i.large | ~$190 | ~$19.0 |
+| 100 comerciantes | 5x r7i.xlarge | ~$656 | ~$6.6 |
+| 1000 comerciantes | 24x r7i.2xlarge | ~$5,671 | ~$5.7 |
 
-> 完整的 K8s（Kubernetes 简称）部署方案（Envoy Gateway 配置、租户管理脚本、安全隔离细节）请参考 [AWS 原文](https://aws.amazon.com/cn/blogs/china/exploring-openclaw-use-cases-in-ecommerce-platforms/) 和 [GitHub 仓库](https://github.com/SharonNi/jdopenclaw)。
+> El esquema completo de despliegue K8s (configuración de Envoy Gateway, scripts de gestión de inquilinos, detalles de aislamiento de seguridad) por favor consulta el [artículo original de AWS](https://aws.amazon.com/cn/blogs/china/exploring-openclaw-use-cases-in-ecommerce-platforms/) y [repositorio GitHub](https://github.com/SharonNi/jdopenclaw).
 
-## 实用建议
+## Consejos prácticos
 
-- **写操作必须有人工确认**：退款、改价等操作在 API 侧加审批流程，`safeBins` 无法区分读写——一旦 `curl` 进了白名单，所有 curl 调用都会被自动批准
-- **从只读开始**：先接入查询类 API（销售、库存、客户），跑通后再渐进覆盖操作类场景
-- **人格隔离很重要**：售后客服"语气温和、优先安抚" vs 销售助手"数据优先、结论先行"——SOUL.md 的差异直接影响用户体验
-- **Skill 写法门槛很低**：只要会写 `curl + jq`，就能封装成 Skill，不需要工程师介入
-- **PoC 使用了 Mock API**：AWS 的 PoC 基于模拟数据（12 个 SKU、50 个客户、20+ 个端点），接入真实平台 API 需要自行适配接口格式
-- **飞书事件订阅顺序**：先启动 OpenClaw 建立 WebSocket 连接，再在飞书开放平台配置事件订阅，否则会报错
+- **Operaciones de escritura deben tener confirmación manual**: Operaciones como reembolsos, cambio de precios agregan proceso de aprobación en el lado de la API, `safeBins` no puede distinguir lectura/escritura — una vez `curl` entra en la lista blanca, todas las llamadas curl se aprobarán automáticamente
+- **Comenzar con solo lectura**: Primero conectar APIs de consulta (ventas, inventario, clientes), después de ejecutar cubrir gradualmente escenarios de operación
+- **Aislamiento de personalidad es importante**: Servicio postventa "tono amable, consuelo primero" vs asistente de ventas "datos primero, conclusiones al inicio" — la diferencia en SOUL.md afecta directamente la experiencia del usuario
+- **Umbral de escritura de Skill es muy bajo**: Mientras sepas escribir `curl + jq`, puedes encapsular como Skill, no necesita intervención de ingenieros
+- **PoC usó Mock API**: El PoC de AWS se basa en datos simulados (12 SKUs, 50 clientes, 20+ endpoints), conectar APIs de plataforma reales necesita adaptar formatos de interfaz por ti mismo
+- **Orden de suscripción de eventos de Feishu**: Primero iniciar OpenClaw para establecer conexión WebSocket, luego configurar suscripción de eventos en plataforma abierta de Feishu, de lo contrario reportará error
 
-## 延伸场景（社区探索）
+## Escenarios extendidos (exploración de comunidad)
 
-以下场景在社区中有讨论和初步实践，但尚未达到完整的端到端验证标准，供参考：
+Los siguientes escenarios tienen discusión y práctica preliminar en la comunidad, pero aún no alcanzan el estándar de verificación completo de extremo a extremo, solo como referencia:
 
-### 竞品价格监控
+### Monitoreo de precios de competencia
 
-安装 `browserwing`（浏览器自动化 Skill）+ `jd-auto-order` + `im-master`（跨平台消息），对 OpenClaw 说"监控京东竞品价格变化，降价超过 10% 立即通知我"即可运行。BrowserWing 支持淘宝/京东等国内网站，支持录制脚本模式降低 Token 消耗。
+Instalar `browserwing` (Skill de automatización de navegador) + `jd-auto-order` + `im-master` (mensajería cross-plataforma), decir a OpenClaw "monitorear cambios de precios de competencia en JD, notificarme inmediatamente si baja más de 10%" y ejecutar. BrowserWing soporta sitios web nacionales como Taobao/JD, soporta modo de grabación de scripts para reducir consumo de Tokens.
 
-> **注意**：V2EX 用户反馈该插件"不太稳定，经常断开需手工重连"，建议在生产环境中增加重连机制。
+> **Nota**: Usuarios de V2EX reportan que este plugin "no muy estable, frecuentemente se desconecta necesita reconexión manual", se recomienda agregar mecanismo de reconexión en entornos de producción.
 
-### 跨境电商多角色协作
+### Colaboración multi-rol en e-commerce transfronterizo
 
-社区博主实测了 5 个 AI 数字员工方案：VOC（客户之声）市场调研员、GEO（地理优化）内容优化师、Reddit 种草手、TikTok 视频生成师、数据分析师，通过飞书路由实现角色分工。具体实施细节和效果数据有待更多独立验证。
+Blogueros de comunidad probaron esquemas de 5 empleados digitales de IA: Investigador de mercado VOC (voz del cliente), Optimizador de contenido GEO (optimización geográfica), Mano de plantado en Reddit, Generador de videos de TikTok, Analista de datos, logran división de roles a través de enrutamiento de Feishu. Los detalles de implementación específicos y datos de efecto esperan más verificación independiente.
 
-## 出处
+## Fuente
 
-由 AWS 中国团队（倪惠青、黄筱婷）完成的 PoC 项目，使用 OpenClaw 构建电商卖家助手，验证了 Skill 机制、多 Agent 路由、Cron 主动通知和 SaaS 多租户部署的可行性。PoC 代码开源在 GitHub。
+Proyecto PoC completado por el equipo de AWS China (Ni Huiqing, Huang Xiaoting), usa OpenClaw para construir asistente de vendedor de e-commerce, verifica viabilidad de mecanismo Skill, enrutamiento multi-Agente, notificación activa de Cron y despliegue SaaS multi-tenant. Código PoC es open source en GitHub.
 
-## 相关链接
+## Enlaces relacionados
 
-- [AWS 中国博客 — OpenClaw 在电商平台的应用场景探索](https://aws.amazon.com/cn/blogs/china/exploring-openclaw-use-cases-in-ecommerce-platforms/) — 原始完整文章
-- [jdopenclaw GitHub 仓库](https://github.com/SharonNi/jdopenclaw) — PoC 完整代码（Mock API、K8s 配置、4 个 Skills、租户管理脚本）
-- [飞书开放平台](https://open.feishu.cn/) — 创建企业自建应用
-- [BrowserWing](https://github.com/nicepkg/browserwing) — 浏览器自动化 Skill（社区）
+- [Blog de AWS China — Exploración de escenarios de aplicación de OpenClaw en plataformas de e-commerce](https://aws.amazon.com/cn/blogs/china/exploring-openclaw-use-cases-in-ecommerce-platforms/) — Artículo completo original
+- [Repositorio GitHub jdopenclaw](https://github.com/SharonNi/jdopenclaw) — Código completo del PoC (Mock API, configuración K8s, 4 Skills, scripts de gestión de inquilinos)
+- [Plataforma Abierta de Feishu](https://open.feishu.cn/) — Crear aplicación auto-construida empresarial
+- [BrowserWing](https://github.com/nicepkg/browserwing) — Skill de automatización de navegador (comunidad)

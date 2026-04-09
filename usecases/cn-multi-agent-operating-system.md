@@ -1,99 +1,99 @@
-# 多智能体协作操作系统（OpenCrew）
+# Sistema Operativo de Colaboración Multi-Agente (OpenCrew)
 
-OpenClaw 用久了会遇到一组共性问题：单个智能体处理多个领域导致上下文膨胀、多项目并行时缺乏统一管理界面、智能体自行修改配置导致崩溃、以及对话中积累的经验和知识随着聊天记录消失。
+OpenClaw después de usarlo por un tiempo encuentra un conjunto de problemas comunes: un solo agente maneja múltiples áreas llevando a expansión de contexto, falta de interfaz de gestión unificada cuando múltiples proyectos se ejecutan en paralelo, agentes modificando configuraciones por sí mismos causando fallos, y experiencia y conocimiento acumulados en conversaciones desaparecen con el historial de chat.
 
-OpenCrew 把 OpenClaw 从"一个什么都做的智能体"变成"一支各司其职的 AI 团队"，通过 Slack、Discord、飞书进行多线程管理和调度（中国大陆用户需要科学上网访问 Slack、Discord）。
+OpenCrew convierte OpenClaw de "un agente que hace de todo" a "un equipo de IA con divisiones de trabajo", a través de Slack, Discord, Feishu para gestión y programación multi-hilo (usuarios en China continental necesitan VPN para acceder a Slack, Discord).
 
-## 它能做什么
+## Qué puede hacer
 
-- **多智能体分工**：每个智能体有明确职责——战略参谋（CoS）、技术负责人（CTO）、执行者（Builder）等
-- **Slack 即管理界面**：每个频道对应一个智能体的"工位"，每个 Thread 是一个独立任务。你的未读消息就是待办队列
-- **意图对齐**：战略参谋在执行前确认你的真实意图，防止智能体"高效地解决错误的问题"
-- **主动推进**：智能体在你不在线时可以按照授权级别自主推进任务
-- **知识沉淀**：每个任务完成后结构化提取可复用的经验，不再随聊天记录消失
-- **变更审计**：Ops 智能体审核所有自我修改，防止配置漂移和崩溃
+- **División de trabajo multi-agente**: Cada agente tiene responsabilidades claras — Estratega Jefe (CoS), Director Técnico (CTO), Ejecutor (Builder), etc.
+- **Slack como interfaz de gestión**: Cada canal corresponde a la "estación de trabajo" de un agente, cada Thread es una tarea independiente. Tus mensajes no leídos son la cola de pendientes
+- **Alineación de intenciones**: Estratega confirma tu intención real antes de ejecutar, previene que el agente "resuelva eficientemente el problema incorrecto"
+- **Avance activo**: Los agentes pueden avanzar autónomamente según nivel de autorización cuando no estás en línea
+- **Sedimentación de conocimiento**: Cada tarea completada extrae experiencia reutilizable estructurada, no desaparece con el historial de chat
+- **Auditoría de cambios**: Agente Ops audita todas las auto-modificaciones, previene deriva de configuración y fallos
 
-## 核心架构
+## Arquitectura central
 
 ```
-你（决策者）
- └── 战略参谋 CoS（意图对齐、异步推进）
-      ├── CTO（技术架构决策）
-      ├── Builder（执行与交付）
-      ├── CIO（领域专家，可替换）
-      └── Ops（变更审计、防漂移）
-           └── Knowledge Officer（知识提取与沉淀）
+Tú (Tomador de decisiones)
+ └── Estratega CoS (Alineación de intenciones, avance asíncrono)
+       ├── CTO (Decisiones de arquitectura técnica)
+       ├── Builder (Ejecución y entrega)
+       ├── CIO (Experto de dominio, reemplazable)
+       └── Ops (Auditoría de cambios, anti-deriva)
+            └── Oficial de Conocimiento (Extracción y sedimentación de conocimiento)
 ```
 
-最小可用配置只需 3 个智能体：CoS + CTO + Builder。
+Configuración mínima usable solo necesita 3 agentes: CoS + CTO + Builder.
 
-## 关键机制
+## Mecanismos clave
 
-### 自主决策分级
+### Clasificación de decisión autónoma
 
-决策按**可逆性**而非复杂度分级，决定智能体何时可以自行行动、何时需要请示：
+Decisiones se clasifican por **reversibilidad** en lugar de complejidad, decide cuándo el agente puede actuar por sí mismo, cuándo necesita consultar:
 
-| 级别 | 含义 | 行为 |
+| Nivel | Significado | Comportamiento |
 |:----:|------|------|
-| L0 | 仅建议 | 只提供建议，不执行 |
-| L1 | 可逆操作 | 自主执行，出错可回滚 |
-| L2 | 有影响但可恢复 | 执行后提交工作报告 |
-| L3 | 不可逆操作 | 必须等你批准 |
+| L0 | Solo sugerencias | Solo proporciona sugerencias, no ejecuta |
+| L1 | Operaciones reversibles | Ejecuta autónomamente, errores se pueden revertir |
+| L2 | Tiene impacto pero recuperable | Presenta informe de trabajo después de ejecutar |
+| L3 | Operaciones irreversibles | Debe esperar tu aprobación |
 
-### 知识三层压缩
+### Compresión de conocimiento de tres capas
 
-| 层级 | 内容 | 压缩比 |
+| Capa | Contenido | Ratio de compresión |
 |:----:|------|:------:|
-| L0 | 原始对话记录 | 1x |
-| L1 | 结构化工作报告（10-15 行） | 25x |
-| L2 | 抽象复用知识 | 100x+ |
+| L0 | Historial de conversaciones original | 1x |
+| L1 | Informe de trabajo estructurado (10-15 líneas) | 25x |
+| L2 | Conocimiento abstracto reutilizable | 100x+ |
 
-### 智能体间通信（A2A 协议）
+### Comunicación entre agentes (protocolo A2A)
 
-智能体之间的协作有严格的安全控制：
-- 只有 CoS/CTO/Ops 有权发起跨智能体通信
-- 每次交互限制 4-5 轮，防止死循环
-- 所有通信在 Slack 中可见，保证透明
+Colaboración entre agentes tiene control estricto de seguridad:
+- Solo CoS/CTO/Ops tienen derecho a iniciar comunicación cross-agente
+- Cada interacción limitada a 4-5 rondas, previene bucles infinitos
+- Toda comunicación visible en Slack, garantiza transparencia
 
-## 所需技能
+## Habilidades requeridas
 
-- OpenClaw 2026.2+ 版本
-- Slack 工作区（免费版即可，中国大陆需 VPN 访问）
-- [OpenCrew 框架](https://github.com/AlexAnys/opencrew)
+- Versión OpenClaw 2026.2+
+- Espacio de trabajo de Slack (versión gratis funciona, China continental necesita VPN para acceder)
+- [Marco OpenCrew](https://github.com/AlexAnys/opencrew)
 
-## 如何设置
+## Cómo configurar
 
-完整部署指南请参考 [OpenCrew 文档](https://github.com/AlexAnys/opencrew)，核心步骤：
+Guía completa de despliegue por favor consulta [Documentación OpenCrew](https://github.com/AlexAnys/opencrew), pasos principales:
 
-1. **创建 Slack App**（Socket Mode，无需公网）：
-   - 获取 App Token（`xapp-...`）和 Bot Token（`xoxb-...`）
-   - 配置事件订阅和权限
+1. **Crear App de Slack** (Modo Socket, no necesita red pública):
+   - Obtener App Token (`xapp-...`) y Bot Token (`xoxb-...`)
+   - Configurar suscripción de eventos y permisos
 
-2. **创建 Slack 频道**：
-   - 最少 3 个：`#hq`（CoS）、`#cto`（CTO）、`#build`（Builder）
-   - 可选：`#know`（知识）、`#ops`（审计）
+2. **Crear canales de Slack**:
+   - Mínimo 3: `#hq` (CoS), `#cto` (CTO), `#build` (Builder)
+   - Opcional: `#know` (Conocimiento), `#ops` (Auditoría)
 
-3. **部署智能体配置**：
-   - 每个智能体有标准化的配置文件（角色定义、工作流程、用户偏好、记忆等）
-   - 共享协议通过 symlink 确保所有智能体遵循统一规范
+3. **Desplegar configuración de agentes**:
+   - Cada agente tiene archivo de configuración estandarizado (definición de rol, flujo de trabajo, preferencias de usuario, memoria, etc.)
+   - Protocolos compartidos a través de symlink aseguran que todos los agentes sigan especificaciones unificadas
 
-4. **验证运行**：发送消息到 `#hq`，确认 CoS 正常响应
+4. **Verificar ejecución**: Enviar mensaje a `#hq`, confirmar que CoS responde normalmente
 
-## 适用场景
+## Escenarios aplicables
 
-- **多项目并行**：同时推进产品开发、市场调研、内容运营，每个项目在独立 Thread 中
-- **团队协作增强**：一个人 + AI 团队 = 一个人完成小团队的工作量
-- **长期项目管理**：经验不随对话消失，知识持续积累
-- **配置稳定性**：不再担心智能体自行修改配置导致崩溃
+- **Múltiples proyectos en paralelo**: Desarrollar producto, investigación de mercado, operación de contenido simultáneamente, cada proyecto en Thread independiente
+- **Mejora de colaboración en equipo**: Una persona + equipo de IA = una persona completa carga de trabajo de pequeño equipo
+- **Gestión de proyectos a largo plazo**: Experiencia no desaparece con conversaciones, conocimiento se acumula continuamente
+- **Estabilidad de configuración**: No más preocupación de que agentes modifiquen configuraciones por sí mismos causando fallos
 
-## 相关链接
+## Enlaces relacionados
 
 - [OpenCrew - GitHub](https://github.com/AlexAnys/opencrew)
-- [OpenCrew 部署指南](https://github.com/AlexAnys/opencrew/blob/main/DEPLOY.md)
-- [OpenCrew 核心概念文档](https://github.com/AlexAnys/opencrew/blob/main/docs/CONCEPTS.md)
+- [Guía de despliegue OpenCrew](https://github.com/AlexAnys/opencrew/blob/main/DEPLOY.md)
+- [Documentación de conceptos centrales OpenCrew](https://github.com/AlexAnys/opencrew/blob/main/docs/CONCEPTS.md)
 
-## 中国用户注意事项
+## Notas para usuarios de China
 
-- **网络要求**：Slack 在中国大陆无法直接访问，需要使用 VPN。部署到云服务器时需确保服务器能访问 Slack API
-- **替代方案探索**：如果团队主要使用飞书，可关注 OpenCrew 对飞书的支持进展。飞书集成方案参考 [openclaw-feishu 配置指南](https://github.com/AlexAnys/openclaw-feishu)
-- **最小配置**：初次尝试建议从 3 个智能体（CoS + CTO + Builder）开始，跑通后再扩展
+- **Requisito de red**: Slack no se puede acceder directamente en China continental, necesita usar VPN. Al desplegar en servidor en la nube asegurar que servidor pueda acceder a API de Slack
+- **Exploración de esquema alternativo**: Si el equipo usa principalmente Feishu, prestar atención al progreso de soporte de OpenCrew para Feishu. Esquema de integración de Feishu referencia [guía de configuración de openclaw-feishu](https://github.com/AlexAnys/openclaw-feishu)
+- **Configuración mínima**: Al intentar por primera vez se recomienda comenzar con 3 agentes (CoS + CTO + Builder), después de ejecutar expandir

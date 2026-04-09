@@ -1,181 +1,181 @@
-# 会议纪要与待办事项自动化
+# Automatización de Actas de Reuniones y Tareas Pendientes
 
-> 含国内适配：飞书妙记 / 腾讯会议 / 钉钉
+> Incluye adaptación local: Feishu Minutes / Tencent Meeting / DingTalk
 
-刚开完一场 45 分钟的团队会议，你需要写会议纪要、提取行动项，然后分别录入 Jira、Linear 或待办清单——全靠手动。等你处理完，下一场会议已经开始了。如果在转录文本落地的那一刻，你的智能体就自动搞定这一切呢？
+Acabas de terminar una reunión de equipo de 45 minutos, necesitas escribir actas, extraer elementos de acción, y luego ingresarlos manualmente a Jira, Linear o lista de tareas pendientes — todo manualmente. Cuando terminas de procesar, la siguiente reunión ya comenzó. ¿Y si tu agente pudiera encargarse automáticamente de todo esto en el momento en que la transcripción del texto aterriza?
 
-这个用例把任何会议转录文本变成结构化纪要，并自动在项目管理工具中创建对应的任务。
+Este caso de uso convierte cualquier transcripción de reunión en actas estructuradas, y crea automáticamente tareas correspondientes en herramientas de gestión de proyectos.
 
-## 痛点
+## Dolor
 
-会议纪要枯燥却重要。大多数人要么跳过不写（然后丢失上下文），要么花 20 多分钟手写。行动项经常被遗忘——因为它们只存在某人脑子里，或者埋在聊天记录的某个角落。这个智能体消除了"我们讨论过了"和"已记录、已分配"之间的断层。
+Las actas de reuniones son tediosas pero importantes. La mayoría de las personas o las saltan (y luego pierden contexto), o gastan más de 20 minutos escribiéndolas manualmente. Los elementos de acción frecuentemente se olvidan — porque solo existen en la cabeza de alguien, o están enterrados en alguna esquina del historial de chat. Este agente elimina la brecha entre "lo discutimos" y "registrado, asignado".
 
-## 它能做什么
+## Qué puede hacer
 
-| 功能 | 说明 |
+| Función | Descripción |
 |------|------|
-| **监听转录来源** | 支持 Otter.ai 导出、Google Meet 转录、Zoom 录制摘要，或直接粘贴到对话中 |
-| **提取关键信息** | 识别决策事项、讨论话题、行动项及其负责人和截止日期 |
-| **自动创建任务** | 在 Jira、Linear、Todoist 或 Notion 中创建任务，分配给正确的人，附带会议上下文 |
-| **发布纪要摘要** | 将摘要推送到 Slack 或 Discord，让整个团队留存记录 |
-| **跟踪提醒** | 可选：在截止日期前通过定时提醒催办负责人 |
+| **Escuchar fuentes de transcripción** | Soporta exportación de Otter.ai, transcripción de Google Meet, resumen de grabación de Zoom, o pegar directamente en el chat |
+| **Extraer información clave** | Identificar decisiones, temas discutidos, elementos de acción con sus responsables y fechas límite |
+| **Crear tareas automáticamente** | Crear tareas en Jira, Linear, Todoist o Notion, asignar a la persona correcta, adjuntar contexto de reunión |
+| **Publicar resumen de actas** | Empujar resumen a Slack o Discord, dejar registro para todo el equipo |
+| **Seguimiento y recordatorio** | Opcional:催促 responsable vía recordatorio programado antes de la fecha límite |
 
-## 所需技能
+## Habilidades requeridas
 
-- 项目管理平台集成：Jira、Linear、Todoist 或 Notion（用于任务创建）
-- 团队沟通工具集成：Slack 或 Discord（用于发布摘要）
-- 文件系统访问（用于读取转录文件）
-- 定时任务 / cron（用于跟踪提醒）
-- 可选：Otter.ai、Fireflies.ai 或 Google Meet API（用于自动获取转录文本）
+- Integración con plataforma de gestión de proyectos: Jira, Linear, Todoist o Notion (para creación de tareas)
+- Integración con herramienta de comunicación de equipo: Slack o Discord (para publicar resumen)
+- Acceso a sistema de archivos (para leer archivos de transcripción)
+- Tareas programadas / cron (para seguimiento y recordatorios)
+- Opcional: Otter.ai, Fireflies.ai o API de Google Meet (para obtener automáticamente texto de transcripción)
 
-## 如何设置
+## Cómo configurar
 
-### 1. 选择转录来源
+### 1. Elegir fuente de transcripción
 
-最简单的方式是直接把转录文本粘贴到对话中。如果需要自动化，可以设置文件夹监控或 API 集成。
+La forma más simple es pegar directamente el texto de transcripción en el chat. Si necesitas automatización, se puede configurar monitoreo de carpeta o integración con API.
 
-### 2. 基础用法：粘贴转录并生成纪要
-
-```text
-I just finished a meeting. Here's the transcript:
-
-[paste transcript or point to file]
-
-Please:
-1. Write a concise summary (max 5 bullet points) covering key decisions and topics.
-2. Extract ALL action items. For each one, identify:
-   - What needs to be done
-   - Who is responsible (match names to my team)
-   - Deadline (if mentioned, otherwise mark as "TBD")
-3. Create a Jira ticket for each action item, assigned to the right person.
-4. Post the full summary to #meeting-notes in Slack.
-```
-
-### 3. 进阶：文件夹自动监控
-
-设置一个自动化管道，定期扫描转录文件并处理：
+### 2. Uso básico: Pegar transcripción y generar actas
 
 ```text
-Set up a recurring task: every 30 minutes, check ~/meeting-transcripts/ for
-new .txt or .vtt files. When you find one:
+Acabo de terminar una reunión. Aquí está la transcripción:
 
-1. Parse the transcript into a structured summary with action items.
-2. Create tasks in Linear for each action item.
-3. Post the summary to #team-updates in Slack.
-4. Move the processed file to ~/meeting-transcripts/processed/.
+[pegar transcripción o apuntar a archivo]
 
-For each action item with a deadline, set a reminder to ping the assignee
-in Slack one day before it's due.
+Por favor:
+1. Escribe un resumen conciso (máximo 5 puntos) cubriendo decisiones clave y temas.
+2. Extrae TODOS los elementos de acción. Para cada uno, identifica:
+   - Qué necesita hacerse
+   - Quién es responsable (coincidir nombres con mi equipo)
+   - Fecha límite (si se menciona, si no marcar como "TBD")
+3. Crea un ticket de Jira para cada elemento de acción, asignado a la persona correcta.
+4. Publica el resumen completo en #meeting-notes en Slack.
 ```
 
-### 4. 自定义输出格式
+### 3. Avanzado: Monitoreo automático de carpeta
+
+Configurar un pipeline automatizado que escanea regularmente archivos de transcripción y procesa:
 
 ```text
-When writing meeting summaries, always use this structure:
-- **Date & Attendees** at the top
-- **Key Decisions** — numbered list of what was decided
-- **Action Items** — table with columns: Task, Owner, Deadline, Status
-- **Open Questions** — anything unresolved that needs follow-up
+Configura una tarea recurrente: cada 30 minutos, verifica ~/meeting-transcripts/ 
+para nuevos archivos .txt o .vtt. Cuando encuentres uno:
+
+1. Analiza la transcripción en un resumen estructurado con elementos de acción.
+2. Crea tareas en Linear para cada elemento de acción.
+3. Publica el resumen en #team-updates en Slack.
+4. Mueve el archivo procesado a ~/meeting-transcripts/processed/.
+
+Para cada elemento de acción con fecha límite, configura un recordatorio para 
+notificar al asignado en Slack un día antes de que venza.
 ```
 
-## 关键洞察
+### 4. Formato de salida personalizado
 
-- 真正的价值不在于纪要本身，而在于**自动创建任务**。不转化为可追踪任务的会议纪要只是形式主义
-- 可以搭配 [Todoist 任务管理器](todoist-task-manager.md) 用例，获得对智能体创建的任务的完整可视化
-- Zoom 或 Google Meet 的 VTT/SRT 字幕文件是很好的输入——它们包含时间戳，帮助智能体将发言归属到具体的人
-- 先从最简单的开始（粘贴转录、获取摘要），验证输出质量后再逐步自动化。不要在验证效果之前就过度设计管道
+```text
+Al escribir resúmenes de reuniones, usa siempre esta estructura:
+- **Fecha y Asistentes** en la parte superior
+- **Decisiones Clave** — lista numerada de lo que se decidió
+- **Elementos de Acción** — tabla con columnas: Tarea, Responsable, Fecha Límite, Estado
+- **Preguntas Abiertas** — cualquier cosa no resuelta que necesita seguimiento
+```
 
-## 中国用户适配
+## Ideas clave
 
-国内企业的会议场景和工具生态与海外有很大不同。以下是针对国内环境的适配方案。
+- El verdadero valor no está en las actas en sí, sino en **crear tareas automáticamente**. Actas de reuniones que no se convierten en tareas rastreables son solo formalismo
+- Se puede combinar con el caso de uso [Gestor de Tareas Todoist](todoist-task-manager.md), obtener visualización completa de tareas creadas por el agente
+- Archivos de subtítulos VTT/SRT de Zoom o Google Meet son buena entrada — tienen marcas de tiempo, ayudan al agente a atribuir declaraciones a personas específicas
+- Comenzar con lo más simple primero (pegar transcripción, obtener resumen), verificar calidad de salida antes de automatizar gradualmente. No sobre-diseñar pipelines antes de verificar efectos
 
-### 国内会议痛点
+## Adaptación para usuarios de China
 
-据统计，国内企业因会议效率低下造成的损失平均占年度营收的 11%，其中会议纪要处理不当是主要诱因之一。常见痛点包括：
+Los escenarios de reuniones y ecosistema de herramientas de empresas nacionales son muy diferentes de los extranjeros. Los siguientes son esquemas de adaptación para el entorno nacional.
 
-- **会议太多**：员工被迫参加大量不必要的会议，纪要负担沉重
-- **纪要与执行脱节**：纪要写了没人看，行动项分散在聊天群里无人跟进
-- **转写工具碎片化**：飞书妙记、腾讯会议智能纪要、钉钉 AI 听记各有各的封闭生态，纪要数据难以跨平台流转
+### Puntos dolorosos de reuniones nacionales
 
-### 转录来源替代方案
+Según estadísticas, las pérdidas causadas por baja eficiencia de reuniones en empresas nacionales promedian 11% de ingresos anuales,其中 el manejo inadecuado de actas de reuniones es una de las principales causas. Los puntos dolorosos comunes incluyen:
 
-| 原版工具 | 国内替代 | 说明 |
+- **Demasiadas reuniones**: Los empleados se ven obligados a asistir a muchas reuniones innecesarias, carga pesada de actas
+- **Desconexión entre actas y ejecución**: Actas escritas nadie las ve, elementos de acción dispersos en grupos de chat nadie da seguimiento
+- **Herramientas de transcripción fragmentadas**: Feishu Minutes, resúmenes inteligentes de Tencent Meeting, DingTalk AI Listening cada uno tiene su propio ecosistema cerrado, datos de actas difíciles de fluir cross-plataforma
+
+### Esquemas alternativos de fuentes de transcripción
+
+| Herramienta original | Reemplazo nacional | Descripción |
 |---------|---------|------|
-| Otter.ai / Fireflies.ai | **飞书妙记** | 支持 19 种语言，准确率 98%，可导出飞书文档/TXT/SRT 格式 |
-| Google Meet 转录 | **腾讯会议智能纪要** | 提供 REST API 获取转写段落和纪要摘要（需商业版/企业版） |
-| Zoom 录制摘要 | **钉钉 AI 听记** | 支持 72 种语言转写，可一键同步待办到钉钉待办 |
-| 直接粘贴 | **任何工具导出后粘贴** | 最通用的方式，不依赖特定平台 |
+| Otter.ai / Fireflies.ai | **Feishu Minutes (妙记)** | Soporta 19 idiomas, precisión 98%, puede exportar formato documento Feishu/TXT/SRT |
+| Transcripción de Google Meet | **Resumen inteligente de Tencent Meeting** | Proporciona API REST para obtener párrafos de transcripción y resumen de actas (necesita versión comercial/empresarial) |
+| Resumen de grabación de Zoom | **DingTalk AI Listening (钉钉 AI 听记)** | Soporta transcripción de 72 idiomas, puede sincronizar tareas pendientes a DingTalk Tasks con un clic |
+| Pegar directamente | **Cualquier herramienta exporta y pega** | Forma más universal, no depende de plataforma específica |
 
-### 任务创建替代方案
+### Esquemas alternativos de creación de tareas
 
-| 原版工具 | 国内替代 | OpenClaw 技能 |
+| Herramienta original | Reemplazo nacional | Skill de OpenClaw |
 |---------|---------|---------------|
-| Jira / Linear | **飞书项目（Meego）** | 通过 [feishu-doc](https://playbooks.com/skills/openclaw/openclaw/feishu-doc) 写入飞书文档，或使用飞书项目 API |
-| Todoist | **滴答清单** | [ticktick-api-skill](https://playbooks.com/skills/openclaw/skills/ticktick-api-skill) |
-| Notion | **飞书文档 / 钉钉文档** | [feishu-doc](https://playbooks.com/skills/openclaw/openclaw/feishu-doc) |
-| Slack / Discord | **飞书群聊 / 钉钉群聊** | 通过飞书/钉钉渠道插件直接发送 |
+| Jira / Linear | **Feishu Project (Meego)** | Escribir a documento Feishu vía [feishu-doc](https://playbooks.com/skills/openclaw/openclaw/feishu-doc), o usar API de Feishu Project |
+| Todoist | **TickTick** | [ticktick-api-skill](https://playbooks.com/skills/openclaw/skills/ticktick-api-skill) |
+| Notion | **Documento Feishu / Documento DingTalk** | [feishu-doc](https://playbooks.com/skills/openclaw/openclaw/feishu-doc) |
+| Slack / Discord | **Grupo Feishu / Grupo DingTalk** | Enviar directamente vía plugins de canal Feishu/DingTalk |
 
-### 飞书用户方案（推荐）
+### Esquema para usuarios de Feishu (recomendado)
 
-飞书生态内可以实现最完整的闭环：会议录制 -> 妙记转写 -> OpenClaw 处理 -> 飞书文档 + 任务。
+El ecosistema de Feishu puede lograr el ciclo más completo: grabación de reunión → transcripción de Minutes → procesamiento de OpenClaw → documento Feishu + tareas.
 
-**前置条件**：已完成 [飞书 AI 助手](cn-feishu-ai-assistant.md) 的基础接入。
+**Pre-requisitos**: Completado el acceso básico de [Asistente IA de Feishu](cn-feishu-ai-assistant.md).
 
-**安装飞书相关技能**：
+**Instalar skills relacionados con Feishu**:
 
 ```bash
 npx playbooks add skill openclaw/openclaw --skill feishu-doc
 npx playbooks add skill openclaw/skills --skill feishu-calendar-tool
 ```
 
-**使用方式**：会议结束后，从飞书妙记导出转写文本（TXT 或飞书文档格式），然后在飞书中发送给 OpenClaw 机器人：
+**Modo de uso**: Después de terminar la reunión, exportar texto de transcripción desde Feishu Minutes (formato TXT o documento Feishu), luego enviar al robot de OpenClaw en Feishu:
 
 ```text
-这是今天下午产品评审会的转录文本：
-[粘贴妙记导出的文本]
+Esta es la transcripción de la reunión de revisión de productos de esta tarde:
+[pegar texto exportado de Minutes]
 
-请：
-1. 整理成结构化会议纪要（决策事项 + 行动项 + 待确认事项）
-2. 把纪要写入飞书文档，放到"会议纪要"文件夹
-3. 每个行动项标注负责人和截止日期
-4. 把纪要摘要发到产品组群聊
+Por favor:
+1. Organizar en actas de reunión estructuradas (decisiones + elementos de acción + asuntos pendientes)
+2. Escribir actas en documento Feishu, colocar en carpeta "Actas de Reunión"
+3. Cada elemento de acción marcar responsable y fecha límite
+4. Enviar resumen de actas al grupo de chat del equipo de producto
 ```
 
-### 腾讯会议用户方案
+### Esquema para usuarios de Tencent Meeting
 
-腾讯会议开放平台提供了录制转写 API（商业版/企业版），可通过 API 自动获取会议纪要：
+La plataforma abierta de Tencent Meeting proporciona API de transcripción de grabación (versión comercial/empresarial), se puede obtener automáticamente actas de reunión vía API:
 
-- 查询录制转写段落信息：`GET /v1/records/{record_file_id}/transcripts`
-- 查询智能纪要：`GET /v1/smart/minutes/{record_file_id}`
+- Consultar información de párrafos de transcripción de grabación: `GET /v1/records/{record_file_id}/transcripts`
+- Consultar resumen inteligente: `GET /v1/smart/minutes/{record_file_id}`
 
-获取到转写文本后，可通过 OpenClaw 进一步结构化处理并分发到对应的任务管理工具。
+Después de obtener texto de transcripción, se puede procesar más estructuralmente con OpenClaw y distribuir a herramientas de gestión de tareas correspondientes.
 
-### 钉钉用户方案
+### Esquema para usuarios de DingTalk
 
-钉钉 AI 听记支持将会议录音自动转写，并可一键同步待办到钉钉待办。2025 年底升级后支持图文纪要和 72 种语言。
+DingTalk AI Listening soporta transcripción automática de grabaciones de reuniones, y puede sincronizar tareas pendientes a DingTalk Tasks con un clic. Después de la actualización de finales de 2025 soporta actas ilustradas y 72 idiomas.
 
-**前置条件**：已完成 [钉钉 AI 助手](cn-dingtalk-ai-assistant.md) 的基础接入。
+**Pre-requisitos**: Completado el acceso básico de [Asistente IA de DingTalk](cn-dingtalk-ai-assistant.md).
 
-**使用方式**：会议结束后，从钉钉 AI 听记导出纪要文本，发送给 OpenClaw 钉钉机器人进行进一步处理和任务分发。
+**Modo de uso**: Después de terminar la reunión, exportar texto de actas desde DingTalk AI Listening, enviar al robot de DingTalk de OpenClaw para procesamiento adicional y distribución de tareas.
 
-### 实用建议
+### Consejos prácticos
 
-- **先用最简单的方式验证**：不管用什么会议工具，先手动复制转写文本粘贴给 OpenClaw，确认输出质量满意后再考虑自动化
-- **飞书妙记 + OpenClaw 是目前最顺畅的组合**：飞书妙记导出格式规范，OpenClaw 飞书技能生态最成熟
-- **跨平台场景**：如果团队同时使用多个会议工具，统一导出为 TXT 后交给 OpenClaw 处理，用同一套模板输出
-- **安全提醒**：会议转录可能包含敏感商业信息，请确保 OpenClaw 运行在安全的环境中，不要将转录文本发送到不受信任的第三方服务
+- **Verificar con la forma más simple primero**: No importa qué herramienta de reunión uses, primero copia manualmente el texto de transcripción y pégalo a OpenClaw, confirmar que la calidad de salida es satisfactoria antes de considerar automatización
+- **Feishu Minutes + OpenClaw es actualmente la combinación más fluida**: Formato de exportación de Feishu Minutes es estandarizado, ecosistema de skills de Feishu de OpenClaw es el más maduro
+- **Escenarios cross-plataforma**: Si el equipo usa múltiples herramientas de reuniones simultáneamente, unificar exportar a TXT y entregar a OpenClaw para procesar, usar misma plantilla para salida
+- **Recordatorio de seguridad**: Las transcripciones de reuniones pueden contener información comercial sensible, asegura que OpenClaw se ejecute en entorno seguro, no enviar texto de transcripción a servicios de terceros no confiables
 
-> **安全提示**：腾讯会议 API 凭证和飞书应用密钥属于敏感信息，请通过环境变量或 `.env` 文件配置，确保 `.env` 已加入 `.gitignore`。
+> **Consejo de seguridad**: Credenciales de API de Tencent Meeting y secretos de aplicación de Feishu son información sensible, por favor configura vía variables de entorno o archivo `.env`, asegura que `.env` se agregue a `.gitignore`.
 
-## 相关链接
+## Enlaces relacionados
 
 - [Otter.ai](https://otter.ai/)
-- [Jira REST API](https://developer.atlassian.com/cloud/jira/platform/rest/v3/)
-- [Linear API](https://developers.linear.app/)
-- [Slack API](https://api.slack.com/)
-- [飞书妙记](https://www.feishu.cn/product/minutes) — 飞书官方会议转写工具
-- [腾讯会议开放平台](https://meeting.tencent.com/open-api.html) — 腾讯会议 API 文档
-- [钉钉 AI 听记](https://www.dingtalk.com/markets/dingtalk-ai) — 钉钉会议转写功能
-- [feishu-doc 技能 - ClawHub](https://playbooks.com/skills/openclaw/openclaw/feishu-doc)
-- [ticktick-api-skill 技能 - ClawHub](https://playbooks.com/skills/openclaw/skills/ticktick-api-skill)
-- [feishu-calendar-tool 技能 - ClawHub](https://playbooks.com/skills/openclaw/skills/feishu-calendar-tool)
+- [API REST de Jira](https://developer.atlassian.com/cloud/jira/platform/rest/v3/)
+- [API de Linear](https://developers.linear.app/)
+- [API de Slack](https://api.slack.com/)
+- [Feishu Minutes](https://www.feishu.cn/product/minutes) — Herramienta de transcripción de reuniones oficial de Feishu
+- [Plataforma abierta de Tencent Meeting](https://meeting.tencent.com/open-api.html) — Documentación de API de Tencent Meeting
+- [DingTalk AI Listening](https://www.dingtalk.com/markets/dingtalk-ai) — Función de transcripción de reuniones de DingTalk
+- [Skill feishu-doc - ClawHub](https://playbooks.com/skills/openclaw/openclaw/feishu-doc)
+- [Skill ticktick-api-skill - ClawHub](https://playbooks.com/skills/openclaw/skills/ticktick-api-skill)
+- [Skill feishu-calendar-tool - ClawHub](https://playbooks.com/skills/openclaw/skills/feishu-calendar-tool)

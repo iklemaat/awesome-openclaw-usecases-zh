@@ -1,74 +1,74 @@
-# Agent Swarm 一人开发团队（全配置指南）
+# Equipo de Desarrollo de Una Persona Agent Swarm (Guía de configuración completa)
 
-> 含国内适配：飞书/钉钉通知 / Codex 替代方案 / 国内监控平台
+> Incluye adaptación local: Notificaciones Feishu/DingTalk / Esquemas alternativos para Codex / Plataformas de monitoreo locales
 >
-> **技术要求较高**：本用例涉及 Git Worktree、tmux、Cron、gh CLI 等系统级工具，建议有 Linux/macOS 命令行经验和 CI/CD 基础的用户使用。
+> **Requiere mayor habilidad técnica**: Este caso de uso involucra Git Worktree, tmux, Cron, gh CLI y otras herramientas a nivel de sistema, se recomienda para usuarios con experiencia en línea de comandos Linux/macOS y base de CI/CD.
 
-用 Codex 或 Claude Code 直接编码？它们只看到代码，看不到你的业务全貌。上下文窗口（context window）是零和博弈——填满代码就没有空间放业务上下文，填满客户历史就没有空间放代码。
+¿Codificar directamente con Codex o Claude Code? Solo ven el código, no ven el panorama completo de tu negocio. La ventana de contexto (context window) es un juego de suma cero — llenar con código no deja espacio para contexto de negocio, llenar con historial de clientes no deja espacio para código.
 
-OpenClaw 作为编排层改变了这个等式：它持有你所有的业务上下文（客户数据、会议记录、历史决策、成功与失败经验），并将这些上下文转化为精确的 Prompt 分发给各个编码 Agent。编码 Agent 专注代码，编排 Agent 把控战略——**通过上下文实现专业化，而非通过不同的模型**。
+OpenClaw como capa de orquestación cambia esta ecuación: mantiene todo tu contexto de negocio (datos de clientes, actas de reuniones, decisiones históricas, experiencias de éxito y fracaso), y convierte este contexto en Prompts precisos distribuidos a varios Agentes de codificación. Los Agentes de codificación se enfocan en código, el Agente orquestador controla la estrategia — **profesionalización a través de contexto, no a través de modelos diferentes**.
 
-## 它能做什么
+## Qué puede hacer
 
-- **异构模型编排**：编排器（"Zoe"）根据任务类型自动选择 Codex（OpenAI 编码模型）或 Claude Code（Anthropic 编码工具），路由到最合适的模型
-- **Git Worktree（工作树）隔离**：每个 Agent 在独立的 Worktree 和分支上工作，互不干扰
-- **tmux（终端复用器）会话管理**：Agent 运行在 tmux 会话中，支持中途发送指令纠偏，无需终止重启
-- **三模型代码审查**：每个 PR 自动经过 Codex、Gemini Code Assist、Claude Code 三重审查，互补盲区
-- **Cron 监控循环**：每 10 分钟自动检测所有 Agent 状态（tmux 存活、PR 状态、CI 结果），失败自动重生（最多 3 次）
-- **自改进 Prompt（提示词，Ralph Loop V2）**：失败时编排器结合业务上下文重写 Prompt，而非简单重试；成功模式自动沉淀为复用经验
-- **主动发现工作**：早间扫描 Sentry 错误→自动修复、会后扫描笔记→生成功能需求、晚间更新日志和文档
-- **完成才通知**：PR 通过全部检查（CI + 三模型审查 + 截图）后才推送 Telegram，避免信息噪音
+- **Orquestación de modelos heterogéneos**: El orquestador ("Zoe") selecciona automáticamente Codex (modelo de codificación de OpenAI) o Claude Code (herramienta de codificación de Anthropic) según tipo de tarea, enruta al modelo más adecuado
+- **Aislamiento con Git Worktree (árbol de trabajo)**: Cada Agente trabaja en Worktree y rama independientes, no interfieren entre sí
+- **Gestión de sesiones con tmux (multiplexor de terminal)**: Agentes se ejecutan en sesiones tmux, soporta enviar instrucciones a mitad de camino para corregir, no necesita terminar y reiniciar
+- **Revisión de código de tres modelos**: Cada PR pasa automáticamente por revisión triple de Codex, Gemini Code Assist, Claude Code, complementando puntos ciegos
+- **Ciclo de monitoreo con Cron**: Cada 10 minutos detecta automáticamente estado de todos los Agentes (vivo en tmux, estado de PR, resultado de CI), fallo auto-renace (máximo 3 veces)
+- **Prompt de auto-mejora (Ralph Loop V2)**: Al fallar el orquestador reescribe Prompt combinando contexto de negocio, no reintento simple; modo exitoso se sedimenta automáticamente como experiencia reutilizable
+- **Descubrimiento activo de trabajo**: Escaneo matutino de errores en Sentry → auto-reparación, escaneo de notas después de reuniones → genera requisitos de funciones, registro de cambios y documentación vespertino
+- **Notificar solo al completar**: Push a Telegram solo después de que PR pasa todos los checks (CI + revisión de tres modelos + capturas), evita ruido de información
 
-## 所需技能
+## Habilidades requeridas
 
-- OpenClaw 2026.2+ 版本
-- `sessions_spawn` / `sessions_send`（多 Agent 协调）
-- `telegram` 技能（通知渠道，国内可替换为飞书/钉钉）
-- `file_read` / `file_write`（任务注册表管理）
-- `cron`（定时监控）
-- Git + [gh CLI](https://cli.github.com/)（PR 管理和 CI 状态检查）
-- [tmux](https://github.com/tmux/tmux)（Agent 会话管理）
-- Codex CLI 或 Claude Code CLI（编码 Agent）
+- Versión OpenClaw 2026.2+
+- `sessions_spawn` / `sessions_send` (coordinación multi-Agente)
+- Skill `telegram` (canal de notificación, reemplazable localmente por Feishu/DingTalk)
+- `file_read` / `file_write` (gestión de registro de tareas)
+- `cron` (monitoreo programado)
+- Git + [gh CLI](https://cli.github.com/) (gestión de PR y verificación de estado de CI)
+- [tmux](https://github.com/tmux/tmux) (gestión de sesiones de Agentes)
+- CLI de Codex o CLI de Claude Code (Agentes de codificación)
 
-## 核心架构
+## Arquitectura central
 
 ```
-你（决策者）
- └── Zoe（OpenClaw 编排器，Obsidian Vault 中的业务上下文）
-      ├── Codex Agent 1（feat/custom-templates，tmux: codex-templates）
-      ├── Codex Agent 2（fix/billing-bug，tmux: codex-billing）
-      ├── Claude Code Agent（feat/ui-refresh，tmux: cc-ui）
-      └── Cron 监控脚本（每 10 分钟，check-agents.sh）
-           ├── 检查 tmux 会话是否存活
-           ├── 通过 gh CLI 检查 PR 和 CI 状态
-           └── 失败 → Zoe 重写 Prompt → 重生 Agent
+Tú (Tomador de decisiones)
+ └── Zoe (Orquestador OpenClaw, contexto de negocio en Obsidian Vault)
+       ├── Agente Codex 1 (feat/custom-templates, tmux: codex-templates)
+       ├── Agente Codex 2 (fix/billing-bug, tmux: codex-billing)
+       ├── Agente Claude Code (feat/ui-refresh, tmux: cc-ui)
+       └── Script de monitoreo Cron (cada 10 minutos, check-agents.sh)
+            ├── Verificar si sesiones tmux están vivas
+            ├── Verificar PR y estado de CI vía gh CLI
+            └── Fallo → Zoe reescribe Prompt → Renacer Agente
 ```
 
-两层上下文分离是核心设计：
+Separación de contexto de dos capas es el diseño central:
 
-| | OpenClaw 编排器（Zoe） | 编码 Agent（Codex / Claude Code） |
+| | Orquestador OpenClaw (Zoe) | Agente de codificación (Codex / Claude Code) |
 |---|---|---|
-| **上下文** | 客户数据、会议记录、历史决策、成功/失败模式 | 代码库、类型定义、测试文件、API 规范 |
-| **职责** | 范围确定、Prompt 生成、Agent 调度、失败分析 | 编码、测试、提交、创建 PR |
-| **权限** | Admin API、只读数据库、任务注册表 | 仅代码仓库和 CI |
+| **Contexto** | Datos de clientes, actas de reuniones, decisiones históricas, patrones de éxito/fracaso | Base de código, definiciones de tipos, archivos de prueba, especificaciones de API |
+| **Responsabilidad** | Determinación de alcance, generación de Prompt, programación de Agentes, análisis de fallos | Codificación, pruebas, commit, creación de PR |
+| **Permisos** | API Admin, base de datos de solo lectura, registro de tareas | Solo base de código y CI |
 
-## 8 步工作流
+## Flujo de 8 pasos
 
-### Step 1：客户需求 → 与编排器确定范围
+### Paso 1: Requisito de cliente → Determinar alcance con orquestador
 
-客户提出需求后，与编排器讨论。因为会议笔记自动同步到 Obsidian Vault，编排器已有完整上下文，无需额外解释。
+Después de que cliente plantea requisito, discutir con orquestador. Como las actas de reuniones se sincronizan automáticamente a Obsidian Vault, el orquestador ya tiene contexto completo, no necesita explicación adicional.
 
-编排器完成三件事：
-1. 通过 Admin API 为客户充值或解锁功能（立即响应客户）
-2. 通过只读数据库访问拉取客户现有配置（编码 Agent 永远没有生产数据库权限）
-3. 生成包含完整上下文的 Prompt 并 Spawn 编码 Agent
+El orquestador completa tres cosas:
+1. Recargar o desbloquear función para cliente vía API Admin (responde al cliente inmediatamente)
+2. Extraer configuración existente del cliente a través de acceso de base de datos de solo lectura (Agentes de codificación nunca tienen permisos de base de datos de producción)
+3. Generar Prompt con contexto completo y Spawn Agente de codificación
 
-### Step 2：生成 Agent
+### Paso 2: Generar Agente
 
-每个 Agent 获得独立的 Worktree 和 tmux 会话：
+Cada Agente obtiene Worktree independiente y sesión tmux:
 
 ```bash
-# 创建 worktree + 启动 agent
+# Crear worktree + iniciar agente
 git worktree add ../feat-custom-templates -b feat/custom-templates origin/main
 cd ../feat-custom-templates && pnpm install
 
@@ -77,7 +77,7 @@ tmux new-session -d -s "codex-templates" \
   "$HOME/.clawdbot/run-agent.sh templates gpt-5.3-codex high"
 ```
 
-启动编码 Agent 的命令：
+Comando para iniciar Agente de codificación:
 
 ```bash
 # Codex
@@ -92,24 +92,24 @@ claude --model claude-opus-4.5 \
   -p "Your prompt here"
 ```
 
-tmux 的核心优势——中途纠偏，无需终止 Agent：
+Ventaja central de tmux — corrección a mitad de camino, no necesita terminar Agente:
 
 ```bash
-# Agent 方向错了？
+# ¿Agente tomó dirección equivocada?
 tmux send-keys -t codex-templates "Stop. Focus on the API layer first, not the UI." Enter
 
-# Agent 需要更多上下文？
+# ¿Agente necesita más contexto?
 tmux send-keys -t codex-templates "The schema is in src/types/template.ts. Use that." Enter
 ```
 
-任务在 `.clawdbot/active-tasks.json` 中追踪：
+Tareas se rastrean en `.clawdbot/active-tasks.json`:
 
 ```json
 {
   "id": "feat-custom-templates",
   "tmuxSession": "codex-templates",
   "agent": "codex",
-  "description": "Custom email templates for agency customer",
+  "description": "Plantillas de correo personalizadas para cliente de agencia",
   "repo": "medialyst",
   "worktree": "feat-custom-templates",
   "branch": "feat/custom-templates",
@@ -119,33 +119,33 @@ tmux send-keys -t codex-templates "The schema is in src/types/template.ts. Use t
 }
 ```
 
-### Step 3：Cron 监控循环
+### Paso 3: Ciclo de monitoreo Cron
 
-每 10 分钟运行 `.clawdbot/check-agents.sh`，100% 确定性逻辑、极低 Token 消耗：
+Ejecutar `.clawdbot/check-agents.sh` cada 10 minutos, lógica 100% determinística, consumo extremadamente bajo de Tokens:
 
-- 检查 tmux 会话是否存活
-- 通过 `gh` CLI 检查是否有已打开的 PR
-- 检查 CI 状态
-- CI 失败或关键审查意见 → 自动重生 Agent（最多 3 次）
-- 只在需要人工介入时告警
+- Verificar si sesiones tmux están vivas
+- Verificar si hay PR abierto vía CLI `gh`
+- Verificar estado de CI
+- Fallo de CI o comentarios críticos de revisión → Renacer Agente automáticamente (máximo 3 veces)
+- Solo alertar cuando necesita intervención humana
 
-不直接轮询 Agent（那会很贵），而是读取 JSON 注册表和外部状态。
+No sondear Agentes directamente (sería caro), sino leer registro JSON y estado externo.
 
-### Step 4：Agent 创建 PR
+### Paso 4: Agente crea PR
 
-Agent 通过 `gh pr create --fill` 提交 PR。此时**不通知你**——PR 创建不等于完成。
+Agente envía PR vía `gh pr create --fill`. En este momento **no te notifica** — creación de PR no es igual a completado.
 
-Definition of Done（确保你的 Agent 知道这个）：
+Definición de Terminado (asegura que tu Agente sepa esto):
 
-- ✅ PR 已创建
-- ✅ 分支已同步 main（无合并冲突）
-- ✅ CI 通过（lint、类型检查、单元测试、E2E）
-- ✅ Codex Review 通过
-- ✅ Claude Code Review 通过
-- ✅ Gemini Review 通过
-- ✅ UI 变更包含截图
+- ✅ PR creado
+- ✅ Rama sincronizada con main (sin conflictos de merge)
+- ✅ CI pasa (lint, verificación de tipos, pruebas unitarias, E2E)
+- ✅ Revisión de Codex pasa
+- ✅ Revisión de Claude Code pasa
+- ✅ Revisión de Gemini pasa
+- ✅ Cambios de UI incluyen capturas
 
-完成后任务注册表自动更新：
+Después de completar, registro de tareas se actualiza automáticamente:
 
 ```json
 {
@@ -159,74 +159,74 @@ Definition of Done（确保你的 Agent 知道这个）：
     "claudeReviewPassed": true,
     "geminiReviewPassed": true
   },
-  "note": "All checks passed. Ready to merge."
+  "note": "Todos los checks pasaron. Listo para merge."
 }
 ```
 
-### Step 5：三模型自动代码审查
+### Paso 5: Revisión automática de código de tres modelos
 
-| 审查器 | 强项 | 说明 |
+| Revisor | Fortaleza | Descripción |
 |--------|------|------|
-| Codex | 边界情况、逻辑错误、竞态条件 | 最深入，误报率极低 |
-| Gemini Code Assist | 安全漏洞、可扩展性问题 | 免费，会给出具体修复建议 |
-| Claude Code | 验证其他审查器的发现 | 倾向过度保守，只关注 Critical 级别 |
+| Codex | Casos límite, errores lógicos, condiciones de carrera | Más profundo, tasa de falsos positivos extremadamente baja |
+| Gemini Code Assist | Vulnerabilidades de seguridad, problemas de escalabilidad | Gratis, da sugerencias de reparación específicas |
+| Claude Code | Verifica hallazgos de otros revisores | Tiende a ser excesivamente conservador, solo enfoca en nivel Crítico |
 
-三个审查器都直接在 PR 上发表评论。
+Los tres revisores comentan directamente en el PR.
 
-### Step 6：自动化测试
+### Paso 6: Pruebas automatizadas
 
-CI 流水线包含：
+Pipeline de CI incluye:
 
-- Lint + TypeScript 类型检查
-- 单元测试
-- E2E 测试
-- Playwright 测试（对照与生产一致的预览环境）
+- Lint + verificación de tipos de TypeScript
+- Pruebas unitarias
+- Pruebas E2E
+- Pruebas Playwright (comparado con entorno de preview consistente con producción)
 
-规则：UI 变更的 PR 必须在描述中包含截图，否则 CI 直接失败。这大幅缩短了审查时间——无需手动点开预览环境。
+Regla: PR con cambios de UI debe incluir capturas en descripción, de lo contrario CI falla directamente. Esto acorta significativamente tiempo de revisión — no necesita abrir entorno de preview manualmente.
 
-### Step 7：人工审查
+### Paso 7: Revisión humana
 
-此时收到通知："PR #341 ready for review"。CI 已通过、三个 AI 审查器已批准、截图展示了 UI 变更。人工审查仅需 5-10 分钟，很多 PR 看完截图就可以直接合并。
+En este momento recibes notificación: "PR #341 listo para revisión". CI ya pasó, tres revisores de IA aprobaron, capturas muestran cambios de UI. Revisión humana solo toma 5-10 minutos, muchos PR se pueden merge directamente después de ver capturas.
 
-### Step 8：合并与清理
+### Paso 8: Merge y limpieza
 
-PR 合并。每日 Cron 清理孤立的 Worktree 和过期任务注册表。
+PR merge. Cron diario limpia Worktrees huérfanos y registro de tareas vencidas.
 
-## Ralph Loop V2：自改进 Prompt 系统
+## Ralph Loop V2: Sistema de Prompt de auto-mejora
 
-传统 Ralph Loop 每个循环使用相同的 Prompt，积累的经验改善了检索质量，但 Prompt 本身是静态的。
+Ralph Loop tradicional usa el mismo Prompt en cada ciclo, la experiencia acumulada mejora calidad de recuperación, pero el Prompt en sí es estático.
 
-本系统不同。Agent 失败时，编排器结合**业务上下文**分析原因并重写 Prompt：
+Este sistema es diferente. Cuando Agente falla, el orquestador analiza la causa combinando **contexto de negocio** y reescribe Prompt:
 
-- Agent 上下文溢出？→ "Focus only on these three files."
-- Agent 方向偏了？→ "Stop. The customer wanted X, not Y. Here's what they said in the meeting."
-- Agent 需要澄清？→ "Here's the customer's email and what their company does."
+- ¿Contexto de Agente desbordado? → "Focus only on these three files."
+- ¿Agente tomó dirección equivocada? → "Stop. The customer wanted X, not Y. Here's what they said in the meeting."
+- ¿Agente necesita aclaración? → "Here's the customer's email and what their company does."
 
-编排器还主动发现工作：
+El orquestador también descubre trabajo activamente:
 
-- **早间**：扫描 Sentry → 发现 4 个新错误 → 生成 4 个修复 Agent
-- **会后**：扫描笔记 → 标记 3 个功能请求 → 生成 3 个 Codex Agent
-- **晚间**：扫描 Git 日志 → 生成 Claude Code 更新 Changelog 和客户文档
+- **Matutino**: Escanear Sentry → detectar 4 errores nuevos → generar 4 Agentes de reparación
+- **Después de reuniones**: Escanear notas → marcar 3 solicitudes de funciones → generar 3 Agentes Codex
+- **Vespertino**: Escanear log de Git → generar Claude Code para actualizar Changelog y documentación de cliente
 
-奖励信号：CI 通过 + 三模型审查通过 + 人工合并。任何失败触发循环。成功模式被记录：
+Señal de recompensa: CI pasa + revisión de tres modelos pasa + merge humano. Cualquier fallo desencadena ciclo. Patrones exitosos se registran:
 
-- "This prompt structure works for billing features."
-- "Codex needs the type definitions upfront."
-- "Always include the test file paths."
+- "Esta estructura de Prompt funciona para funciones de facturación."
+- "Codex necesita definiciones de tipos al inicio."
+- "Siempre incluir rutas de archivos de prueba."
 
-## 模型选择指南
+## Guía de selección de modelos
 
-| 模型 | 适用场景 | 特点 |
+| Modelo | Escenario aplicable | Características |
 |------|----------|------|
-| Codex (gpt-5.3-codex) | 后端逻辑、复杂 Bug、多文件重构 | 慢但深入，用于 90% 的任务 |
-| Claude Code (claude-opus-4.5) | 前端、Git 操作 | 快速，权限问题更少 |
-| Gemini | UI 设计规范 | 先用 Gemini 生成 HTML/CSS 规范，再交给 Claude Code 实现 |
+| Codex (gpt-5.3-codex) | Lógica backend, Bugs complejos, Refactorización multi-archivo | Lento pero profundo, usado para 90% de tareas |
+| Claude Code (claude-opus-4.5) | Frontend, Operaciones Git | Rápido, menos problemas de permisos |
+| Gemini | Especificaciones de diseño de UI | Primero usar Gemini para generar especificaciones HTML/CSS, luego entregar a Claude Code para implementar |
 
-编排器根据任务类型自动路由：计费系统 Bug → Codex、按钮样式修改 → Claude Code、新仪表板设计 → Gemini 出稿 + Claude Code 实现。
+El orquestador enruta automáticamente según tipo de tarea: Bug de sistema de facturación → Codex, modificación de estilo de botón → Claude Code, diseño de nuevo dashboard → Gemini genera borrador + Claude Code implementa.
 
-## 如何设置
+## Cómo configurar
 
-将本文内容复制给 OpenClaw，使用以下提示词：
+Copiar el contenido de este artículo a OpenClaw, usar el siguiente prompt:
 
 ```text
 Implement this agent swarm setup for my codebase:
@@ -243,96 +243,96 @@ Implement this agent swarm setup for my codebase:
 4. Read my codebase structure and create agent spawn templates appropriate for my tech stack
 ```
 
-OpenClaw 会分析代码库、创建脚本、配置 Cron 监控。约 10 分钟完成初始配置。
+OpenClaw analizará la base de código, creará scripts, configurará monitoreo Cron. Aproximadamente 10 minutos completa la configuración inicial.
 
-## 实用建议
+## Consejos prácticos
 
-- **从小开始**：先用 1-2 个 Agent 跑通全流程（Spawn → 编码 → PR → 审查 → 合并），确认一切正常后再扩展
-- **RAM 是真正瓶颈**：每个 Agent 需要独立的 `node_modules` 和构建进程。16GB 内存最多同时跑 4-5 个 Agent，且不能同时触发构建。需要大规模并行建议 64GB+ 内存
-- **成本参考**：Claude ~$100/月 + Codex ~$90/月，入门可以从 $20/月 起步
-- **Definition of Done 是关键**：Agent 必须知道"PR 创建≠完成"，需包含 CI 通过、审查通过、截图（如适用）
-- **tmux 优于 `-p` 模式**：tmux 支持中途发送指令纠偏，不需要杀掉重启 Agent
-- **不要直接轮询 Agent**：用确定性脚本检查 tmux / PR / CI 外部状态，极低 Token 消耗
-- **UI 截图规则**：强制 PR 包含截图可以大幅缩短审查时间——看截图比点开预览环境快得多
+- **Comenzar pequeño**: Primero ejecutar flujo completo con 1-2 Agentes (Spawn → Codificación → PR → Revisión → Merge), confirmar que todo funciona normal antes de expandir
+- **RAM es el verdadero cuello de botella**: Cada Agente necesita `node_modules` y procesos de construcción independientes. 16GB de memoria máximo pueden ejecutar 4-5 Agentes simultáneamente, y no pueden disparar construcción al mismo tiempo. Se recomienda 64GB+ de memoria para paralelismo a gran escala
+- **Referencia de costo**: Claude ~$100/mes + Codex ~$90/mes, se puede comenzar con $20/mes para入门
+- **Definición de Terminado es clave**: Agentes deben saber "PR creado ≠ completado", debe incluir CI pasa, revisión pasa, capturas (si aplica)
+- **tmux es mejor que modo `-p`**: tmux soporta enviar instrucciones a mitad de camino para corregir, no necesita matar y reiniciar Agente
+- **No sondear Agentes directamente**: Usar scripts determinísticos para verificar estado externo de tmux / PR / CI, consumo extremadamente bajo de Tokens
+- **Regla de capturas de UI**: Forzar que PR incluya capturas puede acortar significativamente tiempo de revisión — ver capturas es mucho más rápido que abrir entorno de preview
 
-## 实际效果
+## Efecto real
 
-来自作者 4 周的生产环境数据（用于真实 B2B SaaS 产品）：
+Datos de entorno de producción del autor de 4 semanas (usado para producto B2B SaaS real):
 
-- 最高单日 94 commits（当天有 3 个客户会议，未打开编辑器）
-- 日均约 50 commits
-- 30 分钟内完成 7 个 PR（从想法到生产）
-- 中小任务一次通过率极高，几乎不需要人工干预
-- 功能请求当天交付 → 提升 leads 到付费客户的转化率
+- Máximo 94 commits en un día (hubo 3 reuniones de clientes ese día, no abrió editor)
+- Promedio diario aprox. 50 commits
+- 7 PRs completados en 30 minutos (desde idea hasta producción)
+- Tasa de aprobación de una vez extremadamente alta para tareas pequeñas y medianas, casi no necesita intervención humana
+- Entrega de solicitudes de funciones el mismo día → mejora conversión de leads a clientes pagantes
 
-## 相关链接
+## Enlaces relacionados
 
-- [原文 (X/Twitter)](https://x.com/elvissun/status/2025920521871716562) — Elvis Sun 的完整文章
-- [中文版 (知乎)](https://zhuanlan.zhihu.com/p/2010127051726792220) — 含完整图表
-- [OpenClaw 官方仓库](https://github.com/openclaw/openclaw)
-- [Anthropic：构建有效的智能体](https://www.anthropic.com/research/building-effective-agents)
+- [Artículo original (X/Twitter)](https://x.com/elvissun/status/2025920521871716562) — Artículo completo de Elvis Sun
+- [Versión en chino (Zhihu)](https://zhuanlan.zhihu.com/p/2010127051726792220) — Incluye gráficos completos
+- [Repositorio oficial de OpenClaw](https://github.com/openclaw/openclaw)
+- [Anthropic: Construir Agentes efectivos](https://www.anthropic.com/research/building-effective-agents)
 
-## 中国用户适配
+## Adaptación para usuarios de China
 
-### 通知渠道替代
+### Reemplazo de canales de notificación
 
-| 原方案 | 国内替代 | 说明 |
+| Esquema original | Reemplazo local | Descripción |
 |--------|----------|------|
-| Telegram | 飞书自定义机器人 | Webhook 推送，`curl` 即可调用，参考 [飞书 AI 助手](cn-feishu-ai-assistant.md) |
-| Telegram | 钉钉自定义机器人 | 支持 Webhook + 加签验证，参考 [钉钉 AI 助手](cn-dingtalk-ai-assistant.md) |
-| Telegram | 企业微信应用消息 | 通过应用 API 推送，参考 [企业微信 AI 助手](cn-wecom-ai-assistant.md) |
+| Telegram | **Bot personalizado de Feishu** | Push vía Webhook, se puede llamar con `curl`, referencia [Asistente IA de Feishu](cn-feishu-ai-assistant.md) |
+| Telegram | **Bot personalizado de DingTalk** | Soporta Webhook + verificación de firma, referencia [Asistente IA de DingTalk](cn-dingtalk-ai-assistant.md) |
+| Telegram | **Mensaje de aplicación de WeCom** | Push vía API de aplicación, referencia [Asistente IA de WeCom](cn-wecom-ai-assistant.md) |
 
-### 监控与错误追踪替代
+### Reemplazo de monitoreo y rastreo de errores
 
-| 原方案 | 国内替代 | 说明 |
+| Esquema original | Reemplazo local | Descripción |
 |--------|----------|------|
-| Sentry | 阿里云 ARMS | 应用实时监控，支持自动告警触发 Agent |
-| Sentry | 腾讯云前端性能监控 | 错误上报和性能追踪 |
+| Sentry | **Alibaba Cloud ARMS** | Monitoreo en tiempo real de aplicaciones, soporta activar Agentes con alertas automáticas |
+| Sentry | **Monitoreo de rendimiento frontend de Tencent Cloud** | Reporte de errores y rastreo de rendimiento |
 
-### 代码托管与 CI
+### Alojamiento de código y CI
 
-- **GitHub + gh CLI**（推荐保留）：`gh` CLI 在国内可用，可能需要代理加速
-- **如使用 Gitee**：`check-agents.sh` 中的 `gh` 命令需替换为 Gitee API 调用，CI 切换到 Jenkins 等
+- **GitHub + gh CLI** (recomendado mantener): CLI `gh` está disponible en China, puede necesitar proxy para acelerar
+- **Si usas Gitee**: Comando `gh` en `check-agents.sh` necesita reemplazarse con llamadas a API de Gitee, cambiar CI a Jenkins, etc.
 
 ### Obsidian Vault
 
-Obsidian 在国内可正常使用，无需替代。如团队使用语雀或飞书文档，可通过 API 同步会议记录到本地文件系统供编排器读取。
+Obsidian se puede usar normalmente en China, no necesita reemplazo. Si el equipo usa Yuque o documentos de Feishu, se puede sincronizar actas de reuniones a sistema de archivos local vía API para que el orquestador lea.
 
-### Codex 可用性
+### Disponibilidad de Codex
 
-Codex CLI 需要 OpenAI API 访问，国内需要科学上网。如无法使用，可全部改用 Claude Code：
+CLI de Codex necesita acceso a API de OpenAI, China necesita VPN. Si no se puede usar, se puede cambiar todo a Claude Code:
 
 ```text
-# 将所有任务改为 Claude Code 执行
+# Cambiar todas las tareas a ejecución de Claude Code
 claude --model claude-opus-4.5 \
   --dangerously-skip-permissions \
   -p "Your prompt here"
 ```
 
-模型选择指南中 Codex 的任务可分配给 `claude-opus-4.5`（深度推理）或 `claude-sonnet-4.5`（速度优先）。
+Tareas de Codex en guía de selección de modelos se pueden asignar a `claude-opus-4.5` (razonamiento profundo) o `claude-sonnet-4.5` (priorizar velocidad).
 
-### 国内适配飞书通知提示词
+### Prompt de adaptación de notificación Feishu
 
-以下提示词将 Telegram 通知替换为飞书：
+El siguiente prompt reemplaza notificación de Telegram por Feishu:
 
 ```text
-## Notification Setup (Feishu Webhook)
+## Configuración de Notificación (Webhook Feishu)
 
-When a PR passes ALL checks (CI green + 3 code reviews approved + screenshots if UI changes):
-1. POST to Feishu webhook: $FEISHU_WEBHOOK_URL
-2. Message payload:
+Cuando un PR pasa TODOS los checks (CI verde + 3 revisiones de código aprobadas + capturas si hay cambios de UI):
+1. POST a webhook de Feishu: $FEISHU_WEBHOOK_URL
+2. Payload del mensaje:
    {
      "msg_type": "interactive",
      "card": {
-       "header": {"title": {"content": "PR #{number} Ready for Review", "tag": "plain_text"}},
-       "elements": [{"tag": "div", "text": {"content": "**{title}**\nBranch: {branch}\nCI: ✅ Reviews: ✅", "tag": "lark_md"}}]
+       "header": {"title": {"content": "PR #{number} Listo para Revisión", "tag": "plain_text"}},
+       "elements": [{"tag": "div", "text": {"content": "**{title}**\nRama: {branch}\nCI: ✅ Revisiones: ✅", "tag": "lark_md"}}]
      }
    }
-3. ONLY notify on "definition of done" — never on intermediate states
+3. SOLO notificar en "definición de terminado" — nunca en estados intermedios
 ```
 
 ---
 
-**灵感来源**：[Elvis Sun](https://x.com/elvissun/status/2025920521871716562) — 独立创始人，用 OpenClaw 编排 Codex + Claude Code Agent 舰队构建 B2B SaaS 产品（Agentic PR），日均 50+ commits，一人完成开发团队的工作量。他将此描述为"从管理 Claude Code，到管理一个管理 Claude Code 和 Codex 舰队的 OpenClaw Agent"。
+**Fuente de inspiración**: [Elvis Sun](https://x.com/elvissun/status/2025920521871716562) — Fundador independiente, construye producto B2B SaaS con flota de Agentes Codex + Claude Code orquestados por OpenClaw (PR Agéntico), promedio diario de 50+ commits, completa carga de trabajo de equipo de desarrollo él solo. Lo describe como "de gestionar Claude Code, a gestionar un Agente de OpenClaw que gestiona flota de Claude Code y Codex".
 
-**原文链接**：[Elvis Sun on X](https://x.com/elvissun/status/2025920521871716562) · [知乎中文版](https://zhuanlan.zhihu.com/p/2010127051726792220)
+**Enlace original**: [Elvis Sun en X](https://x.com/elvissun/status/2025920521871716562) · [Versión en chino de Zhihu](https://zhuanlan.zhihu.com/p/2010127051726792220)

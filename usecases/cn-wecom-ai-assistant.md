@@ -1,57 +1,57 @@
-# 企业微信 AI 助手
+# Asistente IA de WeCom (企业微信)
 
-微信是中国最常用的沟通工具，但 AI 能力无法直接在微信生态中使用——你得切到其他 App 用 AI，再手动把结果搬回微信。
+WeChat es la herramienta de comunicación más usada en China, pero las capacidades de IA no se pueden usar directamente en el ecosistema de WeChat — tienes que cambiar a otra App para usar IA, y luego mover manualmente los resultados de vuelta a WeChat.
 
-这个用例把 OpenClaw 部署为企业微信应用。在企业微信里发消息就能触发 AI 任务，而且通过企业微信的"微信插件"功能，个人微信用户扫码关联后，也能直接在微信里和 AI 对话。
+Este caso de uso despliega OpenClaw como una aplicación de WeCom (企业微信). Enviar mensajes en WeCom puede activar tareas de IA, y a través de la función "plugin de WeChat" de WeCom, los usuarios de WeChat personal pueden escanear el código QR para asociarse y también conversar directamente con la IA en WeChat.
 
-## 它能做什么
+## Qué puede hacer
 
-- **企业微信内对话式 AI**：在企业微信私聊或群聊中直接与 OpenClaw 对话
-- **个人微信也能用**：通过企业微信的"微信插件"，关联后个人微信用户也能和 AI 对话
-- **流式输出**：AI 回复实时逐字显示
-- **群聊 AI 助手**：支持 @触发、指令白名单等策略
-- **多媒体支持**：支持图片、文件的收发和处理
+- **IA conversacional en WeCom**: Conversar directamente con OpenClaw en chats privados o grupales de WeCom
+- **WeChat personal también puede usar**: A través del "plugin de WeChat" de WeCom, después de asociar, usuarios de WeChat personal también pueden conversar con IA
+- **Salida en streaming**: Las respuestas de IA se muestran carácter por carácter en tiempo real
+- **Asistente IA para grupos**: Soporta activación por @, lista blanca de comandos y otras estrategias
+- **Soporte multimedia**: Soporta envío y procesamiento de imágenes y archivos
 
-## 两种集成方案
+## Dos esquemas de integración
 
-| 方案 | 插件 | 特点 |
+| Esquema | Plugin | Características |
 |------|------|------|
-| openclaw-china 套件 | `@openclaw-china/wecom-app` | 社区维护的中国 IM 插件集合，一站式配置 |
-| sunnoy 插件 | `@sunnoy/wecom` | 功能更丰富，支持动态 Agent 管理、群聊集成、指令白名单 |
+| Suite openclaw-china | `@openclaw-china/wecom-app` | Colección de plugins de IM de China mantenidos por la comunidad, configuración todo en uno |
+| Plugin sunnoy | `@sunnoy/wecom` | Funciones más ricas, soporta gestión dinámica de Agentes, integración de grupos, lista blanca de comandos |
 
-两种方案都经过社区验证，选哪个看你的需求：只做基础对话选前者，需要群聊管理等高级功能选后者。
+Ambos esquemas están verificados por la comunidad, elige según tu necesidad: para conversación básica elige el primero, para funciones avanzadas como gestión de grupos elige el segundo.
 
-## 所需技能
+## Habilidades requeridas
 
-- OpenClaw 2026.2.9+ 版本
-- 企业微信管理员权限（创建自建应用）
-- 公网 IP 或内网穿透工具（用于接收回调）
+- Versión OpenClaw 2026.2.9+
+- Permisos de administrador de WeCom (para crear aplicación auto-construida)
+- IP pública o herramienta de penetración de red interna (para recibir callbacks)
 
-## 如何设置
+## Cómo configurar
 
-### 第一步：创建企业微信应用
+### Primer paso: Crear aplicación de WeCom
 
-在 [企业微信管理后台](https://work.weixin.qq.com) → 应用管理 → 创建应用。记录 Corp ID、Corp Secret、Agent ID。
+En [Backend de Administración de WeCom](https://work.weixin.qq.com) → Gestión de Aplicaciones → Crear Aplicación. Registrar Corp ID, Corp Secret, Agent ID.
 
-### 第二步：配置回调 URL
+### Segundo paso: Configurar URL de callback
 
-在应用设置中配置"接收消息"的回调 URL，格式一般为：
+Configurar la URL de callback de "recepción de mensajes" en la configuración de la aplicación, el formato general es:
 
 ```
-http://<你的公网IP>:18789/wecom-app
+http://<tu IP pública>:18789/wecom-app
 ```
 
-如果没有公网 IP，可以使用内网穿透工具（如 frp、ngrok）。
+Si no tienes IP pública, puedes usar herramientas de penetración de red interna (como frp, ngrok).
 
-### 第三步：安装插件并配置
+### Tercer paso: Instalar plugin y configurar
 
-**方案 A：openclaw-china 套件**
+**Esquema A: Suite openclaw-china**
 
 ```bash
 openclaw plugins install @openclaw-china/wecom-app
 ```
 
-在 `openclaw.json` 中配置：
+Configurar en `openclaw.json`:
 
 ```json
 {
@@ -59,8 +59,8 @@ openclaw plugins install @openclaw-china/wecom-app
     "wecom-app": {
       "enabled": true,
       "webhookPath": "/wecom-app",
-      "token": "<企业微信 Token>",
-      "encodingAESKey": "<企业微信 AES Key>",
+      "token": "<Token de WeCom>",
+      "encodingAESKey": "<Clave AES de WeCom>",
       "corpId": "<Corp ID>",
       "corpSecret": "<Corp Secret>",
       "agentId": "<Agent ID>"
@@ -69,41 +69,41 @@ openclaw plugins install @openclaw-china/wecom-app
 }
 ```
 
-> **安全提醒**：请勿将真实凭证直接写入配置文件并提交到版本控制。建议使用环境变量：将 Token、AES Key 等敏感信息存入 `.env` 文件，并确保 `.env` 已加入 `.gitignore`。
+> **Recordatorio de seguridad**: Por favor no escribas credenciales reales directamente en el archivo de configuración y las envíes al control de versiones. Se recomienda usar variables de entorno: guardar información sensible como Token, Clave AES, etc. en un archivo `.env`, y asegurar que `.env` se agregue a `.gitignore`.
 
-**方案 B：sunnoy 插件**
+**Esquema B: Plugin sunnoy**
 
 ```bash
 openclaw plugins install @sunnoy/wecom
 ```
 
-按 [插件文档](https://github.com/sunnoy/openclaw-plugin-wecom) 配置 channels。该插件支持 Bot 模式和 App 模式，具体配置参数请参考仓库 README。
+Configurar channels según la [documentación del plugin](https://github.com/sunnoy/openclaw-plugin-wecom). Este plugin soporta modo Bot y modo App, los parámetros de configuración específicos por favor consulta el README del repositorio.
 
-> 安装第三方社区插件后，建议在 `plugins.allow` 中配置白名单（参考钉钉用例中的说明）。
+> Después de instalar plugins de comunidad de terceros, se recomienda configurar lista blanca en `plugins.allow` (referir la descripción en el caso de uso de DingTalk).
 
-### 第四步：启动并测试
+### Cuarto paso: Iniciar y probar
 
 ```bash
 openclaw gateway restart
 ```
 
-在企业微信中找到你的应用，发一条消息测试。
+Encontrar tu aplicación en WeCom, enviar un mensaje para probar.
 
-### 第五步（可选）：关联个人微信
+### Quinto paso (opcional): Asociar WeChat personal
 
-在企业微信管理后台 → 微信插件 → 邀请成员关联个人微信。关联后，成员可以在个人微信中直接和 AI 对话。
+En el backend de administración de WeCom → Plugin de WeChat → Invitar miembros a asociar WeChat personal. Después de asociar, los miembros pueden conversar directamente con la IA en WeChat personal.
 
-## 实用建议
+## Consejos prácticos
 
-- **强烈推荐企业微信路线**：使用官方 API，零封号风险，稳定可靠。不建议使用个人微信第三方协议方案（随时面临封号）
-- **内网穿透**：与飞书的长连接模式不同，企业微信需要公网可达的回调 URL。如果你在家里部署，需要配置内网穿透
-- **安全策略**：建议开启 pairing/allowlist，群聊设为 @触发，避免任何人都能使用
-- **微信插件是杀手级功能**：它让你不需要让所有人都安装企业微信，个人微信关联后就能直接用
+- **Recomendamos fuertemente la ruta de WeCom**: Usar API oficial, cero riesgo de bloqueo, estable y confiable. No se recomiendan esquemas de protocolos de terceros de WeChat personal (enfrentan bloqueo en cualquier momento)
+- **Penetración de red interna**: A diferencia del modo de conexión larga de Feishu, WeCom necesita una URL de callback accesible públicamente. Si despliegas en casa, necesitas configurar penetración de red interna
+- **Estrategia de seguridad**: Se recomienda habilitar pairing/allowlist, grupos configurar como activación por @, evitar que cualquiera pueda usar
+- **El plugin de WeChat es una función杀手**: Te permite no necesitar que todos instalen WeCom, después de asociar con WeChat personal se puede usar directamente
 
-## 相关链接
+## Enlaces relacionados
 
-- [openclaw-china 企业微信插件](https://github.com/BytePioneer-AI/openclaw-china)
-- [sunnoy 企业微信插件（高级功能）](https://github.com/sunnoy/openclaw-plugin-wecom)
-- [阿里云 - 企业微信接入 OpenClaw 官方教程](https://help.aliyun.com/zh/simple-application-server/use-cases/openclaw-enterprise-wechat-integration)
-- [腾讯云 - 企业微信集成教程](https://cloud.tencent.com/developer/article/2625147)
-- [阿里云开发者社区 - 2026 保姆级教程](https://developer.aliyun.com/article/1711514)
+- [Plugin de WeCom de openclaw-china](https://github.com/BytePioneer-AI/openclaw-china)
+- [Plugin de WeCom de sunnoy (funciones avanzadas)](https://github.com/sunnoy/openclaw-plugin-wecom)
+- [Tutorial oficial de Alibaba Cloud - Conexión de WeCom a OpenClaw](https://help.aliyun.com/zh/simple-application-server/use-cases/openclaw-enterprise-wechat-integration)
+- [Tutorial de integración de WeCom de Tencent Cloud](https://cloud.tencent.com/developer/article/2625147)
+- [Comunidad de Desarrolladores de Alibaba Cloud - Tutorial completo 2026](https://developer.aliyun.com/article/1711514)

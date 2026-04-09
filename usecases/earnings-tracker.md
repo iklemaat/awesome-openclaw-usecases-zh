@@ -1,25 +1,25 @@
-# AI 驱动的财报追踪器
+# Rastreador de Informes Financieros Impulsado por IA
 
-> 含国内适配：AKShare / 东方财富 / 巨潮资讯
+> Incluye adaptación local: AKShare / East Money / CNINFO
 
-在财报季追踪数十家科技公司意味着需要查看多个信息来源并记住报告日期。你希望紧跟 AI/科技公司的财报动态，而不必手动追踪每一家公司。
+Seguimiento de docenas de empresas tecnológicas en temporada de informes financieros significa necesitar verificar múltiples fuentes de información y recordar fechas de reportes. Quieres mantenerte al día con la dinámica de informes financieros de empresas de IA/tecnología, sin tener que rastrear manualmente cada empresa.
 
-这个工作流自动化了财报追踪和推送：
+Este flujo de trabajo automatiza el seguimiento y push de informes financieros:
 
-- 每周日预览：扫描即将到来的财报日历，将相关的科技/AI 公司发布到 Telegram
-- 你选择关注哪些公司，OpenClaw 为每个财报日期安排一次性的 cron job（定时任务）
-- 每份报告发布后，OpenClaw 搜索结果，格式化详细摘要（超预期/不及预期、关键指标、AI 亮点），并推送给你
+- Vista previa del domingo: Escanea el calendario próximo de informes financieros, publica empresas de IA/tecnología relevantes a Telegram
+- Tú eliges qué empresas seguir, OpenClaw programa un cron job de un solo uso para cada fecha de informe
+- Después de que cada reporte se publica, OpenClaw busca resultados, formatea resumen detallado (superó/no superó expectativas, indicadores clave, aspectos destacados de IA), y te envía
 
-## 所需技能
+## Habilidades requeridas
 
-- `web_search`（内置）
-- OpenClaw 的 cron job（定时任务）支持
-- 用于财报更新的 Telegram 话题
+- `web_search` (integrado)
+- Soporte de cron job (tarea programada) de OpenClaw
+- Tema de Telegram para actualizaciones de informes financieros
 
-## 如何设置
+## Cómo configurar
 
-1. 创建一个名为 "earnings" 的 Telegram 话题用于接收更新。
-2. 向 OpenClaw 发送以下提示词：
+1. Crear un tema de Telegram llamado "earnings" para recibir actualizaciones.
+2. Enviar el siguiente prompt a OpenClaw:
 ```text
 Every Sunday at 6 PM, run a cron job to:
 1. Search for the upcoming week's earnings calendar for tech and AI companies
@@ -36,100 +36,100 @@ When I reply with which companies to track:
 Keep a memory of which companies I typically track so you can auto-suggest them each week.
 ```
 
-## 中国用户适配
+## Adaptación para usuarios de China
 
-A 股市场有完善的财报披露制度，而且数据获取比美股更规范。以下是针对 A 股投资者的适配方案。
+El mercado de acciones A tiene un sistema completo de divulgación de informes financieros, y la obtención de datos es más estandarizada que las acciones de EE.UU. Los siguientes son esquemas de adaptación para inversores de acciones A.
 
-### A 股 vs 美股财报机制差异
+### Diferencias de mecanismo de informes financieros entre acciones A y acciones de EE.UU.
 
-| 维度 | 美股 | A 股 |
+| Dimensión | Acciones de EE.UU. | Acciones A |
 |------|------|------|
-| 财报日历 | 公司自行公布，需依赖第三方汇总 | 交易所要求提前公布**预约披露时间表**，更规范 |
-| 发布节奏 | 季报一次性发布 | **业绩预告 → 业绩快报 → 正式报告**三阶段机制 |
-| 数据获取 | 需付费 API（Alpha Vantage 等） | 有免费开源方案（AKShare） |
+| Calendario de informes | Empresas publican por sí mismas, necesita depender de agregación de terceros | La bolsa requiere publicar **calendario de divulgación programada** por adelantado, más estandarizado |
+| Ritmo de publicación | Publicación trimestral única | **Mecanismo de tres etapas**: pronóstico de resultados → boletín de resultados → informe formal |
+| Obtención de datos | Necesita API de pago (Alpha Vantage, etc.) | Hay esquemas open source gratis (AKShare) |
 
-这意味着 A 股的财报追踪可以做得更精细——你可以在业绩预告阶段就提前获得信号。
+Esto significa que el seguimiento de informes financieros de acciones A se puede hacer más fino — puedes obtener señales anticipadas en la etapa de pronóstico de resultados.
 
-### A 股数据源推荐
+### Fuentes de datos de acciones A recomendadas
 
-| 数据源 | 费用 | 说明 |
+| Fuente de datos | Costo | Descripción |
 |--------|------|------|
-| **AKShare** | 免费 | 推荐首选，MIT 开源，接口最全 |
-| Tushare Pro | 积分制 | 基础免费，高级功能需积分 |
-| 东方财富 Choice | 付费 | 专业级，适合机构用户 |
-| 巨潮资讯 | 免费 | 官方披露渠道，适合获取原始公告 PDF |
+| **AKShare** | Gratis | Recomendado como primera opción, open source MIT, interfaces más completas |
+| Tushare Pro | Sistema de puntos | Básico gratis, funciones avanzadas necesitan puntos |
+| East Money Choice | De pago | Nivel profesional, adecuado para usuarios institucionales |
+| CNINFO (巨潮资讯) | Gratis | Canal de divulgación oficial, adecuado para obtener PDF de anuncios originales |
 
-**推荐方案：AKShare**（[GitHub](https://github.com/akfamily/akshare)，10k+ stars，MIT 许可）
+**Esquema recomendado: AKShare** ([GitHub](https://github.com/akfamily/akshare), 10k+ stars, licencia MIT)
 
-安装：
+Instalación:
 
 ```bash
 pip install akshare
 ```
 
-关键接口：
+Interfaces clave:
 
-| 接口 | 用途 | 对应原用例功能 |
+| Interface | Uso | Correspondiente a función de caso de uso original |
 |------|------|---------------|
-| `stock_yysj_em(date)` | 预约披露时间表 | earnings calendar（核心） |
-| `stock_yjyg_em()` | 业绩预告数据 | 提前信号，美股无对应 |
-| `stock_yjkb_em()` | 业绩快报 | 快速业绩概览 |
-| `stock_yjbb_em()` | 正式业绩报表 | 完整财报数据 |
+| `stock_yysj_em(date)` | Calendario de divulgación programada | earnings calendar (núcleo) |
+| `stock_yjyg_em()` | Datos de pronóstico de resultados | Señal anticipada, acciones de EE.UU. no tienen correspondiente |
+| `stock_yjkb_em()` | Boletín de resultados | Resumen rápido de resultados |
+| `stock_yjbb_em()` | Informe formal de resultados | Datos completos de informe financiero |
 
-快速上手示例：
+Ejemplo de inicio rápido:
 
 ```python
 import akshare as ak
 
-# 获取 2025 年一季报预约披露时间表
+# Obtener calendario de divulgación programada de informe trimestral 2025
 df = ak.stock_yysj_em(date="20250331")
-# 筛选你关注的公司（以股票代码筛选）
+# Filtrar empresas que te importan (filtrar por código de acción)
 watchlist = ["600519", "000858", "601318", "000001"]
 my_stocks = df[df["股票代码"].isin(watchlist)]
 print(my_stocks[["股票代码", "股票简称", "首次预约时间"]])
 ```
 
-### 推送渠道适配
+### Adaptación de canal de push
 
-| 原版方案 | 国内替代 | 说明 |
+| Esquema original | Reemplazo nacional | Descripción |
 |---------|---------|------|
-| Telegram | **钉钉群机器人** | Webhook 方式，最简单 |
-| Telegram | **飞书机器人** | 支持富文本卡片消息 |
-| Telegram | **企业微信应用** | 企业用户首选 |
+| Telegram | **Bot de grupo de DingTalk** | Forma Webhook, más simple |
+| Telegram | **Bot de Feishu** | Soporta mensajes de tarjeta de texto enriquecido |
+| Telegram | **Aplicación de WeCom** | Primera opción para usuarios empresariales |
 
-### 提示词适配
+### Adaptación de prompt
 
-将原版提示词中的美股部分替换为 A 股逻辑：
+Reemplazar parte de acciones de EE.UU. en prompt original con lógica de acciones A:
 
 ```text
-每周日晚 8 点，运行定时任务：
-1. 调用 AKShare 的 stock_yysj_em 接口，获取下周预约披露时间表
-2. 筛选我关注的公司（600519 贵州茅台、000858 五粮液、601318 中国平安 等）
-3. 将列表推送到钉钉群"财报追踪"
-4. 等我确认要跟踪哪些
+Cada domingo 8 PM, ejecutar tarea programada:
+1. Llamar interface stock_yysj_em de AKShare, obtener calendario de divulgación programada de la próxima semana
+2. Filtrar empresas que sigo (600519 Kweichow Moutai, 000858 Wuliangye, 601318 Ping An, etc.)
+3. Push lista a grupo de DingTalk "Seguimiento de Informes Financieros"
+4. Esperar a que confirme cuáles quiero rastrear
 
-当我回复确认后：
-1. 为每个披露日期安排一次性定时任务
-2. 报告发布后，搜索业绩快报和市场解读
-3. 格式化摘要：营收、净利润、同比增长、业绩预告对比、机构点评
-4. 推送到钉钉群
+Después de que confirmo:
+1. Programar tareas programadas de un solo uso para cada fecha de divulgación
+2. Después de que se publica el reporte, buscar boletín de resultados e interpretación del mercado
+3. Formatear resumen: ingresos, beneficio neto, crecimiento interanual, comparación de pronóstico de resultados, comentarios de instituciones
+4. Push a grupo de DingTalk
 
-记住我通常关注的公司列表，每周自动推荐。
-同时监控业绩预告（stock_yjyg_em），有预告发布时提前通知我。
+Recordar lista de empresas que normalmente sigo, recomendar automáticamente cada semana.
+Monitorear simultáneamente pronósticos de resultados (stock_yjyg_em), notificarme anticipadamente cuando haya lanzamiento de pronóstico.
 ```
 
-### 合规提醒
+### Recordatorio de cumplimiento
 
-- 数据仅供个人学习研究，不构成投资建议
-- 控制 API 调用频率，避免对上游平台造成压力
-- AKShare 底层依赖公开网站数据，接口可能因上游变更而需更新，建议关注其 [GitHub Issues](https://github.com/akfamily/akshare/issues)
+- Datos solo para estudio e investigación personal, no constituye consejo de inversión
+- Controlar frecuencia de llamadas a API, evitar ejercer presión sobre plataformas upstream
+- AKShare depende de datos de sitios web públicos en la capa inferior, interfaces pueden necesitar actualización debido a cambios upstream, se recomienda seguir sus [GitHub Issues](https://github.com/akfamily/akshare/issues)
 
-### 相关链接
+### Enlaces relacionados
 
-- [AKShare 文档](https://akshare.akfamily.xyz/) — 免费开源 A 股数据接口
-- [巨潮资讯](https://www.cninfo.com.cn/) — 官方信息披露平台
-- [东方财富数据中心](https://data.eastmoney.com/) — 财报日历与数据查询
+- [Documentación de AKShare](https://akshare.akfamily.xyz/) — Interfaces de datos de acciones A gratis y open source
+- [CNINFO](https://www.cninfo.com.cn/) — Plataforma oficial de divulgación de información
+- [Centro de datos de East Money](https://data.eastmoney.com/) — Calendario de informes financieros y consulta de datos
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/earnings-tracker.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/earnings-tracker.md)
