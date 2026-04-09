@@ -1,136 +1,136 @@
-# Agent 指南：如何读懂和执行本仓库的用例
+# Guía para Agentes: Cómo leer y ejecutar los casos de uso de este repositorio
 
-## 给人类读者
+## Para Lectores Humanos
 
-本合集的所有用例都采用统一的 Markdown 结构（所需技能 → 如何设置 → 实用建议）。这种一致性不仅方便你阅读，也让 AI 智能体可以理解并辅助执行设置步骤。
+Todos los casos de uso de esta colección adoptan una estructura Markdown uniforme (Habilidades requeridas → Cómo configurar → Consejos prácticos). Esta consistencia no solo facilita tu lectura, también permite que los agentes de IA los entiendan y ayuden a ejecutar los pasos de configuración.
 
-**使用方式**：把你感兴趣的用例文件发给你的 OpenClaw（或其他 AI 智能体），让它参考本文件来帮你完成安装和配置。Agent 会识别哪些代码块该执行、哪些是参考示例、哪些凭证需要你提供。
+**Modo de uso**: Envía el archivo del caso de uso que te interesa a tu OpenClaw (u otro agente de IA), permítele参考 este archivo para ayudarte a completar la instalación y configuración. El agente identificará qué bloques de código ejecutar, cuáles son ejemplos de referencia y qué credenciales necesitas proporcionar tú.
 
-**注意**：这是一个实验性的辅助方式，复杂用例仍建议你通读全文后再操作。以下内容是写给 Agent 的技术细节，你无需继续阅读。
-
----
-
-## 以下内容面向 AI 智能体
-
-本仓库收录了 40+ 个经过验证的 OpenClaw 真实用例。每个用例文件遵循统一的格式约定，你只需学习一次，即可理解并执行所有用例。
+**Nota**: Este es un modo asistencial experimental, para casos complejos aún recomendamos leer completamente antes de operar. El contenido a continuación son detalles técnicos escritos para agentes, no necesitas continuar leyendo.
 
 ---
 
-## 用例文件结构
+## El siguiente contenido está dirigido a agentes de IA
 
-每个 `usecases/*.md` 文件都遵循以下结构（细节可能因用例而异，但大框架一致）：
+Este repositorio recopila 40+ casos de uso reales verificados de OpenClaw. Cada archivo de caso de uso sigue convenciones de formato unificadas, solo necesitas aprender una vez para entender y ejecutar todos los casos.
+
+---
+
+## Estructura de Archivos de Casos de Uso
+
+Cada archivo `usecases/*.md` sigue la siguiente estructura (los detalles pueden variar según el caso, pero el marco general es consistente):
 
 ```
-# 用例标题                     ← 用例名称
-> 含国内适配：XX / YY          ← 可选，表示有国内替代方案
-简短描述（2-3 句话）            ← 痛点和解决方案概述
+# Título del caso de uso            ← Nombre del caso
+> Incluye adaptación local: XX / YY          ← Opcional, indica que hay soluciones alternativas locales
+Descripción breve (2-3 frases)            ← Resumen del dolor y solución
 
-## 它能做什么                   ← 功能清单，了解这个用例的能力边界
-## 所需技能                     ← ⚠️ 必须先完成这里的安装，再执行后续步骤
-## 如何设置                     ← 核心操作步骤，按顺序执行
-## 实用建议                     ← 踩坑经验，执行前建议阅读
-## 相关链接                     ← 参考资料和工具仓库
+## Qué puede hacer                   ← Lista de funciones, entender los límites de capacidad de este caso
+## Habilidades requeridas            ← ⚠️ Debes completar la instalación aquí primero, luego ejecutar pasos siguientes
+## Cómo configurar                   ← Pasos principales de operación, ejecutar en orden
+## Consejos prácticos                ← Experiencias de errores, leer antes de ejecutar
+## Enlaces relacionados              ← Referencias y repositorios de herramientas
 
----                             ← 分隔线
-## 中国用户适配                 ← 可选，国内平台替代方案
+---                             ← Línea separadora
+## Adaptación para usuarios de China           ← Opcional, soluciones alternativas para plataformas locales
 ```
 
-## 如何执行一个用例
+## Cómo ejecutar un caso de uso
 
-### 第一步：读懂前置条件
+### Primer paso: Entender las condiciones previas
 
-1. 先看 **"所需技能"** 章节，确认需要安装哪些 skill
-2. 查看是否需要特殊环境（Docker、Python、特定硬件等）
-3. 查看是否需要 API Key 或账号注册
+1. Primero mira la sección **"Habilidades requeridas"**, confirma qué skills necesitas instalar
+2. Verifica si requiere entorno especial (Docker, Python, hardware específico, etc.)
+3. Verifica si necesita API Key o registro de cuentas
 
-### 第二步：识别代码块类型
+### Segundo paso: Identificar tipos de bloques de código
 
-代码块是否应该执行，取决于 **语言标记 + 所在章节**：
+Si un bloque de código debe ejecutarse depende de **la marca del lenguaje + la sección donde está**:
 
-| 代码块标记 | 在"所需技能"或"如何设置"内 | 在"实用建议"或其他章节内 |
+| Marca de bloque | En "Habilidades requeridas" o "Cómo configurar" | En "Consejos prácticos" u otras secciones |
 |-----------|:------------------------:|:----------------------:|
-| ` ```bash ` | **执行**：在终端运行 | **不执行**：仅作参考（调试技巧、替代命令等） |
-| ` ```text ` / ` ```txt ` | **发送给 OpenClaw**（提示词） | **不执行**：通常是输出示例 |
-| ` ```json ` | **写入配置文件**（上方会说明路径） | **不执行**：通常是格式示例 |
-| ` ```sql ` | **执行**：数据库初始化/建表语句 | **不执行**：仅作查询示例 |
-| ` ```python ` | **保存为 .py 并执行** | **不执行**：仅作参考 |
-| ` ```yaml ` / ` ```markdown ` | 按上下文判断 | 通常是模板/展示 |
+| ` ```bash ` | **Ejecutar**: Ejecutar en terminal | **No ejecutar**: Solo como referencia (técnicas de debug, comandos alternativos, etc.) |
+| ` ```text ` / ` ```txt ` | **Enviar a OpenClaw** (prompt) | **No ejecutar**: Generalmente ejemplos de salida |
+| ` ```json ` | **Escribir en archivo de configuración** (la ruta se indica arriba) | **No ejecutar**: Generalmente ejemplos de formato |
+| ` ```sql ` | **Ejecutar**: Sentencias de inicialización/creación de tablas de base de datos | **No ejecutar**: Solo ejemplos de consultas |
+| ` ```python ` | **Guardar como .py y ejecutar** | **No ejecutar**: Solo como referencia |
+| ` ```yaml ` / ` ```markdown ` | Juzgar según contexto | Generalmente plantillas/exhibición |
 
-**简单规则**：只执行"所需技能"和"如何设置"两个章节内的代码块。其他章节的代码块一律视为参考，不执行。
+**Regla simple**: Solo ejecutar bloques de código en las dos secciones "Habilidades requeridas" y "Cómo configurar". Bloques de código en otras secciones se consideran referencia, no ejecutar.
 
-### 第三步：按顺序执行
+### Tercer paso: Ejecutar en orden
 
-1. 按 **"如何设置"** 章节的步骤编号顺序执行
-2. 每步执行后确认结果正常再进入下一步
-3. 如果某步提到"试一试：..."——这是验证点，执行它来确认前面的配置生效
+1. Ejecutar en orden de numeración de pasos en la sección **"Cómo configurar"**
+2. Confirmar que el resultado es normal después de cada paso antes de continuar al siguiente
+3. Si un paso menciona "Pruébalo:..." — este es un punto de verificación, ejecútalo para confirmar que la configuración anterior funciona
 
-### 第四步：处理凭证
+### Cuarto paso: Manejar credenciales
 
-- `$VARIABLE_NAME` 或 `${VARIABLE_NAME}` = 环境变量，需要用户提供真实值
-- 带 `YOUR_` 前缀的占位符（如 `YOUR_API_KEY`）= 需要替换为真实值
-- **永远不要在配置文件中硬编码凭证**，使用环境变量或 `.env` 文件
-
----
-
-## 特殊情况处理
-
-### 含国内适配的用例
-
-如果用例底部有 `## 中国用户适配` 章节：
-- 国内用户优先按适配章节操作（替代工具、替代 API、替代推送渠道）
-- 适配章节通常会标注哪些国际方案在国内不可用及原因
-
-### 国内原创用例（文件名 `cn-` 开头）
-
-这些用例专为国内生态设计（飞书/钉钉/企业微信/小红书等），没有国际版本对应。直接按步骤执行即可。
-
-### 多方案用例
-
-有些用例提供多个方案（如"方案一/方案二/方案三"），通常按难度或功能递进排列。选择适合你环境的方案即可，不需要全部执行。
-
-### 需要付费服务的步骤
-
-部分用例依赖付费 API 或订阅服务。文中通常会标注费用信息。如果你在测试阶段：
-- 优先使用免费额度或沙箱环境
-- 标注为"付费"的步骤可以先跳过，不影响理解整体流程
+- `$VARIABLE_NAME` o `${VARIABLE_NAME}` = variable de entorno, el usuario debe proporcionar valor real
+- Placeholders con prefijo `YOUR_` (como `YOUR_API_KEY`) = deben reemplazarse con valores reales
+- **Nunca hardcodear credenciales en archivos de configuración**, usar variables de entorno o archivos `.env`
 
 ---
 
-## 用例质量信号
+## Manejo de situaciones especiales
 
-以下信号帮助你判断用例的可靠程度：
+### Casos con adaptación local
 
-| 信号 | 含义 |
+Si el caso tiene una sección `## Adaptación para usuarios de China` al final:
+- Usuarios locales priorizan operar según la sección de adaptación (herramientas alternativas, APIs alternativas, canales de push alternativos)
+- La sección de adaptación generalmente indica qué soluciones internacionales no están disponibles localmente y por qué
+
+### Casos originales locales (nombre de archivo comienza con `cn-`)
+
+Estos casos están diseñados específicamente para el ecosistema local (Feishu/DingTalk/WeCom/Xiaohongshu, etc.), no tienen versión internacional correspondiente. Ejecutar directamente según los pasos.
+
+### Casos con múltiples soluciones
+
+Algunos casos proporcionan múltiples soluciones (como "Solución 1/Solución 2/Solución 3"), generalmente ordenadas por dificultad o progresión de funciones. Elegir la solución adecuada para tu entorno, no es necesario ejecutar todas.
+
+### Pasos que requieren servicios de pago
+
+Algunos casos dependen de APIs de pago o servicios de suscripción. El texto generalmente indica información de costos. Si estás en fase de prueba:
+- Priorizar usar cuotas gratuitas o entornos sandbox
+- Pasos marcados como "de pago" pueden saltarse primero, no afecta entender el flujo general
+
+---
+
+## Señales de calidad de casos de uso
+
+Las siguientes señales te ayudan a juzgar la confiabilidad del caso:
+
+| Señal | Significado |
 |------|------|
-| 引用了高 star 开源项目（1000+） | 依赖成熟可靠 |
-| 有 `clawhub install` 命令 | 使用官方技能市场，安装简单 |
-| 有具体的效果数据（成本、耗时、输出示例） | 作者实际验证过 |
-| "实用建议"中提到具体踩坑经验 | 来自真实使用 |
-| 明确标注了限制和不适用场景 | 作者诚实，信息可信 |
-| 技能 star 数 < 100 或未标注 | 需谨慎评估，建议先用非关键场景测试 |
+| Cita proyectos open source con alto star (1000+) | Dependencia madura y confiable |
+| Tiene comando `clawhub install` | Usa mercado oficial de skills, instalación simple |
+| Tiene datos de efecto concretos (costo, tiempo, ejemplo de salida) | Autor verificó realmente |
+| "Consejos prácticos" menciona experiencias específicas de errores | De uso real |
+| Indica claramente limitaciones y escenarios no aplicables | Autor honesto, información confiable |
+| Skill con star < 100 o no indicado | Evaluar con cuidado, recomendar probar primero con escenarios no críticos |
 
 ---
 
-## 用例分类速查
+## Referencia rápida de clasificación de casos
 
-| 文件名模式 | 类型 | 示例 |
+| Patrón de nombre de archivo | Tipo | Ejemplo |
 |-----------|------|------|
-| `cn-*.md` | 国内原创 | `cn-feishu-ai-assistant.md` |
-| 含 `## 中国用户适配` | 国际+国内适配 | `earnings-tracker.md` |
-| 其他 | 纯国际用例 | `daily-reddit-digest.md` |
+| `cn-*.md` | Original local | `cn-feishu-ai-assistant.md` |
+| Contiene `## Adaptación para usuarios de China` | Internacional + adaptación local | `earnings-tracker.md` |
+| Otros | Caso puramente internacional | `daily-reddit-digest.md` |
 
 ---
 
-## 常见问题
+## Preguntas frecuentes
 
-**Q: 代码块中的注释是中文还是英文？**
-A: 注释为中文，代码和命令为英文。这是本仓库的统一约定。
+**P: ¿Los comentarios en bloques de código son en español o inglés?**
+R: Los comentarios están en español, el código y comandos en inglés. Esta es la convención unificada de este repositorio.
 
-**Q: 提示词（text 代码块）应该用中文还是英文发送？**
-A: 默认保留英文原文效果最佳。如果用例提供了中文版提示词，通常在"中国用户适配"章节中。
+**P: ¿Los prompts (bloques de código text) deben enviarse en español o inglés?**
+R: Por defecto保留 el original en inglés tiene mejor efecto. Si el caso proporciona prompts en español, generalmente están en la sección "Adaptación para usuarios de China".
 
-**Q: 执行某步报错了怎么办？**
-A: 先看"实用建议"章节是否提到了这个问题。如果没有，检查前置条件是否满足、环境变量是否设置、网络是否通畅。
+**P: ¿Qué hago si un paso reporta error al ejecutar?**
+R: Primero ver si la sección "Consejos prácticos" menciona este problema. Si no, verificar si las condiciones previas están satisfechas, variables de entorno configuradas, red funcionando.
 
-**Q: 如何判断用例是否过时？**
-A: 查看"相关链接"中引用的工具仓库是否仍在维护（最近 push 时间）。如果引用的技能已下架或 API 已变更，该用例可能需要更新。
+**Q: ¿Cómo juzgar si un caso está desactualizado?**
+A: Verificar si los repositorios de herramientas citados en "Enlaces relacionados" aún están en mantenimiento (tiempo del último push). Si el skill citado fue descontinuado o la API cambió, el caso puede necesitar actualización.

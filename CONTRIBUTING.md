@@ -1,118 +1,118 @@
-# 贡献指南
+# Guía de Contribución
 
-感谢你对本项目的关注。本合集致力于为中文用户提供**经过验证的** OpenClaw 真实用例——帮读者找到"AI 智能体能改善生活的方式"，照着做就能跑通。
+Gracias por tu interés en este proyecto. Esta colección se compromete a proporcionar a los usuarios hispanohablantes casos de uso reales de OpenClaw **verificados** — ayudar a los lectores a encontrar "formas en que los agentes de IA pueden mejorar la vida", seguir los pasos para que funcionen.
 
-我们欢迎以下贡献：
+Damos la bienvenida a las siguientes contribuciones:
 
-- **提交新用例**（国内生态原创 或 国际用例的国内适配）
-- **改进现有用例**（补充实践经验、修正过时信息）
-- **改进翻译或表述**（让已有内容更准确、更自然）
+- **Enviar nuevos casos de uso** (originales del ecosistema local o adaptación de casos internacionales)
+- **Mejorar casos existentes** (complementar prácticas, corregir información desactualizada)
+- **Mejorar traducción o expresión** (hacer que el contenido existente sea más preciso y natural)
 
 ---
 
-## 收录标准
+## Criterios de Inclusión
 
-用例必须同时满足以下三条才会被收录：
+Los casos de uso deben cumplir simultáneamente estas tres condiciones para ser incluidos:
 
-| 条件 | 说明 |
+| Condición | Descripción |
 |------|------|
-| **真实跑通** | 有端到端执行证据——配置步骤、命令、可复现的输出，不收"想法帖" |
-| **多源验证** | 至少有"官方文档/仓库"+"社区实践者内容"两个独立来源 |
-| **可操作** | 有具体步骤和可复制的提示词/配置，读者照做能复现 |
+| **Ejecutado exitosamente** | Tiene evidencia de ejecución end-to-end — pasos de configuración, comandos, salida reproducible, no aceptamos "posts de ideas" |
+| **Verificación multi-fuente** | Al menos dos fuentes independientes — "documentación oficial/repositorio" + "contenido de practicantes de la comunidad" |
+| **Operable** | Tiene pasos concretos y prompts/configuraciones copiables, los lectores pueden reproducir siguiendo los pasos |
 
-不符合标准的内容不会被合并，但欢迎在 Issue 中讨论。
-
----
-
-## 用例类型
-
-### 1. 国内生态原创用例
-
-专为中国工具生态设计的用例（飞书、钉钉、企业微信、小红书、AKShare 等）。
-
-- 文件放在 `usecases/` 目录，文件名使用 `cn-` 前缀，如 `cn-feishu-ai-assistant.md`
-- 在 README 的 **中国特色用例** 表格中添加一行
-
-### 2. 国际用例的国内适配
-
-在已有国际用例基础上，增加国内平台替代方案。
-
-- **不修改原有内容**，在文件底部添加 `## 中国用户适配` 章节
-- 文件标题下方添加提示行：`> 含国内适配：XX / YY / ZZ`
-- 在 README 的 **中国特色用例** 表格中添加一行，名称标注"（适配）"
-- 同时保留在下方对应分类表格中，名称标注"（国内适配）"
-
-### 3. 改进现有用例
-
-补充实践经验、修正过时信息、改进表述。直接修改对应文件即可。
+El contenido que no cumpla con los estándares no será mergeado, pero damos la bienvenida a discutir en Issues.
 
 ---
 
-## 用例文件格式
+## Tipos de casos de uso
 
-每个用例文件按以下结构组织（根据实际情况可灵活调整）：
+### 1. Casos originales del ecosistema local
+
+Casos de uso diseñados específicamente para el ecosistema de herramientas local (Feishu, DingTalk, WeCom, Xiaohongshu, AKShare, etc.).
+
+- Archivos en el directorio `usecases/`, nombre de archivo usa prefijo `cn-`, como `cn-feishu-ai-assistant.md`
+- Agregar una fila en la tabla **Casos Adaptados Localmente** del README
+
+### 2. Adaptación local de casos internacionales
+
+Agregar soluciones alternativas locales sobre la base de casos internacionales existentes.
+
+- **No modificar el contenido original**, agregar sección `## Adaptación para usuarios de China` al final del archivo
+- Agregar línea de indicación debajo del título del archivo: `> Incluye adaptación local: XX / YY / ZZ`
+- Agregar una fila en la tabla **Casos Adaptados Localmente** del README, nombre marcado como "（adaptado）"
+- Mantener simultáneamente en la tabla de clasificación correspondiente abajo, nombre marcado como "（adaptación local）"
+
+### 3. Mejorar casos existentes
+
+Complementar prácticas, corregir información desactualizada, mejorar expresión. Modificar directamente el archivo correspondiente.
+
+---
+
+## Formato de archivos de casos de uso
+
+Cada archivo de caso de uso se organiza según la siguiente estructura (ajustar flexiblemente según la situación real):
 
 ```markdown
-# 用例名称
+# Nombre del caso de uso
 
-简短描述痛点和这个用例做什么（2-3 句话）。
+Descripción breve del dolor y qué hace este caso (2-3 frases).
 
-## 它能做什么
+## Qué puede hacer
 
-列出核心功能点。
+Listar puntos de funciones principales.
 
-## 所需技能
+## Habilidades requeridas
 
-需要安装的 OpenClaw 技能/插件，注明来源。
+Skills/plugins de OpenClaw que necesitan instalarse, indicar fuente.
 
-## 如何设置
+## Cómo configurar
 
-分步骤说明配置方法，包含可复制的提示词和命令。
+Explicar método de configuración paso a paso, incluye prompts y comandos copiables.
 
-## 实用建议
+## Consejos prácticos
 
-踩过的坑、最佳实践、注意事项。
+Errores encontrados, mejores prácticas, notas importantes.
 
-## 相关链接
+## Enlaces relacionados
 
-参考文档、工具仓库、社区文章等。
+Documentación de referencia, repositorios de herramientas, artículos de la comunidad, etc.
 ```
 
-**要点：**
+**Puntos clave:**
 
-- 提示词（prompt）建议保留英文原文，上方添加中文说明
-- 代码块中的注释翻译为中文，代码和命令保留英文
-- 技术术语首次出现时括号注释，如 `webhook（网络钩子）`
-- 涉及社交媒体自动化的用例，必须包含平台风控提醒
-- 不硬编码 API 密钥，凭证通过环境变量传递
-
----
-
-## 提交流程
-
-1. 从 `main` 分支创建新分支：`feat/用例名称`
-2. 在 `usecases/` 下创建或修改用例文件
-3. 更新 README：
-   - 在对应表格中添加条目
-   - 更新顶部用例计数徽章
-4. 提交 PR 到 `main` 分支，标题使用中性描述
-
-分支命名规范：`feat/xxx`（新功能）、`fix/xxx`（修正）、`improve/xxx`（改进）
+- Prompts se recomiendan保留 el original en inglés, agregar explicación en español arriba
+- Comentarios en bloques de código traducir al español, código y comandos保留 inglés
+- Términos técnicos la primera vez que aparecen agregar paréntesis explicativo, como `webhook (gancho web)`
+- Casos que involucran automatización de redes sociales deben incluir recordatorios de control de viento de la plataforma
+- No hardcodear claves API, credenciales se pasan mediante variables de entorno
 
 ---
 
-## 不接受的内容
+## Flujo de envío
 
-- 未经实际测试的用例（AI 生成但没有跑通的不算）
-- 加密货币相关用例
-- 个人微信协议方案（封号风险极高）
-- 硬编码 API 密钥或凭证
+1. Crear nueva rama desde rama `main`: `feat/nombre-caso`
+2. Crear o modificar archivo de caso en `usecases/`
+3. Actualizar README:
+   - Agregar entrada en la tabla correspondiente
+   - Actualizar badge de conteo de casos en la parte superior
+4. Enviar PR a rama `main`, título usa descripción neutral
+
+Convención de nombres de ramas: `feat/xxx` (nueva función), `fix/xxx` (corrección), `improve/xxx` (mejora)
 
 ---
 
-## 引用规范
+## Contenido no aceptado
 
-- 优先引用官方文档和成熟开源项目
-- 社区技能/插件需注明来源，让读者自行判断风险
-- 不推荐未经验证的社区插件（仅有少量 star 的仓库不算验证）
-- 商业 SaaS 产品不在正文推荐
+- Casos no probados realmente (generados por IA pero no ejecutados exitosamente no cuentan)
+- Casos relacionados con criptomonedas
+- Soluciones de protocolo WeChat personal (riesgo extremadamente alto de bloqueo de cuenta)
+- API keys o credenciales hardcodeadas
+
+---
+
+## Convención de citaciones
+
+- Priorizar citar documentación oficial y proyectos open source maduros
+- Skills/plugins de la comunidad deben indicar fuente, permitir a los lectores juzgar riesgos por sí mismos
+- No recomendar plugins de comunidad no verificados (repos con pocos stars no cuentan como verificados)
+- Productos SaaS comerciales no se recomiendan en el cuerpo principal

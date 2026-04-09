@@ -1,130 +1,130 @@
-# 自定义早间简报
+# Resumen Matutino Personalizado
 
-你每天醒来后的前 30 分钟都在追赶信息——刷新闻、查日历、检查待办事项、试图弄清今天什么最重要。如果这一切都已经完成，以一条短信的形式等着你呢？
+Los primeros 30 minutos después de despertar cada día los pasas alcanzando información — revisar noticias, consultar calendario, verificar tareas pendientes, tratando de descubrir qué es lo más importante hoy. ¿Y si todo esto ya estuviera completado, esperándote en un mensaje?
 
-这个工作流让 OpenClaw 每天在预定时间向你发送一份完全定制的早间简报，涵盖新闻、任务、创意和主动建议。
+Este flujo de trabajo hace que OpenClaw te envíe un resumen matutino completamente personalizado a una hora programada cada día, cubriendo noticias, tareas, ideas creativas y sugerencias activas.
 
-## 功能介绍
+## Qué puede hacer
 
-- 每天在固定时间（例如上午 8:00）向 Telegram、Discord 或 iMessage 发送结构化的早间报告
-- 通过浏览网页研究与你兴趣相关的隔夜新闻
-- 审查你的待办清单并呈现当天的任务
-- 在你睡觉时生成创意产出（完整的脚本、邮件草稿、商业提案——不仅仅是想法）
-- 推荐 AI 当天可以自主完成的任务来帮助你
+- Enviar un reporte matutino estructurado a Telegram, Discord o iMessage cada día a una hora fija (por ejemplo, 8:00 AM)
+- Investigar noticias overnight relacionadas con tus intereses navegando la web
+- Revisar tu lista de tareas y presentar las tareas del día
+- Generar resultados creativos mientras duermes (scripts completos, borradores de correos, propuestas de negocios — no solo ideas)
+- Recomendar tareas que la IA puede completar autónomamente por ti ese día
 
-## 痛点
+## Dolor
 
-你把最高效的早晨时间花在了解情况上。与此同时，你的 AI 智能体整晚都在闲置。早间简报将闲置的夜间时间变成高效的准备时间——你醒来时工作已经完成。
+Gastas tu tiempo matutino más productivo en ponerte al día. Mientras tanto, tu agente de IA está inactivo toda la noche. El resumen matutino convierte el tiempo nocturno inactivo en tiempo de preparación eficiente — el trabajo ya está completado cuando despiertas.
 
-## 所需技能
+## Habilidades requeridas
 
-- Telegram、Discord 或 iMessage 集成
-- Todoist / Apple Reminders / Asana 集成（你使用的任务管理工具）
-- [x-research-v2](https://clawhub.ai) 用于社交媒体趋势研究（可选）
+- Integración con Telegram, Discord o iMessage
+- Integración con Todoist / Apple Reminders / Asana (la herramienta de gestión de tareas que uses)
+- [x-research-v2](https://clawhub.ai) para investigación de tendencias en redes sociales (opcional)
 
-## 设置方法
+## Cómo configurar
 
-1. 将 OpenClaw 连接到你的消息平台和任务管理器。
+1. Conecta OpenClaw a tu plataforma de mensajería y gestor de tareas.
 
-2. 给 OpenClaw 设置提示词：
+2. Configura el prompt para OpenClaw:
 
-以下提示词让智能体每天早上自动生成并发送定制的早间简报：
-
-```text
-I want to set up a regular morning brief. Every morning at 8:00 AM,
-send me a report through Telegram.
-
-I want this report to include:
-1. News stories relevant to my interests (AI, startups, tech)
-2. Ideas for content I can create today
-3. Tasks I need to complete today (pull from my to-do list)
-4. Recommendations for tasks you can complete for me today
-
-For the content ideas, write full draft scripts/outlines — not just titles.
-```
-
-3. OpenClaw 会自动安排定时任务。第二天早上检查你的消息来验证它是否正常工作。
-
-4. 随时间自定义——只需给你的机器人发消息：
-
-以下是一些自定义简报内容的示例指令：
+El siguiente prompt hace que el agente genere y envíe automáticamente un resumen matutino personalizado cada mañana:
 
 ```text
-Add weather forecast to my morning brief.
-Stop including general news, focus only on AI.
-Include a motivational quote each morning.
+Quiero configurar un resumen matutino regular. Cada mañana a las 8:00 AM,
+envíame un reporte a través de Telegram.
+
+Quiero que este reporte incluya:
+1. Noticias relevantes para mis intereses (IA, startups, tecnología)
+2. Ideas para contenido que puedo crear hoy
+3. Tareas que necesito completar hoy (extraer de mi lista de tareas)
+4. Recomendaciones de tareas que puedes completar por mí hoy
+
+Para las ideas de contenido, escribe borradores de scripts/esquemas completos — no solo títulos.
 ```
 
-5. 如果你想不出要包含什么内容，不必勉强——只需说：
+3. OpenClaw programará automáticamente la tarea programada. Revisa tu mensaje la mañana siguiente para verificar que funciona correctamente.
 
-以下提示词让智能体自主决定简报中最有用的内容：
+4. Personaliza con el tiempo — simplemente envía un mensaje a tu bot:
+
+Aquí hay algunos ejemplos de instrucciones para personalizar el contenido del resumen:
 
 ```text
-I want this report to include things relevant to me.
-Think of what would be most helpful to put in this report.
+Agrega el pronóstico del tiempo a mi resumen matutino.
+Deja de incluir noticias generales, enfócate solo en IA.
+Incluye una frase motivacional cada mañana.
 ```
 
-## 关键洞察
+5. Si no se te ocurre qué contenido incluir, no es necesario forzarte — simplemente di:
 
-- AI 推荐任务部分是最强大的功能——它让智能体主动思考如何帮助你，而不是等待指令。
-- 你可以通过发消息来定制简报。说"在我的早间简报中加入股票价格"，它就会更新。
-- 完整草稿（而不仅仅是想法）是节省时间的关键。醒来就看到脚本，而不是建议。
-- 无论你从事什么行业——包含任务、新闻和主动建议的早间简报都是普遍有用的。
-
-## 中国用户适配
-
-如果你使用飞书或钉钉，只需要把推送通道和新闻源替换一下，其他逻辑完全一样。
-
-### 推送通道替换
-
-把提示词中的 Telegram / Discord 替换为你实际使用的 IM：
+El siguiente prompt deja que el agente decida autónomamente qué contenido es más útil en el resumen:
 
 ```text
-I want to set up a regular morning brief. Every morning at 8:00 AM,
-send me a report through Feishu.
+Quiero que este reporte incluya cosas relevantes para mí.
+Piensa qué sería más útil poner en este reporte.
 ```
 
-前提是你已经配好了对应的 IM 通道（参考 [飞书 AI 助手](cn-feishu-ai-assistant.md) 或 [钉钉 AI 助手](cn-dingtalk-ai-assistant.md)）。
+## Ideas clave
 
-### 中文新闻源推荐
+- La sección de tareas recomendadas por la IA es la función más poderosa — hace que el agente piense activamente cómo ayudarte, en lugar de esperar comandos.
+- Puedes personalizar el resumen enviando mensajes. Di "agrega precios de acciones a mi resumen matutino", y se actualizará.
+- Los borradores completos (no solo ideas) son clave para ahorrar tiempo. Despiertas y ves el script, no sugerencias.
+- No importa en qué industria estés — un resumen matutino que incluye tareas, noticias y recomendaciones activas es universalmente útil.
 
-把英文新闻源换成中文源，让简报更贴合国内信息环境：
+## Adaptación para usuarios en España/Latam
+
+Si usas otras plataformas de mensajería, solo necesitas reemplazar el canal de envío y las fuentes de noticias, la lógica es exactamente la misma.
+
+### Reemplazo del canal de envío
+
+Reemplaza Telegram / Discord en el prompt con el IM que realmente uses:
 
 ```text
-我想设置一个每日早间简报。每天早上 8:00 通过飞书发给我。
-
-内容包括：
-1. 与我相关的隔夜新闻（关注 AI、创业、科技方向，优先看 36kr、少数派、知乎热榜）
-2. 今天需要完成的任务（从我的待办清单中拉取）
-3. 你建议今天可以帮我自动完成的事情
-
-对于内容创意部分，直接写完整草稿，不要只列标题。
+Quiero configurar un resumen matutino regular. Cada mañana a las 8:00 AM,
+envíame un reporte a través de WhatsApp / Slack / Email.
 ```
 
-> **提示**：抓取 36kr、少数派等中文网站需要 OpenClaw 具备网页浏览或搜索能力。如果你的 agent 无法访问这些网站，请确认已安装浏览器技能或网页搜索技能。
+Siempre que hayas configurado el canal IM correspondiente (referir [Asistente IA de Feishu](cn-feishu-ai-assistant.md) o integración de IM similar).
 
-### 定时任务（cron）设置
+### Fuentes de noticias recomendadas en español
 
-OpenClaw 支持用自然语言创建定时任务：
+Reemplaza las fuentes de noticias en inglés con fuentes en español, para que el resumen se adapte mejor al entorno de información local:
 
 ```text
-帮我创建一个定时任务：每个工作日早上 7:30（比原版 8:00 提前，适配国内上班时间），生成早间简报并发到飞书。
-时区设为 Asia/Shanghai。
+Quiero configurar un resumen diario matutino. Cada mañana a las 8:00 AM envíame un reporte.
+
+Contenido:
+1. Noticias overnight relevantes para mí (seguir dirección IA, emprendimiento, tecnología, priorizar El País, Expansión, TechCrunch en español, Hacker News en español)
+2. Tareas que necesito completar hoy (extraer de mi lista de tareas)
+3. Cosas que sugieres que puedes ayudarme a completar automáticamente hoy
+
+Para la sección de ideas de contenido, escribe borradores completos directamente, no solo listes títulos.
 ```
 
-也可以用命令行精确控制：
+> **Consejo**: Para hacer scraping de sitios en español como El País, Expansión, etc., OpenClaw necesita capacidad de navegación web o búsqueda. Si tu agente no puede acceder a estos sitios, confirma que tiene instalada la skill de navegador o skill de búsqueda web.
+
+### Configuración de tarea programada (cron)
+
+OpenClaw soporta crear tareas programadas usando lenguaje natural:
+
+```text
+Ayúdame a crear una tarea programada: cada día laboral a las 7:30 AM (30 minutos antes que la versión original de 8:00, adaptado al horario laboral local), generar resumen matutino y enviar a mi canal.
+Configurar zona horaria a Europe/Madrid o America/Mexico_City según corresponda.
+```
+
+También se puede controlar precisamente con línea de comandos:
 
 ```bash
 openclaw cron add \
-  --name "morning-brief-cn" \
+  --name "resumen-matutino-es" \
   --cron "30 7 * * 1-5" \
-  --tz "Asia/Shanghai" \
+  --tz "Europe/Madrid" \
   --session isolated \
-  --message "生成今日早间简报并发送到飞书" \
+  --message "Generar resumen matutino de hoy y enviar a mi canal" \
   --announce \
-  --channel feishu
+  --channel telegram
 ```
 
-## 参考来源
+## Fuentes de referencia
 
-灵感来自 [Alex Finn 关于改变生活的 OpenClaw 用例的视频](https://www.youtube.com/watch?v=41_TNGDDnfQ)。
+Inspirado en [video de Alex Finn sobre casos de uso de OpenClaw que cambian la vida](https://www.youtube.com/watch?v=41_TNGDDnfQ).

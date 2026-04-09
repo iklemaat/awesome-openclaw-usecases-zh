@@ -1,54 +1,54 @@
-# A 股每日行情监控
+# Monitor Diario de Mercado de Acciones A
 
-> 与 [AI 财报追踪器](earnings-tracker.md) 互补：财报追踪器关注单个公司的季报事件，本用例关注每个交易日的市场全局动态。
+> Complementario con [Rastreador de Informes Financieros IA](earnings-tracker.md): El rastreador de informes se enfoca en eventos trimestrales de empresas individuales, este caso se enfoca en la dinámica global del mercado cada día de trading.
 
-每天开盘前翻研报、盘中盯行情软件、收盘后复盘——个人投资者在信息收集上花的时间远超做决策的时间。如果 AI 能每天帮你整理大盘走势、板块异动、资金流向，你只需要看结论就行。
+Revisar reportes antes de la apertura, monitorear software de cotizaciones durante el trading, revisar después del cierre — los inversores individuales gastan mucho más tiempo recopilando información que tomando decisiones. Si la IA puede organizar diariamente la tendencia del mercado, movimientos de sectores y flujos de capital, solo necesitas ver las conclusiones.
 
-这个用例让 OpenClaw 每个交易日自动采集 A 股行情数据，整理成结构化简报推送给你。
+Este caso de uso hace que OpenClaw recolecte automáticamente datos de cotizaciones de acciones A cada día de trading, y los organice en un resumen estructurado para enviarte.
 
-## 它能做什么
+## Qué puede hacer
 
-- **盘前简报**：隔夜外盘走势、今日重要事件（如 LPR 调整、IPO 申购）提醒
-- **盘后复盘**：大盘指数涨跌、成交量对比、涨跌家数统计
-- **板块追踪**：按行业板块排序当日涨跌幅，识别热点板块轮动
-- **资金流向**：主力资金净流入/流出 TOP 排名、北向资金动态
-- **自选股监控**：你关注的股票当日表现、技术指标变化
+- **Resumen pre-apertura**: Tendencias de mercados externos overnight, recordatorios de eventos importantes del día (como ajustes LPR, suscripción IPO)
+- **Revisión post-cierre**: subidas/bajadas de índices principales, comparación de volumen de trading, estadísticas de empresas al alza/baja
+- **Seguimiento de sectores**: Clasificación de subidas/bajas del día por sector industrial, identificar rotación de sectores calientes
+- **Flujo de capital**: TOP de entradas/salidas netas de capital principal, dinámica de capital del norte
+- **Monitoreo de selección propia**: Rendimiento del día de tus acciones seguidas, cambios en indicadores técnicos
 
-## 能力边界（基于社区实测）
+## Límites de capacidad (basado en pruebas de la comunidad)
 
-根据多位开发者的真实使用反馈，**信息采集和数据整理是 OpenClaw 在 A 股场景中最可靠的能力**。以下是实测验证的能力边界：
+Según retroalimentación de uso real de múltiples desarrolladores, **la recopilación de información y organización de datos es la capacidad más confiable de OpenClaw en el escenario de acciones A**. Los siguientes son los límites de capacidad verificados con pruebas reales:
 
-| 场景 | 可靠性 | 说明 |
+| Escenario | Confiabilidad | Descripción |
 |------|--------|------|
-| 行情数据采集 | ✅ 可靠 | AKShare 接口稳定，数据覆盖全面 |
-| 数据整理推送 | ✅ 可靠 | 结构化输出 + 定时 cron 推送 |
-| 技术指标计算 | ✅ 可靠 | MA/MACD/RSI 等基于公式计算，结果确定 |
-| 舆情/新闻聚合 | ⚠️ 基本可用 | 依赖浏览器自动化，偶尔有反爬限制 |
-| AI 买卖建议 | ❌ 不推荐依赖 | LLM 调用延迟 2-5 秒，Chrome 连接不稳定，决策黑箱 |
+| Recopilación de datos de cotizaciones | ✅ Confiable | Interfaz AKShare estable, cobertura de datos completa |
+| Organización y envío de datos | ✅ Confiable | Salida estructurada + envío cron programado |
+| Cálculo de indicadores técnicos | ✅ Confiable | MA/MACD/RSI etc. basados en fórmulas, resultados determinísticos |
+| Agregación de opinión pública/noticias | ⚠️ Básicamente usable | Depende de automatización del navegador, ocasionalmente tiene límites anti-scraping |
+| Sugerencias de compra/venta de IA | ❌ No recomendable depender | Llamadas LLM tienen retraso de 2-5 segundos, conexión Chrome inestable, caja negra de decisiones |
 
-> 引用来源：[Jason Zhang - 用 OpenClaw 做 A 股量化？我试了试，聊聊真实感受](https://junxinzhang.com/openclaw-quant-trading-a-share/)（12 年 IT 经验，3 年美股量化经验的开发者实测）
+> Fuente de citación: [Jason Zhang - ¿Usar OpenClaw para cuantificar acciones A? Lo probé, hablemos de sensaciones reales](https://junxinzhang.com/openclaw-quant-trading-a-share/) (12 años experiencia IT, desarrollador con 3 años experiencia en cuantificación de acciones de EE.UU. probó)
 
-## 所需技能
+## Habilidades requeridas
 
-**数据层**（核心依赖）：
+**Capa de datos** (dependencia principal):
 
-[AKShare](https://github.com/akfamily/akshare)（16,000+ stars，MIT 开源）—— 中国金融数据的事实标准库，覆盖沪深 A 股、港股、ETF、可转债、宏观经济指标。免费，无需 API Key。
+[AKShare](https://github.com/akfamily/akshare) (16,000+ stars, MIT open source) — La biblioteca de facto estándar de datos financieros de China, cubre acciones A Shanghai-Shenzhen, acciones H, ETF, bonos convertibles, indicadores macroeconómicos. Gratis, no necesita API Key.
 
-可选的 MCP 方案（免去写 Python 脚本）：
+Plan MCP opcional (evita escribir scripts Python):
 
-- [mcp-cn-a-stock](https://github.com/elsejj/mcp-cn-a-stock)（400+ stars）—— 专门为 LLM 设计的 A 股数据 MCP 服务，提供个股基本信息、行情、财务和技术指标查询（brief/medium/full 三个工具），适合单个股票深度分析。大盘概览、板块排名、资金流向等全局数据仍需通过 AKShare 获取
+- [mcp-cn-a-stock](https://github.com/elsejj/mcp-cn-a-stock) (400+ stars) — Servicio MCP de datos de acciones A diseñado específicamente para LLM, proporciona consulta de información básica, cotizaciones, finanzas e indicadores técnicos de acciones individuales (tres herramientas brief/medium/full), adecuado para análisis profundo de acciones individuales. Resumen del mercado, clasificación de sectores, flujo de capital y otros datos globales aún necesitan obtenerse vía AKShare
 
-**推送层**：
+**Capa de envío**:
 
-飞书 / 钉钉 / 企业微信（参考对应的 IM 集成用例）
+Feishu / DingTalk / WeCom (referir casos de uso de integración IM correspondientes)
 
-## 如何设置
+## Cómo configurar
 
-### 方案一：MCP 服务 + 自然语言查询（推荐）
+### Plan Uno: Servicio MCP + consulta en lenguaje natural (recomendado)
 
-无需写代码，通过 MCP 服务让 OpenClaw 直接获取 A 股数据。该项目提供公共服务地址，无需本地安装：
+Sin escribir código, dejar que OpenClaw obtenga directamente datos de acciones A a través del servicio MCP. Este proyecto proporciona una dirección de servicio público, no necesita instalación local:
 
-在 OpenClaw 配置中添加 MCP 服务器（使用公共 HTTP 服务）：
+Agregar servidor MCP en la configuración de OpenClaw (usar servicio público HTTP):
 
 ```json
 {
@@ -60,87 +60,87 @@
 }
 ```
 
-> **注意**：此为项目作者提供的公共演示服务，IP 地址可能变更或下线。生产使用建议自建服务。
+> **Nota**: Este es un servicio de demostración público proporcionado por el autor del proyecto, la dirección IP puede cambiar o salir de línea. Para producción se recomienda auto-construir el servicio.
 >
-> **本地部署**：该项目依赖 Python ≥ 3.12 和 ta-lib C 库，通过 `python main.py --transport=http` 启动。详见 [项目 README](https://github.com/elsejj/mcp-cn-a-stock)。
+> **Despliegue local**: Este proyecto depende de Python ≥ 3.12 y biblioteca C ta-lib, ejecutar mediante `python main.py --transport=http` iniciar. Ver [README del proyecto](https://github.com/elsejj/mcp-cn-a-stock) para detalles.
 
-然后直接用自然语言查询个股信息：
+Luego usar directamente lenguaje natural para consultar información de acciones individuales:
 
 ```text
-帮我看一下 SZ000333 美的集团的最新行情和技术指标。
+Ayúdame a ver las últimas cotizaciones e indicadores técnicos de Midea Group SZ000333.
 
-SH600519 贵州茅台最近的财务数据怎么样？
+¿Cómo están los datos financieros recientes de Kweichow Moutai SH600519?
 ```
 
-> **注意**：
-> - MCP 服务提供 brief/medium/full 三个工具，专注于**单个 A 股**的基本信息、行情、财务和技术指标查询。大盘指数、板块排名、北向资金等全局数据需配合方案二（AKShare）使用
-> - 股票代码需使用 `SH`/`SZ` 前缀格式（如 `SH600519`、`SZ000333`），LLM 通常能自动推断转换
-> - **仅支持 A 股**，港股（小米、腾讯、阿里等）不在覆盖范围内
+> **Notas**:
+> - El servicio MCP proporciona tres herramientas brief/medium/full, enfocado en consulta de información básica, cotizaciones, finanzas e indicadores técnicos de **acciones A individuales**. Índices del mercado, clasificación de sectores, capital del norte y otros datos globales necesitan usarse junto con el Plan Dos (AKShare)
+> - Los códigos de acciones deben usar formato con prefijo `SH`/`SZ` (como `SH600519`, `SZ000333`), LLM generalmente puede inferir y convertir automáticamente
+> - **Solo soporta acciones A**, acciones H (Xiaomi, Tencent, Alibaba, etc.) no están en la cobertura
 
-### 方案二：AKShare + Python 沙箱
+### Plan Dos: AKShare + sandbox Python
 
-适合想要更灵活控制数据处理逻辑的用户：
+Adecuado para usuarios que quieren control más flexible sobre la lógica de procesamiento de datos:
 
 ```bash
 pip install akshare
 ```
 
-然后让 OpenClaw 在 Python 沙箱中调用 AKShare：
+Luego dejar que OpenClaw llame AKShare en el sandbox Python:
 
 ```text
-用 akshare 获取今天 A 股涨幅前 10 的股票，
-显示股票名称、代码、涨幅、成交量、换手率。
+Usa akshare para obtener las 10 acciones con mayor subida en acciones A hoy,
+mostrar nombre de la acción, código, porcentaje de subida, volumen de trading, tasa de rotación.
 ```
 
-常用接口速查：
+Consulta rápida de interfaces comunes:
 
-| 接口 | 用途 |
+| Interface | Uso |
 |------|------|
-| `ak.stock_zh_a_spot_em()` | 全部 A 股实时行情 ⚠️ |
-| `ak.stock_zh_a_hist()` | 个股历史日线数据 |
-| `ak.stock_zh_index_daily_em()` | 主要指数日线行情 |
-| `ak.stock_hk_hist()` | 港股个股历史行情 |
-| `ak.stock_board_industry_name_em()` | 行业板块列表 ⚠️ |
-| `ak.stock_hsgt_fund_flow_summary_em()` | 沪深港通资金流向汇总 |
-| `ak.stock_market_activity_legu()` | 涨跌家数/涨停跌停统计 |
+| `ak.stock_zh_a_spot_em()` | Cotizaciones en tiempo real de todas las acciones A ⚠️ |
+| `ak.stock_zh_a_hist()` | Datos históricos diarios de acciones individuales |
+| `ak.stock_zh_index_daily_em()` | Cotizaciones diarias históricas de índices principales |
+| `ak.stock_hk_hist()` | Historial de cotizaciones de acciones H individuales |
+| `ak.stock_board_industry_name_em()` | Lista de sectores industriales ⚠️ |
+| `ak.stock_hsgt_fund_flow_summary_em()` | Resumen de flujo de capital de Shanghai-Hong Kong Connect |
+| `ak.stock_market_activity_legu()` | Estadísticas de empresas al alza/baja/límite arriba/abajo |
 
-> ⚠️ 标记的接口底层依赖东方财富，从海外 IP 调用可能被拒绝连接。替代方案：实时行情可用 `stock_zh_a_hist` 取当日数据，指数可用 `stock_zh_index_daily_em`。
+> ⚠️ Las interfaces marcadas dependen de East Money en la capa inferior, las llamadas desde IPs extranjeras pueden ser rechazadas. Plan alternativo: cotizaciones en tiempo real se pueden usar `stock_zh_a_hist` para tomar datos del día, índices se pueden usar `stock_zh_index_daily_em`.
 
-### 设置每日自动推送
+### Configurar envío automático diario
 
-配置定时任务，工作日自动推送盘前简报和盘后复盘：
+Configurar tareas programadas, enviar automáticamente resumen pre-apertura y revisión post-cierre en días de trading:
 
 ```text
-帮我创建两个定时任务：
+Ayúdame a crear dos tareas programadas:
 
-1. 盘前简报：每个工作日早上 8:30（Asia/Shanghai），
-   整理隔夜美股三大指数涨跌、A50 期货走势、今日重要事件日历，
-   发送到飞书。
+1. Resumen pre-apertura: Cada día de trading a las 8:30 AM (Asia/Shanghai),
+   organizar subidas/bajas de los tres índices principales de EE.UU. overnight, tendencia de futuros A50, calendario de eventos importantes del día,
+   enviar a Feishu.
 
-2. 盘后复盘：每个工作日下午 3:30（Asia/Shanghai），
-   整理今日大盘涨跌、成交量变化、板块涨跌幅 TOP5、
-   北向资金流向、我的自选股表现，
-   发送到飞书。
+2. Revisión post-cierre: Cada día de trading a las 3:30 PM (Asia/Shanghai),
+   organizar subidas/bajas del mercado principal hoy, cambio en volumen de trading, TOP 5 de subidas/bajas de sectores,
+   flujo de capital del norte, rendimiento de mis acciones seleccionadas,
+   enviar a Feishu.
 
-自选股列表：600519 贵州茅台、300750 宁德时代、000858 五粮液。
+Lista de acciones seleccionadas: 600519 Kweichow Moutai, 300750 CATL, 000858 Wuliangye.
 ```
 
-## 实用建议
+## Consejos prácticos
 
-- **AKShare 是首选数据源**：免费、开源、接口全面。如果需要更高频数据（分钟级），可申请 Tushare Pro 积分（通过环境变量 `TUSHARE_TOKEN` 传入）
-- **海外服务器注意**：部分 AKShare 接口（如 `stock_zh_a_spot_em`、`stock_zh_index_spot_em`、`stock_board_industry_name_em`）底层依赖东方财富，从海外 IP 调用会被拒绝连接。替代方案：个股用 `stock_zh_a_hist`、指数用 `stock_zh_index_daily_em`、港股用 `stock_hk_hist`。或直接部署在国内云服务器上
-- **港股覆盖**：小米、阿里巴巴、腾讯等港股不在 MCP 服务覆盖范围内，需通过 AKShare 的 `stock_hk_hist(symbol="01810")` 等接口获取
-- **MCP 方案更省心**：不需要自己写 Python，OpenClaw 通过 MCP 协议自动调用数据接口。注意 MCP 服务专注于个股查询，全局数据（大盘、板块、资金流向）仍需 AKShare
-- **云端部署保持在线**：如果需要每天准时推送，推荐部署到云服务器（阿里云/腾讯云轻量服务器，月费几十元），配合 cron 实现全自动
-- **不要依赖 AI 做交易决策**：当前 LLM 在金融决策上存在延迟、不稳定、不可解释等问题。把 OpenClaw 当作信息收集和整理工具，决策留给自己
-- **注意接口频率**：AKShare 底层依赖公开网站数据，高频调用可能被限速。日常监控（每天几次）完全没问题
+- **AKShare es la fuente de datos preferida**: Gratis, open source, interfaces completas. Si necesitas datos de mayor frecuencia (nivel minuto), puedes solicitar puntos Tushare Pro (pasar mediante variable de entorno `TUSHARE_TOKEN`)
+- **Nota para servidores extranjeros**: Algunas interfaces de AKShare (como `stock_zh_a_spot_em`, `stock_zh_index_spot_em`, `stock_board_industry_name_em`) dependen de East Money en la capa inferior, las llamadas desde IPs extranjeras serán rechazadas. Plan alternativo: acciones individuales usar `stock_zh_a_hist`, índices usar `stock_zh_index_daily_em`, acciones H usar `stock_hk_hist`. O desplegar directamente en servidores en la nube de China
+- **Cobertura de acciones H**: Xiaomi, Alibaba, Tencent y otras acciones H no están en la cobertura del servicio MCP, necesitan obtenerse a través de interfaces como `stock_hk_hist(symbol="01810")` de AKShare
+- **Plan MCP es más sencillo**: No necesitas escribir Python tú mismo, OpenClaw llama automáticamente las interfaces de datos a través del protocolo MCP. Nota que el servicio MCP se enfoca en consultas de acciones individuales, datos globales (mercado, sectores, flujo de capital) aún necesitan AKShare
+- **Despliegue en la nube para mantener en línea**: Si necesitas enviar puntualmente cada día, se recomienda desplegar en servidor en la nube (servidor ligero Alibaba Cloud/Tencent Cloud, costo mensual de decenas de yuanes),配合 cron para lograr completamente automático
+- **No depender de IA para decisiones de trading**: Los LLM actuales tienen problemas de retraso, inestabilidad e inexplicabilidad en decisiones financieras. Usar OpenClaw como herramienta de recopilación y organización de información, dejar las decisiones para ti
+- **Notar frecuencia de interfaces**: AKShare depende de datos de sitios web públicos en la capa inferior, las llamadas de alta frecuencia pueden ser limitadas en velocidad. Monitoreo diario (varias veces al día) no tiene problema
 
-> **⚠️ 免责声明**：本用例仅用于个人投资信息整理，不构成投资建议。股市有风险，投资需谨慎。
+> **⚠️ Descargo de responsabilidad**: Este caso de uso es solo para organización de información de inversión personal, no constituye consejo de inversión. El mercado de valores tiene riesgos, invertir con precaución.
 
-## 相关链接
+## Enlaces relacionados
 
-- [AKShare 官方文档](https://akshare.akfamily.xyz/) — 免费开源 A 股数据接口（16,000+ stars）
-- [mcp-cn-a-stock - GitHub](https://github.com/elsejj/mcp-cn-a-stock) — A 股数据 MCP 服务（400+ stars）
-- [Jason Zhang - 用 OpenClaw 做 A 股量化的真实感受](https://junxinzhang.com/openclaw-quant-trading-a-share/) — 最坦诚的实测报告
-- [腾讯云 - Lighthouse 部署 OpenClaw 股市分析师](https://blog.csdn.net/u012263509/article/details/157762036) — 部署教程
-- [阿里云 - 零门槛部署 OpenClaw 接入 A 股数据](https://developer.aliyun.com/article/1713167) — 部署教程
+- [Documentación oficial de AKShare](https://akshare.akfamily.xyz/) — Interfaces de datos de acciones A gratis y open source (16,000+ stars)
+- [mcp-cn-a-stock - GitHub](https://github.com/elsejj/mcp-cn-a-stock) — Servicio MCP de datos de acciones A (400+ stars)
+- [Jason Zhang - Sensaciones reales de usar OpenClaw para cuantificar acciones A](https://junxinzhang.com/openclaw-quant-trading-a-share/) — Reporte de prueba más honesto
+- [Tencent Cloud - Despliegue Lighthouse de analista de mercado de valores OpenClaw](https://blog.csdn.net/u012263509/article/details/157762036) — Tutorial de despliegue
+- [Alibaba Cloud - Despliegue sin barrera de OpenClaw accediendo a datos de acciones A](https://developer.aliyun.com/article/1713167) — Tutorial de despliegue
