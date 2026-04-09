@@ -1,23 +1,23 @@
-# 个人 CRM（客户关系管理）与自动联系人发现
+# CRM Personal (Gestión de Relaciones con Clientes) y Descubrimiento Automático de Contactos
 
-手动记录你见过的人、见面时间以及讨论内容几乎不可能。重要的跟进事项不知不觉就被遗漏，在重要会议前你也忘记了相关背景。
+Es casi imposible registrar manualmente a las personas que has conocido, cuándo se reunieron y qué discutieron. Los seguimientos importantes se omiten inadvertidamente, y olvidas el contexto antes de reuniones importantes.
 
-这个工作流自动构建和维护个人 CRM：
+Este flujo de trabajo construye y mantiene automáticamente un CRM personal:
 
-- 每日定时任务（cron job）扫描邮件和日历，发现新联系人和互动记录
-- 将联系人存储在结构化数据库中，附带关系上下文
-- 自然语言查询："我对 [某人] 了解多少？"、"谁需要跟进？"、"我上次和 [某人] 交流是什么时候？"
-- 每日会议准备简报：在当天会议前，通过 CRM 和邮件历史研究外部与会者，并提供简报
+- Tarea programada diariamente (cron job) escanea correos y calendario, descubre nuevos contactos y registros de interacciones
+- Almacena contactos en base de datos estructurada con contexto de relaciones
+- Consultas en lenguaje natural: "¿Qué sé de [alguien]?", "¿Quién necesita seguimiento?", "¿Cuándo fue la última vez que interactué con [alguien]?"
+- Briefing de preparación de reuniones diarias: Antes de las reuniones del día, investiga a participantes externos a través del CRM e historial de correos, y proporciona un briefing
 
-## 所需技能
+## Habilidades requeridas
 
-- `gog` CLI（用于 Gmail 和 Google Calendar）
-- 自定义 CRM 数据库（SQLite 或类似方案），或使用 [crm-query](https://clawhub.ai) 技能（如果可用）
-- Telegram 话题用于 CRM 查询
+- CLI `gog` (para Gmail y Google Calendar)
+- Base de datos personalizada de CRM (SQLite o esquema similar), o usar skill [crm-query](https://clawhub.ai) (si está disponible)
+- Tema de Telegram para consultas de CRM
 
-## 如何设置
+## Cómo configurar
 
-1. 创建 CRM 数据库：
+1. Crear base de datos de CRM:
 ```sql
 CREATE TABLE contacts (
   id INTEGER PRIMARY KEY,
@@ -29,10 +29,10 @@ CREATE TABLE contacts (
   notes TEXT
 );
 ```
-2. 在 Telegram 中设置一个名为 "personal-crm" 的话题用于查询。
-3. 指示 OpenClaw：
+2. Configurar un tema llamado "personal-crm" en Telegram para consultas.
+3. Indicar a OpenClaw:
 
-以下提示词配置自动联系人发现和每日会议简报：
+El siguiente prompt configura descubrimiento automático de contactos y briefing diario de reuniones:
 
 ```text
 Run a daily cron job at 6 AM to:
@@ -50,4 +50,4 @@ When I ask about a contact in the personal-crm topic, search the database and gi
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/personal-crm.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/personal-crm.md)

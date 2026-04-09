@@ -1,40 +1,40 @@
-# Todoist 任务管理器：智能体任务可见性
+# Gestor de Tareas Todoist: Visibilidad de Tareas del Agente
 
-通过将内部推理和进度日志直接同步到 Todoist，最大化长时间运行的智能体工作流的透明度。
+Maximiza la transparencia de flujos de trabajo de agentes de ejecución prolongada sincronizando razonamiento interno y registros de progreso directamente a Todoist.
 
-## 痛点
+## Dolor
 
-当智能体运行复杂的多步骤任务（如构建全栈应用或进行深度研究）时，用户经常无法追踪智能体当前在做什么、哪些步骤已完成、以及智能体可能在哪里卡住。对于后台任务，手动检查聊天日志非常繁琐。
+Cuando los agentes ejecutan tareas complejas de múltiples pasos (como construir aplicaciones full-stack o realizar investigaciones profundas), los usuarios frecuentemente no pueden rastrear qué está haciendo el agente actualmente, qué pasos se completaron, y dónde puede estar atascado el agente. Para tareas en segundo plano, revisar manualmente registros de chat es tedioso.
 
-## 功能介绍
+## Qué puede hacer
 
-这个用例使用 `todoist-task-manager` 技能来：
-1. **可视化状态**：在特定分区创建任务，如 `🟡 进行中` 或 `🟠 等待中`。
-2. **外化推理**：将智能体的内部"计划"发布到任务描述中。
-3. **流式日志**：将子步骤完成情况作为评论实时添加到任务中。
-4. **自动校验**：心跳脚本（heartbeat script）检查停滞的任务并通知用户。
+Este caso de uso usa el skill `todoist-task-manager` para:
+1. **Visualizar estado**: Crear tareas en secciones específicas, como `🟡 En Progreso` o `🟠 Esperando`.
+2. **Externalizar razonamiento**: Publicar "planes" internos del agente en descripciones de tareas.
+3. **Registros en streaming**: Agregar completado de sub-pasos como comentarios en tiempo real a tareas.
+4. **Verificación automática**: Scripts de latido (heartbeat script) verifican tareas estancadas y notifican al usuario.
 
-## 所需技能
+## Habilidades requeridas
 
-你不需要预构建的技能。只需提示你的 OpenClaw 智能体创建下面**设置指南**中描述的 bash 脚本。由于 OpenClaw 可以管理自己的文件系统并执行 shell 命令，它会按你的要求"构建"这个技能。
+No necesitas skills pre-construidos. Solo indica a tu agente de OpenClaw crear los scripts de bash descritos en **Guía de Configuración** abajo. Dado que OpenClaw puede gestionar su propio sistema de archivos y ejecutar comandos shell, "construirá" este skill según tus instrucciones.
 
-## 详细设置指南
+## Guía de Configuración Detallada
 
-### 1. 配置 Todoist
+### 1. Configurar Todoist
 
-创建一个项目（例如 "OpenClaw Workspace"）并获取其 ID。为不同状态创建分区：
-- `🟡 In Progress`（进行中）
-- `🟠 Waiting`（等待中）
-- `🟢 Done`（已完成）
+Crear un proyecto (por ejemplo "OpenClaw Workspace") y obtener su ID. Crear secciones para diferentes estados:
+- `🟡 En Progreso`
+- `🟠 Esperando`
+- `🟢 Completado`
 
-### 2. 实现："智能体自建"技能
+### 2. Implementar: Skill "auto-construido por el agente"
 
-你可以让 OpenClaw 为你创建这些脚本，而不是安装技能。每个脚本处理与 Todoist API 通信的不同部分。
+Puedes hacer que OpenClaw cree estos scripts para ti, en lugar de instalar skills. Cada script maneja diferentes partes de comunicación con la API de Todoist.
 
-**`scripts/todoist_api.sh`**（核心封装脚本）：
+**`scripts/todoist_api.sh`** (script de encapsulamiento central):
 ```bash
 #!/bin/bash
-# 用法：./todoist_api.sh <endpoint> <method> [data_json]
+# Uso: ./todoist_api.sh <endpoint> <method> [data_json]
 ENDPOINT=$1
 METHOD=$2
 DATA=$3
@@ -51,10 +51,10 @@ else
 fi
 ```
 
-**`scripts/sync_task.sh`**（任务和状态管理）：
+**`scripts/sync_task.sh`** (gestión de tareas y estado):
 ```bash
 #!/bin/bash
-# 用法：./sync_task.sh <task_content> <status> [task_id] [description] [labels_json_array]
+# Uso: ./sync_task.sh <task_content> <status> [task_id] [description] [labels_json_array]
 CONTENT=$1
 STATUS=$2
 TASK_ID=$3
@@ -73,7 +73,7 @@ PAYLOAD="{\"content\": \"$CONTENT\""
 [ -n "$SECTION_ID" ] && PAYLOAD="$PAYLOAD, \"section_id\": \"$SECTION_ID\""
 [ -n "$PROJECT_ID" ] && [ -z "$TASK_ID" ] && PAYLOAD="$PAYLOAD, \"project_id\": \"$PROJECT_ID\""
 if [ -n "$DESCRIPTION" ]; then
-  # 转义描述中的换行符和引号
+  # Escapar saltos de línea y comillas en descripción
   ESC_DESC=$(echo "$DESCRIPTION" | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/"/\\"/g')
   PAYLOAD="$PAYLOAD, \"description\": \"$ESC_DESC\""
 fi
@@ -87,21 +87,21 @@ else
 fi
 ```
 
-**`scripts/add_comment.sh`**（进度日志记录）：
+**`scripts/add_comment.sh`** (registro de progreso):
 ```bash
 #!/bin/bash
-# 用法：./add_comment.sh <task_id> <comment_text>
+# Uso: ./add_comment.sh <task_id> <comment_text>
 TASK_ID=$1
 TEXT=$2
-# 转义文本中的换行符和引号
+# Escapar saltos de línea y comillas en texto
 ESC_TEXT=$(echo "$TEXT" | sed ':a;N;$!ba;s/\n/\\n/g' | sed 's/"/\\"/g')
 PAYLOAD="{\"task_id\": \"$TASK_ID\", \"content\": \"$ESC_TEXT\"}"
 ./scripts/todoist_api.sh "comments" POST "$PAYLOAD"
 ```
 
-### 3. 使用提示词
+### 3. Prompt de uso
 
-你可以将以下提示词交给你的智能体，用于**设置**和**使用**任务可见性系统：
+Puedes entregar el siguiente prompt a tu agente, para **configurar** y **usar** el sistema de visibilidad de tareas:
 
 ```text
 I want you to build a Todoist-based task visibility system for your own runs.
@@ -122,10 +122,10 @@ Once created, for every complex task I give you:
 3. Move the task to 'Done' when finished.
 ```
 
-## 相关链接
+## Enlaces relacionados
 
-- [Todoist REST API 文档](https://developer.todoist.com/rest/v2/)
+- [Documentación de API REST de Todoist](https://developer.todoist.com/rest/v2/)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/todoist-task-manager.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/todoist-task-manager.md)

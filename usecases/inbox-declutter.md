@@ -1,24 +1,24 @@
-# 收件箱整理
+# Limpieza de Bandeja de Entrada
 
-新闻订阅邮件（newsletter）会迅速占满收件箱。它们经常堆积如山，根本没有被打开过。
+Las suscripciones de newsletters (boletines de noticias) llenan rápidamente la bandeja de entrada. A menudo se acumulan como montañas, nunca se abren.
 
-## 所需技能
-[Gmail OAuth 设置](https://clawhub.ai/kai-jar/gmail-oauth)。
+## Habilidades requeridas
+[Configuración de Gmail OAuth](https://clawhub.ai/kai-jar/gmail-oauth).
 
-## 如何设置
-1. [可选] 为 OpenClaw 专门创建一个新的 Gmail 账户。
-2. [可选] 取消主邮箱中所有新闻订阅，改用 OpenClaw 邮箱订阅。
-3. 安装技能并确保其正常工作。
-4. 指示 OpenClaw：
+## Cómo configurar
+1. [Opcional] Crear una nueva cuenta de Gmail específicamente para OpenClaw.
+2. [Opcional] Cancelar todas las suscripciones de newsletters en tu correo principal, usar el correo de OpenClaw en su lugar.
+3. Instalar el skill y asegurar que funcione correctamente.
+4. Instruir a OpenClaw:
 
-以下提示词让 OpenClaw 每天自动整理新闻摘要：
+El siguiente prompt hace que OpenClaw organice automáticamente un resumen de noticias diariamente:
 
 ```txt
 I want you to run a cron job everyday at 8 p.m. to read all the newsletter emails of the past 24 hours and give me a digest of the most important bits along with links to read more. Then ask for my feedback on whether you picked good bits, and update your memory based on my preferences for better digests in the future jobs.
 ```
 
-该提示词要求 OpenClaw 设置一个定时任务（cron job），每天晚上 8 点读取过去 24 小时内的所有新闻订阅邮件，提供最重要内容的摘要和阅读链接，然后根据你的反馈更新记忆，以便未来生成更好的摘要。
+Este prompt requiere que OpenClaw configure una tarea programada (cron job), todos los días a las 8 PM lee todos los correos de suscripción de noticias de las últimas 24 horas, proporciona un resumen del contenido más importante con enlaces para leer más, y luego solicita tu retroalimentación sobre si eligió buenos fragmentos, actualiza su memoria según tus preferencias para generar mejores resúmenes en trabajos futuros.
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/inbox-declutter.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/inbox-declutter.md)

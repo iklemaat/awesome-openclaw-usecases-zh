@@ -1,43 +1,43 @@
-# 多渠道个人助手
+# Asistente Personal Multicanal
 
-在多个应用间切换来管理任务、安排日程、发送消息和追踪工作令人精疲力竭。你需要一个统一的接口来连接所有工具。
+Cambiar entre múltiples aplicaciones para gestionar tareas, agendar citas, enviar mensajes y rastrear trabajo es agotador. Necesitas una interfaz unificada que conecte todas las herramientas.
 
-这个工作流将所有功能整合到一个 AI 助手中：
+Este flujo de trabajo integra todas las funciones en un solo asistente de IA:
 
-- Telegram 作为主要交互界面，通过话题路由（不同话题对应视频创意、CRM、收入、配置等）
-- Slack 集成用于团队协作（任务分配、知识库保存、视频创意触发）
-- Google Workspace：通过聊天创建日历事件、管理邮件、上传到 Drive
-- Todoist 用于快速任务捕获
-- Asana 用于项目管理
-- 自动提醒：垃圾清运日、每周公司通讯等
+- Telegram como interfaz de interacción principal, con enrutamiento por temas (diferentes temas para ideas de video, CRM, ingresos, configuración, etc.)
+- Integración con Slack para colaboración en equipo (asignación de tareas, guardar en base de conocimientos, activar ideas de video)
+- Google Workspace: Crear eventos de calendario, gestionar correos, subir a Drive vía chat
+- Todoist para captura rápida de tareas
+- Asana para gestión de proyectos
+- Recordatorios automáticos: Día de basura, boletín semanal de la empresa, etc.
 
-## 所需技能
+## Habilidades requeridas
 
-- `gog` CLI（Google Workspace）
-- Slack 集成（bot + user tokens）
-- Todoist API 或技能
-- Asana API 或技能
-- 配置了多个话题的 Telegram 频道
+- CLI `gog` (Google Workspace)
+- Integración con Slack (tokens de bot + usuario)
+- Token de API de Todoist o skill
+- Token de API de Asana o skill
+- Canal de Telegram configurado con múltiples temas
 
-## 如何设置
+## Cómo configurar
 
-1. 为不同场景设置 Telegram 话题：
-   - `config` — 机器人设置和调试
-   - `updates` — 状态和通知
-   - `video-ideas` — 内容管道
-   - `personal-crm` — 联系人管理
-   - `earnings` — 财务追踪
-   - `knowledge-base` — RAG（检索增强生成）数据导入和查询
+1. Configurar temas de Telegram para diferentes escenarios:
+   - `config` — Configuración y depuración del robot
+   - `updates` — Estado y notificaciones
+   - `video-ideas` — Pipeline de contenido
+   - `personal-crm` — Gestión de contactos
+   - `earnings` — Seguimiento financiero
+   - `knowledge-base` — Importación y consultas de datos RAG (generación aumentada por recuperación)
 
-2. 通过 OpenClaw 配置连接所有工具：
-   - Google OAuth（Gmail、Calendar、Drive）
-   - Slack（app + user tokens）
-   - Todoist API 令牌
-   - Asana API 令牌
+2. Conectar todas las herramientas vía configuración de OpenClaw:
+   - OAuth de Google (Gmail, Calendar, Drive)
+   - Slack (tokens de app + usuario)
+   - Token de API de Todoist
+   - Token de API de Asana
 
-3. 指示 OpenClaw：
+3. Indicar a OpenClaw:
 
-以下提示词配置多渠道路由和自动提醒：
+El siguiente prompt configura enrutamiento multicanal y recordatorios automáticos:
 
 ```text
 You are my multi-channel assistant. Route requests based on context:
@@ -62,8 +62,8 @@ Set up automated reminders:
 - Friday 3 PM: "Time to write the weekly company update"
 ```
 
-4. 逐一测试每个集成，然后测试跨工作流交互（例如，将 Slack 链接保存到知识库，然后在视频研究卡中使用它）。
+4. Probar cada integración una por una, luego probar interacciones cross-flujo de trabajo (por ejemplo, guardar enlaces de Slack a base de conocimientos, luego usarlos en tarjetas de investigación de video).
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/multi-channel-assistant.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/multi-channel-assistant.md)
