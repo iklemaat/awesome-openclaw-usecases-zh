@@ -1,79 +1,79 @@
-# arXiv 论文阅读与 LaTeX 论文写作
+# Lectura de Papers arXiv y Escritura de Papers LaTeX
 
-> 含国内适配：中文 LaTeX 配置 / Docker 国内镜像 / 高校论文模板 / 在线平台对比
+> Incluye adaptación local: Configuración LaTeX en chino / Espejo de Docker en China / Plantillas de tesis universitarias / Comparación de plataformas en línea
 >
-> 📝 本文档合并了上游的 arxiv-paper-reader 和 latex-paper-writing 两个用例，因二者共享 Prismer 工具链且适配内容高度重叠。
+> 📝 Este documento combina los casos de uso arxiv-paper-reader y latex-paper-writing upstream, porque comparten la cadena de herramientas Prismer y el contenido de adaptación se superpone altamente.
 
-读 arXiv 论文意味着下载 PDF、在多篇论文之间频繁切换丢失上下文、艰难解读密集的 LaTeX 公式。写论文意味着安装动辄几个 GB 的 TeX Live、调试编译错误、在编辑器和 PDF 预览之间来回切换。如果你的智能体能在对话中帮你完成论文阅读、分析、写作和编译的全流程呢？
+Leer papers de arXiv significa descargar PDFs, cambiar frecuentemente entre múltiples papers perdiendo contexto, interpretar con dificultad fórmulas LaTeX densas. Escribir papers significa instalar TeX Live que ocupa varios GB, depurar errores de compilación, cambiar entre editor y vista previa de PDF. ¿Y si tu agente pudiera ayudarte a completar todo el flujo de lectura, análisis, escritura y compilación de papers en una conversación?
 
-这个用例将两个学术工作流整合到一个智能体中：
+Este caso de uso integra dos flujos de trabajo académicos en un solo agente:
 
-- **论文阅读**：通过 arXiv ID 获取论文，自动展平 LaTeX 源码为可读文本，浏览章节结构，批量对比摘要，让智能体做总结和分析
-- **论文写作**：在对话中协作撰写 LaTeX 论文，即时编译为 PDF 预览，支持 pdflatex/xelatex/lualatex，无需本地安装 TeX 环境
+- **Lectura de papers**: Obtener paper vía ID de arXiv, aplanar automáticamente el código fuente LaTeX a texto legible, navegar estructura de capítulos, comparar resúmenes por lotes, dejar que el agente haga resumen y análisis
+- **Escritura de papers**: Colaborar para escribir paper LaTeX en conversación, compilar instantáneamente a vista previa de PDF, soporta pdflatex/xelatex/lualatex, no necesita instalar entorno TeX local
 
-## 痛点
+## Dolor
 
-- **阅读效率低**：arXiv 论文以 PDF 形式发布，难以快速定位关键章节；同时跟踪多篇相关论文时上下文频繁丢失
-- **环境配置繁琐**：安装完整的 TeX Live 需要数 GB 空间，不同论文模板的依赖各不相同，编译报错信息晦涩难懂
-- **工具切换频繁**：阅读用一个工具、写作用一个编辑器、编译用命令行、预览用 PDF 阅读器——流程断裂
+- **Baja eficiencia de lectura**: Los papers de arXiv se publican en formato PDF, difícil localizar rápidamente capítulos clave; contexto se pierde frecuentemente al rastrear múltiples papers relacionados simultáneamente
+- **Configuración de entorno tediosa**: Instalar TeX Live completo necesita varios GB de espacio, dependencias de diferentes plantillas de papers varían, mensajes de error de compilación son crípticos
+- **Cambio frecuente de herramientas**: Leer usa una herramienta, escribir usa un editor, compilar usa línea de comandos, vista previa usa lector de PDF — flujo interrumpido
 
-## 它能做什么
+## Qué puede hacer
 
-| 功能 | 说明 |
+| Función | Descripción |
 |------|------|
-| **论文获取** | 通过 arXiv ID 获取论文，自动下载并展平 LaTeX 源码（移除 `\input` 嵌套）为干净的可读文本 |
-| **章节浏览** | 先列出论文的章节结构，决定重点阅读哪些部分，而不是通读全文 |
-| **摘要速扫** | 批量获取多篇论文的摘要，生成对比表格，按研究方向相关性排序 |
-| **智能分析** | 让智能体总结关键贡献、分析方法论、评价实验结果、对比不同论文 |
-| **本地缓存** | 已读论文缓存在本地，再次访问瞬间完成 |
-| **LaTeX 写作** | 用自然语言描述段落内容，智能体生成对应的 LaTeX 源码 |
-| **即时编译** | 支持 pdflatex、xelatex、lualatex 编译，无需本地安装 TeX 环境 |
-| **PDF 预览** | 编译后直接在对话中预览 PDF，无需切换应用 |
-| **模板支持** | 内置 article、IEEE、beamer、中文文章等起始模板 |
-| **参考文献** | 支持 BibTeX/BibLaTeX，粘贴 `.bib` 内容即可自动集成 |
+| **Obtención de papers** | Obtener paper vía ID de arXiv, descargar automáticamente y aplanar código fuente LaTeX (eliminar anidación `\input`) a texto limpio legible |
+| **Navegación de capítulos** | Listar primero la estructura de capítulos del paper, decidir qué partes leer en profundidad, en lugar de leer todo el texto |
+| **Escaneo rápido de resúmenes** | Obtener resúmenes de múltiples papers por lotes, generar tabla comparativa, ordenar por relevancia de dirección de investigación |
+| **Análisis inteligente** | Dejar que el agente resuma contribuciones clave, analice metodología, evalúe resultados experimentales, compare diferentes papers |
+| **Caché local** | Papers leídos se cachean localmente, acceso instantáneo la próxima vez |
+| **Escritura LaTeX** | Describir contenido de párrafos en lenguaje natural, el agente genera el código fuente LaTeX correspondiente |
+| **Compilación instantánea** | Soporta compilación pdflatex, xelatex, lualatex, no necesita instalar entorno TeX local |
+| **Vista previa de PDF** | Vista previa de PDF directamente en la conversación después de compilar, no necesita cambiar de aplicación |
+| **Soporte de plantillas** | Plantillas de inicio integradas article, IEEE, beamer, artículos en chino, etc. |
+| **Referencias** | Soporta BibTeX/BibLaTeX, pegar contenido `.bib` se integra automáticamente |
 
-## 所需技能
+## Habilidades requeridas
 
-### 论文阅读
+### Lectura de papers
 
-- [arxiv-reader](https://github.com/Prismer-AI/Prismer/tree/main/skills/arxiv-reader) 技能（3 个工具：`arxiv_fetch`、`arxiv_sections`、`arxiv_abstract`）
+- Skill [arxiv-reader](https://github.com/Prismer-AI/Prismer/tree/main/skills/arxiv-reader) (3 herramientas: `arxiv_fetch`, `arxiv_sections`, `arxiv_abstract`)
 
-arxiv-reader 技能无需 Docker 或 Python，使用 Node.js 内置模块运行。它直接从 arXiv 下载 LaTeX 源码，解压并自动展平 `\input` 引用。
+El skill arxiv-reader no necesita Docker ni Python, se ejecuta usando módulos integrados de Node.js. Descarga directamente el código fuente LaTeX desde arXiv, descomprime y aplana automáticamente referencias `\input`.
 
-### 论文写作
+### Escritura de papers
 
-- [latex-compiler](https://github.com/Prismer-AI/Prismer/tree/main/skills/latex-compiler) 技能（4 个工具：`latex_compile`、`latex_preview`、`latex_templates`、`latex_get_template`）
-- [Prismer](https://github.com/Prismer-AI/Prismer) 工作区容器（在端口 8080 运行 LaTeX 服务，包含完整的 TeX Live 环境）
+- Skill [latex-compiler](https://github.com/Prismer-AI/Prismer/tree/main/skills/latex-compiler) (4 herramientas: `latex_compile`, `latex_preview`, `latex_templates`, `latex_get_template`)
+- Contenedor de espacio de trabajo [Prismer](https://github.com/Prismer-AI/Prismer) (ejecuta servicio LaTeX en puerto 8080, incluye entorno completo de TeX Live con el contenedor)
 
-## 如何设置
+## Cómo configurar
 
-### 1. 安装论文阅读技能
+### 1. Instalar skill de lectura de papers
 
-从 Prismer 仓库安装 `arxiv-reader` 技能——将 `skills/arxiv-reader/` 目录复制到你的 OpenClaw 技能文件夹：
+Instalar skill `arxiv-reader` desde el repositorio de Prismer — copiar directorio `skills/arxiv-reader/` a tu carpeta de skills de OpenClaw:
 
 ```bash
 git clone https://github.com/Prismer-AI/Prismer.git
 cp -r Prismer/skills/arxiv-reader/ ~/openclaw/skills/
 ```
 
-技能安装完成后即可直接使用，无需额外配置。
+Después de instalar el skill se puede usar directamente, sin configuración adicional.
 
-### 2. 部署论文写作环境
+### 2. Desplegar entorno de escritura de papers
 
-克隆并通过 Docker 部署 Prismer（LaTeX 服务与完整 TeX Live 随容器自动启动）：
+Clonar y desplegar Prismer vía Docker (servicio LaTeX y TeX Live completo se inician automáticamente con el contenedor):
 
 ```bash
 git clone https://github.com/Prismer-AI/Prismer.git && cd Prismer
 docker compose -f docker/docker-compose.dev.yml up
 ```
 
-`latex-compiler` 技能为内置技能，无需单独安装。
+El skill `latex-compiler` es un skill integrado, no necesita instalación separada.
 
-### 3. 配置论文阅读提示词
+### 3. Configurar prompt de lectura de papers
 
-向 OpenClaw 发送以下提示词来设定论文阅读工作流：
+Enviar el siguiente prompt a OpenClaw para configurar flujo de trabajo de lectura de papers:
 
-> 以下提示词建议保留英文使用，效果最佳。中文说明帮助你理解每一步的作用。
+> Se recomienda保留 el siguiente prompt en inglés para mejor efecto. Las descripciones en chino te ayudan a entender el propósito de cada paso.
 
 ```text
 I'm researching [topic]. Here's my workflow:
@@ -94,9 +94,9 @@ I'm researching [topic]. Here's my workflow:
 Keep a running list of papers I've read and their key takeaways.
 ```
 
-试一试：发送 "Read 2401.04088 -- what's the main contribution?" 验证论文阅读功能。
+Probar: Enviar "Read 2401.04088 -- what's the main contribution?" para verificar la función de lectura de papers.
 
-### 4. 配置论文写作提示词
+### 4. Configurar prompt de escritura de papers
 
 ```text
 Help me write a research paper in LaTeX. Here's my workflow:
@@ -111,94 +111,94 @@ Use xelatex if I need Chinese/CJK support, otherwise default to pdflatex.
 Always run 2 passes for cross-references.
 ```
 
-试一试：发送 "Start a new IEEE paper titled 'A Survey of LLM Agents'. Give me the template with abstract and introduction sections filled in, then compile it." 验证写作和编译功能。
+Probar: Enviar "Start a new IEEE paper titled 'A Survey of LLM Agents'. Give me the template with abstract and introduction sections filled in, then compile it." para verificar funciones de escritura y compilación.
 
-## 实用建议
+## Consejos prácticos
 
-- **先阅读再写作**：利用 arxiv-reader 研究相关论文，梳理研究脉络后再开始写作，智能体可以帮你维护一份阅读笔记
-- **章节优先于全文**：用 `arxiv_sections` 先浏览结构，精准定位需要深入阅读的章节，避免在不相关内容上浪费时间
-- **摘要速扫做文献筛选**：拿到一批候选论文 ID 后，先批量获取摘要做快速筛选，再逐篇深入阅读通过筛选的论文
-- **编译错误交给智能体**：LaTeX 编译报错时，不要自己去读日志，让智能体分析报错并自动修复
-- **交叉引用需要两次编译**：涉及引用、参考文献、图表编号时，智能体会自动执行两次编译以确保引用正确
+- **Primero leer luego escribir**: Usar arxiv-reader para investigar papers relacionados, aclarar el hilo de investigación antes de comenzar a escribir, el agente puede ayudarte a mantener notas de lectura
+- **Capítulos primero que texto completo**: Usar `arxiv_sections` para navegar primero la estructura, localizar precisamente los capítulos que necesitan lectura profunda, evitar perder tiempo en contenido no relevante
+- **Escaneo rápido de resúmenes para filtrado de literatura**: Después de obtener un lote de IDs de papers candidatos, primero obtener resúmenes por lotes para filtrado rápido, luego leer profundamente uno por uno los papers que pasaron el filtrado
+- **Dejar errores de compilación al agente**: Cuando reporte error de compilación de LaTeX, no leas el registro tú mismo, deja que el agente analice el error y repare automáticamente
+- **Referencias cruzadas necesitan dos compilaciones**: Cuando involucre citas, referencias, numeración de figuras/tablas, el agente ejecutará automáticamente dos compilaciones para asegurar que las citas sean correctas
 
-## 中国用户适配
+## Adaptación para usuarios de China
 
-国内学术场景与海外有一些不同：中文论文写作需要 xelatex + ctex 宏包支持，Docker 镜像拉取需要配置国内源，高校学位论文有特定模板要求。以下是针对这些场景的适配方案。
+Los escenarios académicos nacionales tienen algunas diferencias con el extranjero: la escritura de papers en chino necesita soporte del paquete ctex + compilador xelatex, extraer imágenes de Docker necesita configurar fuentes nacionales, las tesis de universidades tienen requisitos de plantillas específicas. Los siguientes son esquemas de adaptación para estos escenarios.
 
-### 中文 LaTeX 写作配置
+### Configuración de escritura LaTeX en chino
 
-使用 Prismer 的 LaTeX 编译功能撰写中文论文时，需要指定 xelatex 编译器并加载 ctex 宏包。在提示词中告知智能体：
+Al usar la función de compilación LaTeX de Prismer para escribir papers en chino, necesitas especificar el compilador xelatex y cargar el paquete ctex. Informar al agente en el prompt:
 
 ```text
-我需要写中文论文。请注意：
-1. 编译器使用 xelatex（不是 pdflatex）
-2. 文档头部加载 ctex 宏包：\usepackage[UTF8]{ctex}
-3. 中文字体使用系统自带方案（fontset=auto 让 ctex 自动选择）
-4. 如果需要自定义字体，使用 \setCJKmainfont{} 设置
+Necesito escribir paper en chino. Por favor nota:
+1. Compilador usar xelatex (no pdflatex)
+2. Cargar paquete ctex en la cabecera del documento: \usepackage[UTF8]{ctex}
+3. Fuente de caracteres chinos usar esquema自带 del sistema (fontset=auto deja que ctex seleccione automáticamente)
+4. Si necesitas fuentes personalizadas, usar \setCJKmainfont{} para configurar
 
-每次编译都使用 xelatex，并执行两次编译以确保目录和引用正确。
+Cada compilación usar xelatex, y ejecutar dos compilaciones para asegurar que el índice y las citas sean correctas.
 ```
 
-一个最小的中文 LaTeX 模板示例：
+Un ejemplo de plantilla mínima de LaTeX en chino:
 
 ```latex
 \documentclass[12pt,a4paper]{article}
-\usepackage[UTF8]{ctex}          % 中文支持核心宏包
+\usepackage[UTF8]{ctex}          % Paquete central para soporte de chino
 \usepackage{geometry}
 \geometry{left=2.5cm,right=2.5cm,top=2.5cm,bottom=2.5cm}
-\usepackage{amsmath,amssymb}     % 数学公式
-\usepackage{graphicx}            % 图片
-\usepackage{hyperref}            % 超链接
-\usepackage[backend=biber,style=gb7714-2015]{biblatex}  % 中文参考文献格式
+\usepackage{amsmath,amssymb}     % Fórmulas matemáticas
+\usepackage{graphicx}            % Imágenes
+\usepackage{hyperref}            % Hipervínculos
+\usepackage[backend=biber,style=gb7714-2015]{biblatex}  % Formato de referencias en chino
 
-\title{论文标题}
-\author{作者姓名}
+\title{Título del paper}
+\author{Nombre del autor}
 \date{\today}
 
 \begin{document}
 \maketitle
 \begin{abstract}
-摘要内容。
+Contenido del resumen.
 \end{abstract}
 
-\section{引言}
-正文内容。
+\section{Introducción}
+Contenido del texto.
 
 \printbibliography
 \end{document}
 ```
 
-> **注意**：Prismer 的 Docker 容器包含完整的 TeX Live 环境，已内置 ctex 宏包和常用中文字体（Fandol 字体集）。如需使用系统字体（如宋体、黑体），需要在 Docker 容器中挂载字体目录。
+> **Nota**: El contenedor Docker de Prismer incluye el entorno completo de TeX Live, ya tiene incorporado el paquete ctex y fuentes chinas comunes (colección de fuentes Fandol). Si necesitas usar fuentes del sistema (como Songti, Heiti), necesitas montar el directorio de fuentes en el contenedor Docker.
 
-### 国内高校学位论文模板
+### Plantillas de tesis de universidades nacionales
 
-中文学术场景中最常见的需求是学位论文排版。以下是主流高校的 LaTeX 模板，均开源且活跃维护：
+La demanda más común en escenarios académicos chinos es la composición de tesis de grados. Las siguientes son plantillas LaTeX de universidades principales, todas open source y activamente mantenidas:
 
-| 高校 | 模板名称 | GitHub 地址 | 说明 |
+| Universidad | Nombre de plantilla | Dirección GitHub | Descripción |
 |------|---------|-------------|------|
-| 清华大学 | ThuThesis | [tuna/thuthesis](https://github.com/tuna/thuthesis) | 清华大学学位论文模板，由 TUNA 维护 |
-| 中国科学院 | ucasthesis | [mohuangrui/ucasthesis](https://github.com/mohuangrui/ucasthesis) | 国科大学位论文模板 |
-| 浙江大学 | zjuthesis | [TheNetAdmin/zjuthesis](https://github.com/TheNetAdmin/zjuthesis) | 支持本硕博，Overleaf 可用 |
-| 中国科技大学 | ustcthesis | [ustctug/ustcthesis](https://github.com/ustctug/ustcthesis) | 中科大学位论文模板 |
-| 更多模板 | latex-templates | [hantang/latex-templates](https://github.com/hantang/latex-templates) | 国内高校 LaTeX 模板大全 |
+| Universidad de Tsinghua | ThuThesis | [tuna/thuthesis](https://github.com/tuna/thuthesis) | Plantilla de tesis de la Universidad de Tsinghua, mantenida por TUNA |
+| Academia de Ciencias de China | ucasthesis | [mohuangrui/ucasthesis](https://github.com/mohuangrui/ucasthesis) | Plantilla de tesis de la Academia de Ciencias de China |
+| Universidad de Zhejiang | zjuthesis | [TheNetAdmin/zjuthesis](https://github.com/TheNetAdmin/zjuthesis) | Soporta licenciatura, maestría, doctorado, disponible en Overleaf |
+| Universidad de Ciencia y Tecnología de China | ustcthesis | [ustctug/ustcthesis](https://github.com/ustctug/ustcthesis) | Plantilla de tesis de la USTC |
+| Más plantillas | latex-templates | [hantang/latex-templates](https://github.com/hantang/latex-templates) | Colección completa de plantillas LaTeX de universidades nacionales |
 
-**使用方式**：下载模板后，可以让 OpenClaw 智能体基于模板结构帮你填充内容并编译：
+**Modo de uso**: Después de descargar la plantilla, puedes dejar que el agente de OpenClaw llene el contenido y compile basado en la estructura de la plantilla:
 
 ```text
-我要写硕士毕业论文，使用清华大学 ThuThesis 模板。
-模板文件已在 ~/thesis/ 目录下。请：
-1. 阅读模板结构，了解各文件的作用
-2. 根据我的描述生成各章节内容
-3. 编译并预览，确保格式符合模板要求
+Voy a escribir tesis de maestría, usar plantilla ThuThesis de la Universidad de Tsinghua.
+Los archivos de plantilla están en el directorio ~/thesis/. Por favor:
+1. Leer la estructura de la plantilla, entender la función de cada archivo
+2. Generar contenido de cada capítulo según mi descripción
+3. Compilar y previsualizar, asegurar que el formato cumpla con los requisitos de la plantilla
 ```
 
-### Docker 国内镜像配置
+### Configuración de espejo de Docker nacional
 
-Prismer 的 Docker 镜像包含完整的 TeX Live 环境，镜像体积较大。国内用户拉取镜像时建议配置 Docker 镜像加速：
+La imagen Docker de Prismer incluye el entorno completo de TeX Live, el volumen de la imagen es grande. Se recomienda configurar aceleración de espejo de imágenes Docker para usuarios nacionales al extraer imágenes:
 
-配置 Docker 镜像加速器（国内 Docker Hub 镜像站变化较快，请搜索“Docker 国内镜像加速”获取最新可用地址）：
+Configurar acelerador de espejo de imágenes Docker (las estaciones de espejo de Docker Hub nacionales cambian rápidamente, por favor buscar "aceleración de espejo de Docker nacional" para obtener direcciones disponibles más recientes):
 
-编辑 `/etc/docker/daemon.json`（不存在则新建）：
+Editar `/etc/docker/daemon.json` (crear si no existe):
 
 ```json
 {
@@ -208,75 +208,75 @@ Prismer 的 Docker 镜像包含完整的 TeX Live 环境，镜像体积较大。
 }
 ```
 
-重启 Docker 服务：
+Reiniciar servicio Docker:
 
 ```bash
 sudo systemctl daemon-reload
 sudo systemctl restart docker
 ```
 
-**TeX Live 包管理器 (tlmgr) 换源**：
+**Cambio de fuente del gestor de paquetes de TeX Live (tlmgr)**:
 
-如果需要在容器内安装额外的 LaTeX 宏包，可以将 CTAN 源切换到清华镜像：
+Si necesitas instalar paquetes LaTeX adicionales dentro del contenedor, puedes cambiar la fuente CTAN al espejo de Tsinghua:
 
 ```bash
 tlmgr option repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet
 ```
 
-> 💡 也可使用阿里云容器镜像服务（需注册账号获取专属加速地址）。
+> 💡 También puedes usar el servicio de espejo de contenedores de Alibaba Cloud (necesita registro de cuenta para obtener dirección de aceleración exclusiva).
 >
-> **macOS 用户**：macOS 版 Docker Desktop 的镜像加速在 Docker Desktop > Settings > Docker Engine 中配置，添加相同的 `registry-mirrors` 字段即可。
+> **Usuarios de macOS**: La aceleración de imágenes de Docker Desktop para macOS se configura en Docker Desktop > Settings > Docker Engine, agregar el mismo campo `registry-mirrors`.
 
-### 国内论文数据库说明
+### Descripción de bases de datos de papers nacionales
 
-本用例的论文阅读功能依赖 arXiv 的公开 API，以下是国内学术数据库的兼容性说明：
+La función de lectura de papers de este caso de uso depende de la API pública de arXiv, la siguiente es la descripción de compatibilidad de bases de datos académicas nacionales:
 
-| 数据库 | 能否使用 | 说明 |
+| Base de datos | ¿Disponible? | Descripción |
 |--------|:-------:|------|
-| **arXiv** | 可用 | 提供免费公开 API，无需注册，AI/ML/CS 领域论文覆盖全面 |
-| **Semantic Scholar** | 可用 | 提供免费 API，可作为论文发现的补充来源 |
-| **知网 (CNKI)** | 不可用 | 未提供公开 API，内容访问需要机构授权 |
-| **万方数据** | 不可用 | 未提供公开 API，需通过高校图书馆等机构访问 |
-| **维普** | 不可用 | 未提供公开 API |
+| **arXiv** | Disponible | Proporciona API pública gratuita, no necesita registro, cobertura completa de papers en áreas de AI/ML/CS |
+| **Semantic Scholar** | Disponible | Proporciona API gratuita, puede servir como fuente complementaria de descubrimiento de papers |
+| **CNKI (知网)** | No disponible | No proporciona API pública, el acceso al contenido necesita autorización institucional |
+| **Wanfang Data (万方数据)** | No disponible | No proporciona API pública, acceso a través de instituciones como bibliotecas universitarias |
+| **Weipu (维普)** | No disponible | No proporciona API pública |
 
-**实际影响**：对于 AI、机器学习、计算机科学领域的研究者，arXiv 已覆盖绝大多数重要论文。中文论文（如发表在知网、万方的论文）目前无法通过本用例的自动化流程处理，需要手动下载后使用 OpenClaw 的文件读取功能分析。
+**Impacto práctico**: Para investigadores en AI, aprendizaje automático, ciencias de la computación, arXiv ya cubre la mayoría de los papers importantes. Los papers en chino (como los publicados en CNKI, Wanfang) actualmente no se pueden procesar a través del flujo de trabajo automatizado de este caso de uso, necesitan descargarse manualmente y luego analizarse usando la función de lectura de archivos de OpenClaw.
 
-### 国内 LaTeX 在线平台对比
+### Comparación de plataformas LaTeX en línea nacionales
 
-如果不想使用 Docker 部署本地 LaTeX 环境，以下是国内可用的在线 LaTeX 编辑平台：
+Si no quieres usar Docker para desplegar entorno LaTeX local, las siguientes son plataformas de edición LaTeX en línea disponibles nacionalmente:
 
-> 以下为国内可用的在线 LaTeX 平台，仅供参考，非推荐。请根据自身需求选择。
+> Las siguientes son plataformas LaTeX en línea disponibles nacionalmente, solo para referencia, no recomendación. Por favor elige según tus propias necesidades.
 
-| 平台 | 特点 | 费用 | 适用场景 |
+| Plataforma | Características | Costo | Escenario aplicable |
 |------|------|------|---------|
-| [Overleaf](https://www.overleaf.com) 国际版 | 功能最全面，模板生态最丰富 | 免费版有编译时长限制；付费版（价格见 [Overleaf 官网](https://www.overleaf.com/user/subscription/plans)） | 国际期刊投稿、与海外合作者协作 |
-| [TeXPage](https://www.texpage.com) | 国内团队开发，端到端加密，服务器在国内 | 付费 | 对数据安全和网络延迟敏感的场景 |
-| [LoongTeX](https://www.loongtex.com) | 国产平台，AI 辅助校对，支持异步协作 | 提供免费版 | 国内高校团队协作 |
+| [Overleaf](https://www.overleaf.com) Versión internacional | Función más completa, ecosistema de plantillas más rico | La versión gratuita tiene límite de tiempo de compilación; versión de pago (ver [sitio oficial de Overleaf](https://www.overleaf.com/user/subscription/plans)) | Envío a revistas internacionales, colaboración con socios en el extranjero |
+| [TeXPage](https://www.texpage.com) | Desarrollado por equipo nacional, cifrado de extremo a extremo, servidores en el país | De pago | Escenarios sensibles a seguridad de datos y latencia de red |
+| [LoongTeX](https://www.loongtex.com) | Plataforma nacional, corrección de errores asistida por AI, soporta colaboración asíncrona | Proporciona versión gratuita | Colaboración en equipo de universidades nacionales |
 
-**与 Prismer 方案的对比**：在线平台的优势是零配置，但不支持通过 OpenClaw 智能体自动化写作和编译流程。Prismer + OpenClaw 的组合适合需要在对话中完成"阅读相关论文 -> 写作 -> 编译 -> 修改"全流程自动化的用户。
+**Comparación con el esquema de Prismer**: La ventaja de las plataformas en línea es cero configuración, pero no soportan el flujo de trabajo automatizado de escritura y compilación a través del agente de OpenClaw. La combinación de Prismer + OpenClaw es adecuada para usuarios que necesitan completar el flujo de trabajo automatizado completo de "leer papers relacionados -> escribir -> compilar -> modificar" en una conversación.
 
-### 适用人群
+### Grupos aplicables
 
-- **AI/ML 研究者**：每天需要阅读 arXiv 新论文，用英文撰写期刊/会议论文
-- **国际期刊投稿者**：需要使用 IEEE、ACM 等特定 LaTeX 模板
-- **研究生**：需要用高校指定模板撰写学位论文
-- **跨语言写作者**：中英文混排论文（如中文学位论文中引用英文文献）
+- **Investigadores de AI/ML**: Necesitan leer nuevos papers de arXiv diariamente, escribir papers de revistas/conferencias en inglés
+- **Remitentes de revistas internacionales**: Necesitan usar plantillas LaTeX específicas como IEEE, ACM
+- **Estudiantes de posgrado**: Necesitan usar plantillas designadas por la universidad para escribir tesis
+- **Escritores cross-idioma**: Papers bilingües en chino e inglés (como citar literatura en inglés en tesis en chino)
 
-## 相关链接
+## Enlaces relacionados
 
-- [Prismer - 开源研究平台](https://github.com/Prismer-AI/Prismer) -- 提供 arxiv-reader 和 latex-compiler 技能
-- [arxiv-reader 技能](https://github.com/Prismer-AI/Prismer/tree/main/skills/arxiv-reader) -- 论文阅读工具（3 个工具）
-- [latex-compiler 技能](https://github.com/Prismer-AI/Prismer/tree/main/skills/latex-compiler) -- LaTeX 编译工具（4 个工具）
-- [arXiv API 文档](https://info.arxiv.org/help/api/) -- arXiv 官方 API
-- [ctex 宏包文档](https://ctan.org/pkg/ctex) -- 中文 LaTeX 排版核心宏包
-- [ThuThesis - 清华大学论文模板](https://github.com/tuna/thuthesis)
-- [国内高校 LaTeX 模板合集](https://github.com/hantang/latex-templates) -- 收录各高校学位论文模板
-- [清华 CTAN 镜像](https://mirrors.tuna.tsinghua.edu.cn/CTAN/) -- TeX Live 国内镜像源
-- [TeXPage](https://www.texpage.com) -- 国内 LaTeX 在线编辑平台
-- [LoongTeX](https://www.loongtex.com) -- 国产 LaTeX 协作平台
+- [Prismer - Plataforma de investigación open source](https://github.com/Prismer-AI/Prismer) -- Proporciona skills arxiv-reader y latex-compiler
+- [Skill arxiv-reader](https://github.com/Prismer-AI/Prismer/tree/main/skills/arxiv-reader) -- Herramienta de lectura de papers (3 herramientas)
+- [Skill latex-compiler](https://github.com/Prismer-AI/Prismer/tree/main/skills/latex-compiler) -- Herramienta de compilación LaTeX (4 herramientas)
+- [Documentación de API de arXiv](https://info.arxiv.org/help/api/) -- API oficial de arXiv
+- [Documentación del paquete ctex](https://ctan.org/pkg/ctex) -- Paquete central de composición LaTeX en chino
+- [ThuThesis - Plantilla de tesis de la Universidad de Tsinghua](https://github.com/tuna/thuthesis)
+- [Colección de plantillas LaTeX de universidades nacionales](https://github.com/hantang/latex-templates) -- Incluye plantillas de tesis de cada universidad
+- [Espejo CTAN de Tsinghua](https://mirrors.tuna.tsinghua.edu.cn/CTAN/) -- Fuente de espejo nacional de TeX Live
+- [TeXPage](https://www.texpage.com) -- Plataforma de edición LaTeX en línea nacional
+- [LoongTeX](https://www.loongtex.com) -- Plataforma de colaboración LaTeX nacional
 
 ---
 
-**原文链接**：
-- [arXiv Paper Reader (English)](https://github.com/hesamsheikh/awesome-openclaw-usecases/pull/53)
-- [LaTeX Paper Writing (English)](https://github.com/hesamsheikh/awesome-openclaw-usecases/pull/53)
+**Enlaces originales**:
+- [Lector de Papers arXiv (Inglés)](https://github.com/hesamsheikh/awesome-openclaw-usecases/pull/53)
+- [Escritura de Papers LaTeX (Inglés)](https://github.com/hesamsheikh/awesome-openclaw-usecases/pull/53)

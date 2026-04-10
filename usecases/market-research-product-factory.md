@@ -1,32 +1,32 @@
-# 市场调研与产品工厂
+# Investigación de Mercados y Fábrica de Productos
 
-你想做一个产品但不知道做什么。或者你已经有了业务，需要了解客户面临的痛点。这个工作流使用 Last 30 Days 技能从 Reddit 和 X 上挖掘真实的用户痛点，然后让 OpenClaw 为这些问题构建解决方案。
+Quieres hacer un producto pero no sabes qué hacer. O ya tienes un negocio y necesitas entender los puntos dolorosos que enfrentan los clientes. Este flujo de trabajo usa el skill Last 30 Days para extraer puntos dolorosos reales de usuarios de Reddit y X, luego deja que OpenClaw construya soluciones para estos problemas.
 
-## 功能介绍
+## Qué puede hacer
 
-- 使用 [Last 30 Days](https://github.com/matvanhorde/last-30-days) 技能，调研过去 30 天内 Reddit 和 X 上的任何话题
-- 挖掘用户正在发布的真实挑战、抱怨和功能请求
-- 帮助你从真实用户痛点中发现产品机会
-- 更进一步：让 OpenClaw 构建一个 MVP（最小可行产品）来解决其中一个问题
-- 打造从调研到产品的完整流水线，无需你编写任何代码
+- Usar el skill [Last 30 Days](https://github.com/matvanhorde/last-30-days), investigar cualquier tema en Reddit y X en los últimos 30 días
+- Extraer desafíos reales, quejas y solicitudes de funciones que los usuarios están publicando
+- Ayudarte a descubrir oportunidades de productos a partir de puntos dolorosos reales de usuarios
+- Más allá: dejar que OpenClaw construya un MVP (producto mínimo viable) para resolver uno de estos problemas
+- Crear una pipeline completa desde investigación hasta producto, sin que escribas código
 
-## 痛点
+## Dolor
 
-大多数想创业的人都在"做什么产品"这个问题上纠结。传统的市场调研意味着花费数小时手动浏览论坛、社交媒体和评论网站。这个工作流将整个从发现到原型的流程自动化。
+La mayoría de las personas que quieren emprender luchan con el problema de "qué producto hacer". La investigación de mercados tradicional significa gastar horas navegando manualmente foros, redes sociales y sitios de reseñas. Este flujo de trabajo automatiza todo el proceso desde descubrimiento hasta prototipo.
 
-## 所需技能
+## Habilidades requeridas
 
-- [Last 30 Days](https://github.com/matvanhorde/last-30-days) 技能，作者 Matt Van Horde
-- Telegram 或 Discord 集成，用于接收调研报告
+- Skill [Last 30 Days](https://github.com/matvanhorde/last-30-days), por Matt Van Horde
+- Integración con Telegram o Discord para recibir informes de investigación
 
-## 如何设置
+## Cómo configurar
 
-1. 安装 Last 30 Days 技能：
+1. Instalar el skill Last 30 Days:
 ```text
 Install this skill: https://github.com/matvanhorde/last-30-days
 ```
 
-2. 对任何话题进行调研：
+2. Investigar cualquier tema:
 ```text
 Please use the Last 30 Days skill to research challenges people are
 having with [your topic here].
@@ -38,51 +38,51 @@ Organize the findings into:
 - Opportunities for a new product
 ```
 
-3. 选择一个痛点，让 OpenClaw 构建解决方案：
+3. Elegir un punto doloroso, dejar que OpenClaw construya una solución:
 ```text
 Build me an MVP that solves [pain point from research].
 Keep it simple — just the core functionality.
 Ship it as a web app I can share with people.
 ```
 
-4. 若需持续的市场情报，可安排定期调研：
+4. Si necesitas inteligencia de mercado continua, programar investigación regular:
 ```text
 Every Monday morning, use the Last 30 Days skill to research what
 people are saying about [your niche] on Reddit and X. Summarize the
 top opportunities and send them to my Telegram.
 ```
 
-## 真实案例
+## Casos reales
 
 ```text
 "Use the Last 30 Days skill to research challenges people are having with OpenClaw."
 
-调研结果：
-- 安装困难：许多用户在初始配置上遇到困难
-- 技能发现：用户找不到满足需求的技能
-- 成本顾虑：用户希望有更便宜的模型替代方案
+Resultados de la investigación:
+- Dificultad de instalación: Muchos usuarios tienen dificultades con la configuración inicial
+- Descubrimiento de skills: Los usuarios no encuentran skills que satisfagan sus necesidades
+- Preocupaciones de costo: Los usuarios quieren alternativas de modelos más baratas
 
 → "Build me a simple web app that makes OpenClaw setup easier with a guided wizard."
 
-OpenClaw 构建了应用。你发布上线。你就有了一个产品。
+OpenClaw construyó la aplicación. Tú la lanzas. Ya tienes un producto.
 ```
 
-## 关键洞察
+## Ideas clave
 
-- 这是**创业自动驾驶**：发现问题 → 验证需求 → 构建解决方案，全部通过发消息完成。
-- Last 30 Days 技能为你提供真实、未经过滤的用户情绪——而非经过美化的调查问卷数据。
-- 你不需要技术背景。OpenClaw 既做调研又做开发。
-- 安排每周调研，持续跟踪你所在市场不断变化的痛点。
+- Esto es **piloto automático para emprendedores**: Descubrir problema → Validar demanda → Construir solución, todo completado enviando mensajes.
+- El skill Last 30 Days te proporciona sentimiento de usuario real, no filtrado — no datos de encuestas embellecidos.
+- No necesitas antecedentes técnicos. OpenClaw hace tanto la investigación como el desarrollo.
+- Programar investigación semanal, rastrear continuamente puntos dolorosos cambiantes de tu mercado.
 
-## 灵感来源
+## Fuentes de inspiración
 
-受 [Alex Finn 关于改变人生的 OpenClaw 使用案例的视频](https://www.youtube.com/watch?v=41_TNGDDnfQ) 和 Matt Van Horde 的 [Last 30 Days 技能](https://github.com/matvanhorde/last-30-days) 启发。
+Inspirado en [video de Alex Finn sobre casos de uso de OpenClaw que cambian la vida](https://www.youtube.com/watch?v=41_TNGDDnfQ) y el [skill Last 30 Days](https://github.com/matvanhorde/last-30-days) de Matt Van Horde.
 
-## 相关链接
+## Enlaces relacionados
 
-- [Last 30 Days 技能](https://github.com/matvanhorde/last-30-days)
-- [OpenClaw 技能目录](https://github.com/openclaw/skills)
+- [Skill Last 30 Days](https://github.com/matvanhorde/last-30-days)
+- [Directorio de skills de OpenClaw](https://github.com/openclaw/skills)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/market-research-product-factory.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/market-research-product-factory.md)

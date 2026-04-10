@@ -1,36 +1,36 @@
-# HuggingFace 论文发现与研究
+# Descubrimiento de Investigación de Papers de HuggingFace
 
-> 含国内适配：HF 镜像站 / PaperWeekly / 飞书推送
+> Incluye adaptación local: Espejo de HF / PaperWeekly / Push Feishu
 
-跟进 ML（机器学习）前沿研究意味着每天刷 Hugging Face Papers 页面、扫几十篇标题、逐个点开看摘要、再手动交叉检索 GitHub 仓库。你需要一种对话式的方式来发现、筛选和深读热门论文，而不必离开工作区。
+Mantenerse al día con la vanguardia de la investigación en ML (aprendizaje automático) significa navegar diariamente la página de HuggingFace Papers, escanear docenas de títulos, abrir uno por uno para ver resúmenes, y luego cruzar manualmente con repositorios de GitHub. Necesitas una forma conversacional de descubrir, filtrar y leer profundamente papers populares sin salir de tu espacio de trabajo.
 
-这个工作流组合两个技能（Skill），构建完整的研究发现流水线：
+Este flujo de trabajo combina dos skills (habilidades), construye una pipeline completa de descubrimiento de investigación:
 
-- 浏览当天 Hugging Face 热门论文——按点赞数或日期排序
-- 按关键词搜索论文，快速定位任意主题的相关工作
-- 获取完整论文元数据（Metadata）：摘要、作者、GitHub 仓库、社区点赞数、AI 生成摘要
-- 阅读任意论文的社区讨论和评论
-- 通过 arXiv ID 深读论文全文 LaTeX 源码（使用 arxiv-source 技能）
+- Navegar papers populares del día en HuggingFace — ordenar por likes o fecha
+- Buscar papers por palabra clave, localizar rápidamente trabajos relevantes de cualquier tema
+- Obtener metadatos completos del paper: resumen, autores, repositorio de GitHub, likes de la comunidad, resumen generado por AI
+- Leer discusiones y comentarios de la comunidad de cualquier paper
+- Leer profundamente el código fuente LaTeX completo del paper vía ID de arXiv (usando skill arxiv-source)
 
-> **与 arXiv 论文阅读用例的关系**：本仓库的 [arXiv 论文阅读与 LaTeX 写作用例](https://github.com/AlexAnys/awesome-openclaw-usecases-zh/pull/36)聚焦于"已知论文的深度阅读和写作辅助"——给定 arXiv ID 后的全文解析、章节浏览、LaTeX 写作。本用例则聚焦于**上游环节：发现与筛选**——每日热门、关键词搜索、元数据浏览、社区信号。两者互补：先用本用例找到值得读的论文，再用 arXiv 用例深入阅读。
+> **Relación con el caso de uso de lectura de papers arXiv**: El [caso de uso de lectura de papers arXiv y escritura LaTeX](https://github.com/AlexAnys/awesome-openclaw-usecases-zh/pull/36) en este repositorio se enfoca en "lectura profunda y asistencia de escritura de papers conocidos" — análisis de texto completo, navegación por capítulos, escritura LaTeX después de dar ID de arXiv. Este caso de uso se enfoca en la **fase upstream: descubrimiento y filtrado** — populares diarios, búsqueda por palabra clave, navegación de metadatos, señales de comunidad. Son complementarios: primero usa este caso de uso para encontrar papers que vale la pena leer, luego usa el caso de uso arXiv para lectura profunda.
 
-## 所需技能
+## Habilidades requeridas
 
-- [hf-papers](https://github.com/openclaw/skills/tree/main/skills/willamhou/hf-papers) 技能（4 个工具：`hf_daily_papers`、`hf_search_papers`、`hf_paper_detail`、`hf_paper_comments`）
-- [arxiv-source](https://github.com/openclaw/skills/tree/main/skills/willamhou/arxiv-source) 技能（3 个工具：`arxiv_fetch`、`arxiv_sections`、`arxiv_abstract`）——用于全文深读
+- Skill [hf-papers](https://github.com/openclaw/skills/tree/main/skills/willamhou/hf-papers) (4 herramientas: `hf_daily_papers`, `hf_search_papers`, `hf_paper_detail`, `hf_paper_comments`)
+- Skill [arxiv-source](https://github.com/openclaw/skills/tree/main/skills/willamhou/arxiv-source) (3 herramientas: `arxiv_fetch`, `arxiv_sections`, `arxiv_abstract`) — para lectura profunda de texto completo
 
-无需 Docker（容器）或身份认证——两个技能均使用公开 API（应用编程接口），支持本地缓存（Local Caching）。
+No se necesita Docker ni autenticación — ambos skills usan APIs públicas, soportan caché local.
 
-## 如何设置
+## Cómo configurar
 
-1. 安装两个技能：
+1. Instalar dos skills:
 
 ```bash
 clawhub install hf-papers
 clawhub install arxiv-source
 ```
 
-2. 向 OpenClaw 发送以下提示词：
+2. Enviar el siguiente prompt a OpenClaw:
 
 ```text
 I want to stay on top of ML research. Here's my daily workflow:
@@ -55,61 +55,61 @@ I want to stay on top of ML research. Here's my daily workflow:
 Keep a running list of papers I've reviewed today with one-line takeaways.
 ```
 
-提示词说明：
-- 第 1 步：每天早上展示 HF 热门 Top 10，按点赞排序，附 paper ID（arXiv ID）/标题/点赞数/GitHub 仓库/AI 摘要
-- 第 2 步：输入 "search [主题]" 进行关键词搜索，高亮有代码仓库或高点赞的论文
-- 第 3 步：选定论文后展示完整摘要、作者、关联资源、社区评论
-- 第 4 步：深读模式——通过 arxiv-source 获取全文，总结关键贡献/方法/结论
-- 最后一行：维护今日已读论文列表，附一句话要点
+Descripción del prompt:
+- Paso 1: Mostrar Top 10 populares de HF cada mañana, ordenar por likes, adjuntar ID de paper (ID de arXiv)/título/número de likes/repositorio de GitHub/resumen de AI
+- Paso 2: Ingresar "search [tema]" para búsqueda por palabra clave, resaltar papers con repositorios de código o alto número de likes
+- Paso 3: Después de seleccionar paper mostrar resumen completo, autores, recursos relacionados, comentarios de la comunidad
+- Paso 4: Modo lectura profunda — obtener texto completo vía arxiv-source, resumir contribuciones clave/método/conclusiones
+- Última línea: Mantener lista de papers revisados hoy, adjuntar resumen en una línea
 
-3. 试一下："What's trending on Hugging Face Papers today?"
+3. Probar: "What's trending on HuggingFace Papers today?"
 
-## 实用建议
+## Consejos prácticos
 
-- **筛选策略**：先看点赞数和评论数快速过滤，再看摘要决定是否深读。社区点赞数（Upvotes）是判断论文热度的有效信号
-- **关键词组合**：搜索时尝试不同粒度的关键词，例如 "vision transformer" vs "ViT efficient inference"，缩小范围可以减少噪音
-- **GitHub 仓库关联**：有关联 GitHub 仓库的论文通常意味着可复现代码已开源，优先关注这类论文
-- **社区评论**：hf_paper_comments 工具可以获取社区讨论，有时评论中会有作者对方法局限性的补充说明
-- **结合定时任务**：可以用 OpenClaw 的 cron job（定时任务）功能，每天早上自动推送热门论文摘要
+- **Estrategia de filtrado**: Primero ver número de likes y comentarios para filtrar rápidamente, luego ver resumen para decidir si leer profundamente. El número de likes de la comunidad es una señal efectiva para juzgar la popularidad del paper
+- **Combinación de palabras clave**: Intentar diferentes granularidades de palabras clave al buscar, por ejemplo "vision transformer" vs "ViT efficient inference", reducir el alcance puede reducir ruido
+- **Asociación de repositorios de GitHub**: Papers con repositorios de GitHub asociados generalmente significan que el código reproducible está abierto, priorizar estos papers
+- **Comentarios de la comunidad**: La herramienta hf_paper_comments puede obtener discusiones de la comunidad, a veces los comentarios tienen explicaciones suplementarias del autor sobre limitaciones del método
+- **Combinar con tareas programadas**: Se puede usar la función cron job (tarea programada) de OpenClaw, enviar automáticamente resúmenes de papers populares cada mañana
 
-## 中国用户适配
+## Adaptación para usuarios de China
 
-### HuggingFace 访问问题
+### Problemas de acceso a HuggingFace
 
-HuggingFace 在中国大陆访问受限。以下是可用的替代方案：
+HuggingFace tiene acceso restringido en China continental. Los siguientes son esquemas alternativos disponibles:
 
-| 方案 | 说明 |
+| Esquema | Descripción |
 |------|------|
-| **hf-mirror.com** | 社区维护的 HF 镜像站，设置 `HF_ENDPOINT=https://hf-mirror.com` 即可。该镜像已覆盖 Papers API（`/api/daily_papers`、`/api/papers/search` 等），hf-papers 技能可通过此镜像正常工作 |
-| **huggingface.ac.cn** | HF 官方中国合作镜像，包含 AI 论文精选页面 |
-| 代理访问 | 自行配置网络代理访问原站 |
+| **hf-mirror.com** | Espejo de HF mantenido por la comunidad, configurar `HF_ENDPOINT=https://hf-mirror.com` funciona. Este espejo ya cubre la API de Papers (`/api/daily_papers`, `/api/papers/search`, etc.), el skill hf-papers puede funcionar normalmente vía este espejo |
+| **huggingface.ac.cn** | Espejo oficial de cooperación de HF en China, incluye página seleccionada de papers de AI |
+| Acceso por proxy | Configurar proxy de red para acceder al sitio original por ti mismo |
 
-> **提示**：如果 hf-papers 技能不支持 `HF_ENDPOINT` 环境变量，你需要手动修改技能源码中的 API 基础 URL（Base URL），将 `huggingface.co` 替换为 `hf-mirror.com`。
+> **Consejo**: Si el skill hf-papers no soporta la variable de entorno `HF_ENDPOINT`, necesitas modificar manualmente la URL base de la API en el código fuente del skill, reemplazar `huggingface.co` por `hf-mirror.com`.
 
-### 国内 AI 论文社区
+### Comunidades de papers de AI nacionales
 
-除了 HuggingFace Papers，国内也有优质的 AI 论文发现渠道：
+Además de HuggingFace Papers, también hay canales de descubrimiento de papers de AI de alta calidad nacionales:
 
-| 平台 | 特点 | 链接 |
+| Plataforma | Características | Enlace |
 |------|------|------|
-| **PaperWeekly** | 学术论文推荐与解读，有知乎专栏和微信公众号 | [知乎](https://zhuanlan.zhihu.com/paperweekly) |
-| **机器之心（Synced）** | AI 领域深度报道，含论文解读 | [官网](https://www.jiqizhixin.com/) |
-| **智源社区（BAAI）** | 北京智源研究院社区，含论文速递 | [官网](https://hub.baai.ac.cn/) |
-| **huggingface.ac.cn** | HF 中国镜像，每日论文精选页面 | [论文页](https://huggingface.ac.cn/papers) |
+| **PaperWeekly** | Recomendación e interpretación de papers académicos, tiene columna de Zhihu y cuenta oficial de WeChat | [Zhihu](https://zhuanlan.zhihu.com/paperweekly) |
+| **Máquina de Corazones (Synced)** | Reportajes profundos en área de AI, incluye interpretación de papers | [Sitio oficial](https://www.jiqizhixin.com/) |
+| **Comunidad de BAAI** | Comunidad del Instituto de Investigación de Inteligencia Artificial de Beijing, incluye boletín de papers | [Sitio oficial](https://hub.baai.ac.cn/) |
+| **huggingface.ac.cn** | Espejo de HF en China, página seleccionada de papers diarios | [Página de papers](https://huggingface.ac.cn/papers) |
 
-这些平台可以作为 HuggingFace Papers 的补充信息源，尤其在网络受限时提供替代发现渠道。
+Estas plataformas pueden servir como fuentes de información complementarias para HuggingFace Papers, especialmente proporcionando canales alternativos de descubrimiento cuando la red está restringida.
 
-### 推送渠道适配
+### Adaptación de canal de push
 
-| 原版方案 | 国内替代 | 说明 |
+| Esquema original | Reemplazo nacional | Descripción |
 |---------|---------|------|
-| 终端对话 | **飞书机器人** | 支持富文本卡片消息，适合推送论文摘要 |
-| 终端对话 | **钉钉群机器人** | Webhook（网络钩子）方式，配置最简单 |
-| 终端对话 | **企业微信应用** | 企业用户首选 |
+| Chat de terminal | **Bot de Feishu** | Soporta mensajes de tarjeta de texto enriquecido, adecuado para enviar resúmenes de papers |
+| Chat de terminal | **Bot de grupo de DingTalk** | Forma Webhook, configuración más simple |
+| Chat de terminal | **Aplicación de WeCom** | Primera opción para usuarios empresariales |
 
-### 提示词适配
+### Adaptación de prompt
 
-如果你更习惯中文交互，可以使用以下提示词：
+Si estás más acostumbrado a la interacción en chino, puedes usar el siguiente prompt:
 
 ```text
 I want to track ML research daily. Here's my workflow:
@@ -137,22 +137,22 @@ I want to track ML research daily. Here's my workflow:
 Respond in Chinese for summaries and explanations, but keep paper titles and technical terms in English.
 ```
 
-提示词说明：
-- 第 1 步：每天早 9 点获取 HF 热门 Top 10，附 paper ID（arXiv ID），以编号列表格式展示
-- 第 2 步：输入数字查看详情，输入 "search [关键词]" 搜索
-- 第 3 步：论文详情包含摘要、作者、GitHub 链接、社区评论
-- 第 4 步：输入 "deep read" 启动深读模式
-- 第 5 步：每次会话结束时汇总今日已读论文
-- 最后一行：摘要和说明用中文回复，论文标题和术语保留英文
+Descripción del prompt:
+- Paso 1: Obtener Top 10 populares de HF a las 9 AM cada día, adjuntar ID de paper (ID de arXiv), mostrar en formato de lista numerada
+- Paso 2: Ingresar número para ver detalles, ingresar "search [palabra clave]" para buscar
+- Paso 3: Detalles de paper incluyen resumen, autores, enlace de GitHub, comentarios de la comunidad
+- Paso 4: Ingresar "deep read" para iniciar modo de lectura profunda
+- Paso 5: Resumir papers revisados al final de cada sesión
+- Última línea: Responder resúmenes y explicaciones en chino, mantener títulos de papers y términos técnicos en inglés
 
-## 相关链接
+## Enlaces relacionados
 
-- [hf-papers 技能](https://github.com/openclaw/skills/tree/main/skills/willamhou/hf-papers) — HuggingFace 论文浏览与搜索
-- [arxiv-source 技能](https://github.com/openclaw/skills/tree/main/skills/willamhou/arxiv-source) — arXiv 论文全文获取
-- [HuggingFace Daily Papers](https://huggingface.co/papers) — 每日 AI 论文精选
-- [HF Papers API 文档（非官方）](https://github.com/0x0is1/hf-papers-api-docs) — HuggingFace Papers API 端点参考
-- [huggingface.ac.cn 论文页](https://huggingface.ac.cn/papers) — HF 中国镜像论文精选
+- [Skill de hf-papers](https://github.com/openclaw/skills/tree/main/skills/willamhou/hf-papers) — Navegación y búsqueda de papers de HuggingFace
+- [Skill de arxiv-source](https://github.com/openclaw/skills/tree/main/skills/willamhou/arxiv-source) — Obtención de texto completo de papers arXiv
+- [Papers Diarios de HuggingFace](https://huggingface.co/papers) — Selección diaria de papers de AI
+- [Documentación de API de HF Papers (no oficial)](https://github.com/0x0is1/hf-papers-api-docs) — Referencia de endpoints de API de HuggingFace Papers
+- [Página de papers de huggingface.ac.cn](https://huggingface.ac.cn/papers) — Selección de papers del espejo de HF en China
 
 ---
 
-**原文链接**：[English Version](https://github.com/hesamsheikh/awesome-openclaw-usecases/blob/main/usecases/hf-papers-research-discovery.md)
+**Enlace original**: [Versión en inglés](https://github.com/hesamsheikh/awesome-openclaw-usecases/blob/main/usecases/hf-papers-research-discovery.md)
