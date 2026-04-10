@@ -1,39 +1,39 @@
-# 家庭日历聚合与家务助手
+# Calendario Familiar y Asistente de Tareas Domésticas
 
-现代家庭需要同时管理五个甚至更多日历——工作、个人、共享家庭、孩子学校、课外活动——分布在不同平台和格式中。重要事件会因为没有统一视图而被遗漏。与此同时，家务协调（购物清单、储藏室库存、预约安排）通过零散的短信进行，很容易被淹没。
+Las familias modernas necesitan gestionar cinco o más calendarios simultáneamente — trabajo, personal, familiar compartido, escuela de niños, actividades extraescolares — distribuidos en diferentes plataformas y formatos. Los eventos importantes se pierden porque no hay una vista unificada. Mientras tanto, la coordinación de tareas domésticas (lista de compras, inventario de despensa, programación de citas) se realiza mediante mensajes de texto fragmentados, fácilmente se pierden.
 
-这个用例将 OpenClaw 变成一个始终在线的家庭协调员：聚合日历生成早间简报、监控消息中的可操作事项，以及通过共享聊天界面管理家务后勤。
+Este caso de uso convierte OpenClaw en un coordinador familiar siempre activo: agrega calendarios para generar resumen matutino, monitorea mensajes para elementos accionables, y gestiona logística doméstica a través de una interfaz de chat compartida.
 
-## 痛点
+## Dolor
 
-- **日历碎片化**：工作日历有安全限制，无法共享。学校日历以 PDF 或手写网页的形式送达。夏令营时间表在邮件里。每天早上手动检查每个日历是不可持续的——而且"跨日历复制事件确实管用，直到我忘了，然后就有事情漏掉了。"
-- **家务协调开销**："家里还有多少牛奶？"需要亲自检查冰箱，然后检查地下室储藏间，然后回复短信。这样的事情每周购物时都要重复多次。
-- **错过预约**：预约确认以短信形式到达，然后就搁在那里没人处理——没有日历事件，没有路程时间缓冲，没有提醒。
+- **Fragmentación de calendarios**: El calendario de trabajo tiene restricciones de seguridad, no se puede compartir. El calendario de la escuela llega en PDF o páginas web escritas a mano. Los horarios de campamento de verano están en correos. Revisar manualmente cada calendario cada mañana no es sostenible — y "copiar eventos cross-calendros funciona, hasta que lo olvido y algo se pierde."
+- **Sobrecarga de coordinación doméstica**: "¿Cuánta leche queda en casa?" requiere verificar el refrigerador personalmente, luego verificar la despensa del sótano, luego responder mensajes de texto. Esto se repite múltiples veces cada semana de compras.
+- **Citas perdidas**: Las confirmaciones de citas llegan por mensaje de texto, y luego se quedan ahí sin que nadie las procese — sin evento de calendario, sin tiempo de desplazamiento buffer, sin recordatorio.
 
-## 功能介绍
+## Qué puede hacer
 
-- **早间简报**：将所有家庭日历聚合成每日摘要，通过你偏好的渠道发送
-- **环境消息监控**：监视 iMessage/短信对话，在检测到预约时自动创建日历事件（牙医确认、会面计划等）
-- **路程时间缓冲**：在检测到的预约前后添加交通时间段
-- **家庭库存管理**：维护储藏室/冰箱物品的实时库存清单，任何一方都可以随时随地查询
-- **购物协调**：跨食谱去重食材，跟踪库存不足的物品，生成购物清单
-- **照片输入**：拍一张学校日历或冷冻柜内容的照片，智能体会将其处理为结构化数据
+- **Resumen matutino**: Agregar todos los calendarios familiares en un resumen diario, enviar a través de tu canal preferido
+- **Monitoreo ambiental de mensajes**: Vigilar conversaciones de iMessage/SMS, crear automáticamente eventos de calendario cuando detecta citas (confirmación de dentista, planes de reunión, etc.)
+- **Buffer de tiempo de viaje**: Agregar segmentos de tiempo de tránsito antes y después de citas detectadas
+- **Gestión de inventario familiar**: Mantener lista de inventario en tiempo real de artículos de despensa/refrigerador, cualquiera de las partes puede consultar en cualquier momento
+- **Coordinación de compras**: Duplicar ingredientes cross-recetas, rastrear artículos con inventario bajo, generar lista de compras
+- **Entrada de fotos**: Tomar foto de calendario escolar o contenido del congelador, el agente lo procesa como datos estructurados
 
-## 所需技能
+## Habilidades requeridas
 
-- 日历 API 访问（Google Calendar、通过 `ical` 访问 Apple Calendar）
-- `imessage` 技能用于消息监控（仅限 macOS）
-- Telegram 或 Slack 用于共享家庭聊天界面
-- 文件系统访问用于库存跟踪
-- 相机/照片处理用于实体日历的 OCR（光学字符识别）
+- Acceso a API de calendario (Google Calendar, Apple Calendar vía `ical`)
+- Skill `imessage` para monitoreo de mensajes (solo macOS)
+- Telegram o Slack para interfaz de chat familiar compartida
+- Acceso a sistema de archivos para seguimiento de inventario
+- Cámara/procesamiento de fotos para OCR de calendarios físicos
 
-## 设置方法
+## Cómo configurar
 
-### 1. 日历聚合
+### 1. Agregación de calendarios
 
-配置 OpenClaw 从所有家庭日历源拉取数据：
+Configurar OpenClaw para extraer datos de todas las fuentes de calendarios familiares:
 
-以下提示词让智能体每天早上聚合所有日历源并生成简报：
+El siguiente prompt hace que el agente agregue todas las fuentes de calendarios cada mañana y genere un resumen:
 
 ```text
 ## Calendar Sources
@@ -55,11 +55,11 @@ Compile into a single briefing:
 Deliver via Telegram/Slack family channel.
 ```
 
-### 2. 环境消息监控
+### 2. Monitoreo ambiental de mensajes
 
-这是关键差异化功能——智能体在后台被动监视，在识别到可操作内容时采取行动：
+Esta es la diferenciación clave — el agente vigila pasivamente en segundo plano, toma acción cuando identifica contenido accionable:
 
-以下提示词配置智能体定期检查消息并自动创建日历事件：
+El siguiente prompt configura al agente para revisar mensajes periódicamente y crear automáticamente eventos de calendario:
 
 ```text
 ## Message Monitoring (HEARTBEAT.md)
@@ -81,9 +81,9 @@ Every 15 minutes:
    → Create calendar hold or reminder
 ```
 
-### 3. 家庭库存管理
+### 3. Gestión de inventario familiar
 
-以下提示词配置智能体管理家庭库存，支持照片、文字和收据等多种输入方式：
+El siguiente prompt configura al agente para gestionar inventario familiar, soporta múltiples métodos de entrada como fotos, texto y recibos:
 
 ```text
 ## Pantry Tracking
@@ -104,30 +104,30 @@ Query: Either partner can ask via Telegram:
 - "Generate grocery list" → Compile low-stock items + any recipe ingredients needed
 ```
 
-## 关键洞察
+## Ideas clave
 
-- **被动优于主动**：最大的突破在于智能体无需被要求就能行动。检测短信中的预约并自动创建带路程缓冲的日历事件——"我没有让它这样做。它就是知道这是我想要的。"
-- **Mac Mini 是最佳载体**：这个用例特别适合在家用 Mac Mini 上运行——iMessage 集成、Apple Calendar 和始终在线的可用性
-- **从只读开始**：先从日历读取和消息监控开始，然后再启用写入操作（创建事件、发送消息）
-- **共享 Telegram 频道**：让双方都能看到智能体在做什么——建立信任并尽早发现错误
-- **照片输入被低估了**：拍一张学校日历 PDF 或冷冻柜内容的照片比打字快得多——而且视觉模型处理得很好
+- **Pasivo es mejor que activo**: El mayor avance es que el agente actúa sin que se lo pidan. Detectar citas en SMS y crear automáticamente eventos de calendario con buffer de viaje — "No le pedí que hiciera esto. Simplemente supo que era lo que quería."
+- **Mac Mini es el mejor vehículo**: Este caso de uso es especialmente adecuado para ejecutar en un Mac Mini en casa — integración con iMessage, Apple Calendar y disponibilidad siempre activa
+- **Comenzar con solo lectura**: Primero comenzar con lectura de calendarios y monitoreo de mensajes, luego habilitar operaciones de escritura (crear eventos, enviar mensajes)
+- **Canal compartido de Telegram**: Hacer que ambas partes puedan ver qué está haciendo el agente — construye confianza y detecta errores temprano
+- **Entrada de fotos está subestimada**: Tomar una foto de un PDF de calendario escolar o contenido del congelador es mucho más rápido que escribir — y los modelos visuales lo manejan muy bien
 
-## 灵感来源
+## Fuentes de inspiración
 
-这个用例结合了多个社区模式：
+Este caso de uso combina múltiples patrones de la comunidad:
 
-- **日历聚合**：由 HN 用户 `angiolillo` 在一次 [Hacker News 讨论](https://news.ycombinator.com/item?id=46872465)中描述，他详细说明了每天早上分别检查工作、个人、家庭和孩子学校日历的痛苦。
-- **环境消息监控**：由 [Sparkry AI](https://sparkryai.substack.com/p/24-hours-with-openclaw-the-ai-setup) 记录——当妻子收到一条牙科预约短信时，OpenClaw 自动创建了带 30 分钟路程缓冲的日历事件，无需被要求。在 [OpenClaw Showcase](https://openclaw.ai/showcase) 上也得到了验证，`@theaaron` 称基于聊天的日历管理是"我体验过的最好的 LLM 用途之一"。
-- **家务协调**：Brandon Wang 的 [Clawdbot "Linguini"](https://brandon.wang/2026/clawdbot) 运行在家用 Mac Mini 上——处理短信跟进、从照片创建日历事件、跟踪 Airbnb 价格、处理冷冻柜库存照片，以及通过 iMessage 和 Slack 协调家务后勤。
-- **储藏室跟踪**：多位 HN 用户讨论了维护家庭库存的价值（和挑战），`dns_snek` 指出："我5秒钟前放东西的地方都会忘记……这对我来说确实是个大问题，因为我会让东西过期。"
+- **Agregación de calendarios**: Descrito por usuario de HN `angiolillo` en una [discusión de Hacker News](https://news.ycombinator.com/item?id=46872465), detalló el dolor de revisar cada mañana los calendarios de trabajo, personal, familiar y escuela de niños por separado.
+- **Monitoreo ambiental de mensajes**: Documentado por [Sparkry AI](https://sparkryai.substack.com/p/24-hours-with-openclaw-the-ai-setup) — cuando la esposa recibió un mensaje de texto de cita dental, OpenClaw creó automáticamente un evento de calendario con buffer de viaje de 30 minutos, sin que se lo pidieran. Verificado también en [OpenClaw Showcase](https://openclaw.ai/showcase), donde `@theaaron` llamó a la gestión de calendarios basada en chat "uno de los mejores usos de LLM que he experimentado".
+- **Coordinación doméstica**: El "Clawdbot Linguini" de Brandon Wang se ejecuta en un Mac Mini doméstico — maneja seguimientos de SMS, crea eventos de calendario desde fotos, rastrea precios de Airbnb, procesa fotos de inventario de congelador, y coordina logística doméstica vía iMessage y Slack.
+- **Seguimiento de despensa**: Múltiples usuarios de HN discutieron el valor (y desafíos) de mantener inventario familiar, `dns_snek` señaló: "Olvido dónde puse las cosas 5 segundos después... Este es realmente un problema grande para mí, porque dejo que las cosas expiren."
 
-## 相关链接
+## Enlaces relacionados
 
-- [OpenClaw iMessage 技能](https://github.com/openclaw/openclaw)
-- [Google Calendar API](https://developers.google.com/calendar)
+- [Skill de iMessage de OpenClaw](https://github.com/openclaw/openclaw)
+- [API de Google Calendar](https://developers.google.com/calendar)
 - [Apple Calendar (EventKit)](https://developer.apple.com/documentation/eventkit)
-- [OpenClaw Showcase — 日历相关评价](https://openclaw.ai/showcase)
+- [OpenClaw Showcase — Evaluaciones relacionadas con calendarios](https://openclaw.ai/showcase)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/family-calendar-household-assistant.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/family-calendar-household-assistant.md)

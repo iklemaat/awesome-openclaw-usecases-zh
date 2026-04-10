@@ -1,44 +1,44 @@
-# 活动嘉宾确认
+# Confirmación de Invitados a Eventos
 
-你正在举办一个活动——晚宴派对、婚礼、公司团建——你需要确认一份嘉宾名单上的出席情况。手动打电话给 20 多个人非常繁琐：你要反复打电话、忘记谁说了什么、还会弄丢饮食限制或携伴信息。发短信有时管用，但人们会忽略消息。真正的电话通话能获得更高的回复率。
+Estás organizando un evento — cena, boda, evento corporativo — y necesitas confirmar asistencia de una lista de invitados. Llamar manualmente a 20+ personas es muy tedioso: tienes que llamar repetidamente, olvidar quién dijo qué, y perder información de restricciones dietéticas o invitados adicionales. Los mensajes de texto a veces funcionan, pero la gente ignora los mensajes. Las llamadas telefónicas reales obtienen mayor tasa de respuesta.
 
-这个用例让 OpenClaw 使用 [SuperCall](https://clawhub.ai/xonder/supercall) 插件逐一给你名单上的每位嘉宾打电话，确认他们是否出席，收集备注信息，并将所有结果汇总成一份摘要。
+Este caso de uso hace que OpenClaw use el plugin [SuperCall](https://clawhub.ai/xonder/supercall) para llamar uno por uno a cada invitado de tu lista, confirmar si asisten, recopilar información de notas, y compilar todo en un resumen.
 
-## 功能介绍
+## Qué puede hacer
 
-- 遍历嘉宾名单（姓名 + 电话号码）并逐一拨打
-- AI 以友好的角色介绍自己是你的活动协调员
-- 向嘉宾确认活动日期、时间和地点
-- 询问是否出席，并收集备注信息（饮食需求、携伴、到达时间等）
-- 所有电话完成后，汇总摘要：谁确认了、谁拒绝了、谁没接电话，以及所有备注
+- Recorrer lista de invitados (nombre + número de teléfono) y llamar a cada uno
+- IA se presenta amablemente como tu coordinador de eventos con un rol
+- Confirmar fecha, hora y ubicación del evento con los invitados
+- Preguntar si asisten, y recopilar notas (restricciones dietéticas, invitados adicionales, hora de llegada, etc.)
+- Después de completar todas las llamadas, compilar resumen: quién confirmó, quién rechazó, quién no contestó, y todas las notas
 
-## 为什么选择 SuperCall
+## Por qué SuperCall
 
-这个用例专门使用 [SuperCall](https://clawhub.ai/xonder/supercall) 插件——而不是内置的 `voice_call` 插件。关键区别在于：SuperCall 是一个完全独立的语音智能体。通话中的 AI 角色**只能访问你提供的上下文**（角色名称、目标和开场白）。它无法访问你的网关智能体、你的文件、你的其他工具或任何其他内容。
+Este caso de uso usa específicamente el plugin [SuperCall](https://clawhub.ai/xonder/supercall) — no el plugin `voice_call` integrado. La diferencia clave es: SuperCall es un agente de voz completamente independiente. El rol de IA durante la llamada **solo tiene acceso al contexto que proporcionas** (nombre del rol, objetivo y saludo inicial). No puede acceder a tu agente de gateway, tus archivos, tus otras herramientas ni nada más.
 
-这对嘉宾确认很重要，因为：
+Esto es importante para confirmación de invitados porque:
 
-- **安全性**：电话另一端的人无法通过对话操纵或访问你的智能体。没有提示注入（prompt injection）或数据泄露的风险。
-- **更好的对话**：因为 AI 被限定在单一聚焦任务（确认出席），它能保持话题并比通用语音智能体更自然地处理通话。
-- **适合批量处理**：你要给不同的人打很多电话。一个每次通话都重置的沙箱化角色正是你所需要的——对话之间不会互相影响。
+- **Seguridad**: La persona al otro lado del teléfono no puede manipular o acceder a tu agente mediante conversación. No hay riesgo de inyección de prompt (prompt injection) o fuga de datos.
+- **Mejor conversación**: Como la IA está limitada a una tarea única enfocada (confirmar asistencia), puede mantener el tema y manejar la llamada más naturalmente que un agente de voz genérico.
+- **Adecuado para procesamiento por lotes**: Vas a hacer muchas llamadas a diferentes personas. Un rol en caja de arena que se reinicia con cada llamada es exactamente lo que necesitas — las conversaciones no se afectan entre sí.
 
-## 所需技能
+## Habilidades requeridas
 
-- [SuperCall](https://clawhub.ai/xonder/supercall) — 通过 `openclaw plugins install @xonder/supercall` 安装
-- 一个带电话号码的 Twilio 账户（用于拨打外呼电话）
-- 一个 OpenAI API 密钥（用于 GPT-4o 实时语音 AI）
-- ngrok（用于 webhook（网络钩子）隧道——免费版即可）
+- [SuperCall](https://clawhub.ai/xonder/supercall) — Instalar vía `openclaw plugins install @xonder/supercall`
+- Una cuenta de Twilio con número de teléfono (para hacer llamadas salientes)
+- Una clave de API de OpenAI (para IA de voz en tiempo real GPT-4o)
+- ngrok (para túnel de webhook — versión gratis funciona)
 
-完整配置说明请参阅 [SuperCall README](https://github.com/xonder/supercall)。
+Consulta la [documentación de SuperCall](https://github.com/xonder/supercall) para instrucciones completas de configuración.
 
-## 设置方法
+## Cómo configurar
 
-1. 按照[设置指南](https://github.com/xonder/supercall#configuration)安装并配置 SuperCall。确保在你的 OpenClaw 配置中启用了 hooks。
+1. Instalar y configurar SuperCall según la [guía de configuración](https://github.com/xonder/supercall#configuration). Asegurar que hooks estén habilitados en tu configuración de OpenClaw.
 
-2. 准备你的嘉宾名单。你可以直接在聊天中粘贴，也可以保存在文件中：
+2. Preparar tu lista de invitados. Puedes pegar directamente en el chat o guardar en un archivo:
 
 ```text
-Guest List — Summer BBQ, Saturday June 14th, 4 PM, 23 Oak Street
+Lista de Invitados — BBQ de Verano, Sábado 14 de Junio, 4 PM, 23 Oak Street
 
 - Sarah Johnson: +15551234567
 - Mike Chen: +15559876543
@@ -46,9 +46,9 @@ Guest List — Summer BBQ, Saturday June 14th, 4 PM, 23 Oak Street
 - David Kim: +15558887777
 ```
 
-3. 给 OpenClaw 设置提示词：
+3. Configurar prompt para OpenClaw:
 
-以下提示词让智能体逐一拨打嘉宾电话并汇总确认结果：
+El siguiente prompt hace que el agente llame a los invitados uno por uno y compile las confirmaciones:
 
 ```text
 I need you to confirm attendance for my event. Here are the details:
@@ -71,24 +71,24 @@ After each call, log the result. Once all calls are done, give me a full summary
 - Any notes or special requests from each guest
 ```
 
-4. OpenClaw 会使用 SuperCall 逐一拨打每位嘉宾的电话，然后汇总结果。你可以随时询问进度更新。
+4. OpenClaw usará SuperCall para llamar a cada invitado uno por uno, luego resumirá los resultados. Puedes preguntar actualizaciones de progreso en cualquier momento.
 
-## 关键洞察
+## Ideas clave
 
-- **从小规模测试开始**：先用 2-3 位嘉宾试试，确保角色和开场白听起来合适。你可以在拨打完整名单之前调整语调。
-- **注意拨打时间**：不要安排太早或太晚的电话。你可以告诉 OpenClaw 只在特定时间段内拨打。
-- **查看通话记录**：SuperCall 会将通话记录保存到 `~/clawd/supercall-logs`。在第一批电话后浏览一下，看看对话进行得如何。
-- **未接电话处理**：如果有人没接电话，OpenClaw 会记录下来，你可以决定是稍后重试还是改用短信跟进。
-- **真实电话通话需要花钱**：每次通话都会消耗 Twilio 通话时长。在你的 Twilio 账户中设置适当的限额，尤其是嘉宾名单较大时。
+- **Comenzar con prueba pequeña**: Primero probar con 2-3 invitados, asegurar que el rol y el saludo suenen bien. Puedes ajustar el tono antes de llamar a la lista completa.
+- **Notar hora de llamadas**: No programar llamadas demasiado temprano o demasiado tarde. Puedes decirle a OpenClaw que solo llame durante ventanas de tiempo específicas.
+- **Revisar registros de llamadas**: SuperCall guarda registros de llamadas en `~/clawd/supercall-logs`. Revisar después de las primeras llamadas para ver cómo van las conversaciones.
+- **Manejo de llamadas no contestadas**: Si alguien no contesta, OpenClaw lo registrará, puedes decidir si reintentar más tarde o hacer seguimiento vía SMS.
+- **Las llamadas telefónicas reales cuestan dinero**: Cada llamada consume minutos de Twilio. Configurar límites apropiados en tu cuenta de Twilio, especialmente para listas de invitados grandes.
 
-## 相关链接
+## Enlaces relacionados
 
-- [SuperCall on ClawHub](https://clawhub.ai/xonder/supercall)
-- [SuperCall on GitHub](https://github.com/xonder/supercall)
-- [Twilio Console](https://console.twilio.com)
-- [OpenAI Realtime API](https://platform.openai.com/docs/guides/realtime)
+- [SuperCall en ClawHub](https://clawhub.ai/xonder/supercall)
+- [SuperCall en GitHub](https://github.com/xonder/supercall)
+- [Consola de Twilio](https://console.twilio.com)
+- [API en tiempo real de OpenAI](https://platform.openai.com/docs/guides/realtime)
 - [ngrok](https://ngrok.com)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/event-guest-confirmation.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/event-guest-confirmation.md)

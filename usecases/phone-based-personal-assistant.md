@@ -1,21 +1,21 @@
-# 基于电话的个人助手
+# Asistente Personal Basado en Teléfono
 
-## 痛点
+## Dolor
 
-你希望从任何电话访问你的 AI 智能体，无需智能手机应用或互联网浏览器。在开车、步行或双手被占用时，你需要免提语音助手。
+Quieres acceder a tu agente de IA desde cualquier teléfono, sin aplicación de smartphone ni navegador web de internet. Necesitas un asistente de voz manos libres cuando conduces, caminas o tienes las manos ocupadas.
 
-## 功能概述
+## Descripción general de funciones
 
-ClawdTalk 使 OpenClaw 能够接听和拨打电话，将任何电话变成你 AI 助手的入口。你可以：
-- 拨打一个电话号码，通过语音与你的 AI 智能体交流
-- 通过语音获取日历提醒、Jira 更新和网络搜索结果
-- 集成 Telnyx 实现可靠的电话连接
+ClawdTalk permite que OpenClaw responda y realice llamadas, convirtiendo cualquier teléfono en un punto de entrada para tu agente de IA. Puedes:
+- Marcar un número de teléfono, interactuar con tu agente de IA por voz
+- Obtener recordatorios de calendario, actualizaciones de Jira y resultados de búsqueda web por voz
+- Integrar con Telnyx para conexión telefónica confiable
 
-短信支持即将推出。
+El soporte de SMS estará disponible próximamente.
 
-## 提示词
+## Prompt
 
-以下提示词用于配置语音助手的行为：
+El siguiente prompt se usa para configurar el comportamiento del asistente de voz:
 
 ```
 You are available via phone. When I call, greet me and ask how I can help.
@@ -25,20 +25,20 @@ For Jira updates: "Show me my open tickets"
 For web search: "Search for latest news on AI agents"
 ```
 
-## 所需技能
+## Habilidades requeridas
 
 - [ClawdTalk](https://github.com/team-telnyx/clawdtalk-client)
-- 日历技能（Google Calendar 或 Outlook）
-- Jira 技能
-- 网络搜索技能
+- Skill de calendario (Google Calendar o Outlook)
+- Skill de Jira
+- Skill de búsqueda web
 
-## 相关链接
+## Enlaces relacionados
 
-- [ClawdTalk 网站](https://clawdtalk.com)
-- [ClawdTalk GitHub](https://github.com/team-telnyx/clawdtalk-client)
-- [Telnyx API](https://telnyx.com/)
-- [OpenClaw Skills](https://github.com/openclaw/skills)
+- [Sitio web de ClawdTalk](https://clawdtalk.com)
+- [ClawdTalk en GitHub](https://github.com/team-telnyx/clawdtalk-client)
+- [API de Telnyx](https://telnyx.com/)
+- [Skills de OpenClaw](https://github.com/openclaw/skills)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/phone-based-personal-assistant.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/phone-based-personal-assistant.md)

@@ -1,26 +1,26 @@
-# 健康与症状追踪器
+# Rastreador de Salud y Síntomas
 
-识别食物敏感性需要长期持续记录，但这种记录非常繁琐难以维持。你需要提醒来记录，也需要分析来发现模式。
+Identificar sensibilidades alimentarias requiere registro continuo a largo plazo, pero este registro es muy tedioso y difícil de mantener. Necesitas recordatorios para registrar, y necesitas análisis para descubrir patrones.
 
-这个工作流自动追踪食物和症状：
+Este flujo de trabajo rastrea automáticamente alimentos y síntomas:
 
-- 在专用的 Telegram 话题中发送你的饮食和症状信息，OpenClaw 会自动记录所有内容并附带时间戳
-- 每天 3 次提醒（早上、中午、晚上）提示你记录餐食
-- 随着时间推移，分析模式以识别潜在的触发因素
+- Enviar información de comidas y síntomas en un tema dedicado de Telegram, OpenClaw registrará automáticamente todo con marcas de tiempo
+- 3 recordatorios diarios (mañana, mediodía, noche) para registrar comidas
+- Con el tiempo, analiza patrones para identificar posibles desencadenantes
 
-## 所需技能
+## Habilidades requeridas
 
-- 定时任务（cron job）用于提醒
-- Telegram 话题用于记录
-- 文件存储（markdown 日志文件）
+- Tarea programada (cron job) para recordatorios
+- Tema de Telegram para registro
+- Almacenamiento de archivos (archivos de registro markdown)
 
-## 如何设置
+## Cómo configurar
 
-1. 在 Telegram 中创建一个名为 "health-tracker"（或类似名称）的话题。
-2. 创建日志文件：`~/clawd/memory/health-log.md`
-3. 指示 OpenClaw：
+1. Crear un tema en Telegram llamado "health-tracker" (o similar).
+2. Crear archivo de registro: `~/clawd/memory/health-log.md`
+3. Indicar a OpenClaw:
 
-以下提示词配置食物和症状的自动追踪与周度分析：
+El siguiente prompt configura seguimiento automático de alimentos y síntomas con análisis semanal:
 
 ```text
 When I message in the "health-tracker" topic:
@@ -41,8 +41,8 @@ Every Sunday, analyze the past week's log and identify patterns:
 Post the analysis to the health-tracker topic.
 ```
 
-4. 可选：为 OpenClaw 添加一个记忆文件，用于追踪已知的触发因素，并随着模式的出现不断更新。
+4. Opcional: Agregar un archivo de memoria a OpenClaw para rastrear desencadenantes conocidos, actualizar continuamente a medida que surgen patrones.
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/health-symptom-tracker.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/health-symptom-tracker.md)
