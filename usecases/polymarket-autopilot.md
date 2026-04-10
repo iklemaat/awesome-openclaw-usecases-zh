@@ -1,39 +1,39 @@
-# Polymarket 自动驾驶：自动化模拟交易
+# Piloto Automático de Polymarket: Trading Simulado Automatizado
 
-手动监控预测市场的套利机会并执行交易既耗时又需要持续关注。你希望在不冒真金白银风险的情况下测试和优化交易策略。
+Monitorear manualmente oportunidades de arbitraje en mercados de predicción y ejecutar trades consume mucho tiempo y requiere atención continua. Quieres probar y optimizar estrategias de trading sin arriesgar dinero real.
 
-这个工作流使用自定义策略在 Polymarket 上自动化模拟交易（paper trading）：
+Este flujo de trabajo usa estrategias personalizadas para automatizar el trading simulado (paper trading) en Polymarket:
 
-- 通过 API 监控市场数据（价格、成交量、价差）
-- 使用 TAIL（趋势跟踪）和 BONDING（逆向）策略执行模拟交易
-- 追踪投资组合表现、盈亏和胜率
-- 每日向 Discord 推送包含交易日志和洞察的摘要
-- 从模式中学习：根据回测结果调整策略参数
+- Monitorea datos de mercado vía API (precios, volumen, diferenciales)
+- Ejecuta trades simulados usando estrategias TAIL (seguimiento de tendencias) y BONDING (contrarias)
+- Rastrea rendimiento de portafolio, ganancias/pérdidas y tasa de victorias
+- Envía resúmenes diarios a Discord con registros de trades e insights
+- Aprende de patrones: ajusta parámetros de estrategia basado en resultados de backtesting
 
-## 痛点
+## Dolor
 
-预测市场变化很快。手动交易意味着错过机会、情绪化决策以及难以追踪哪些策略有效。在你了解市场行为之前就用真钱测试策略，会有亏损风险。
+Los mercados de predicción cambian rápidamente. El trading manual significa perder oportunidades, decisiones emocionales y dificultad para rastrear qué estrategias funcionan. Probar estrategias con dinero real antes de entender el comportamiento del mercado conlleva riesgo de pérdidas.
 
-## 功能介绍
+## Qué puede hacer
 
-自动驾驶系统持续扫描 Polymarket 的机会，使用可配置的策略模拟交易，并记录所有内容以供分析。你醒来时就能看到它"隔夜交易"的摘要——哪些有效，哪些无效。
+El sistema de piloto automático escanea continuamente oportunidades en Polymarket, ejecuta trades simulados usando estrategias configurables, y registra todo para análisis. Te despiertas y ves un resumen de sus "trades overnight" — qué funcionó, qué no.
 
-策略示例：
-- **TAIL**：当成交量飙升且趋势明确时跟随趋势
-- **BONDING**：当市场对新闻过度反应时买入逆向头寸
-- **SPREAD**：识别定价偏差的市场，寻找套利机会
+Ejemplos de estrategias:
+- **TAIL**: Sigue tendencias fuertes cuando el volumen se dispara
+- **BONDING**: Compra posiciones contrarias cuando el mercado reacciona en exceso a noticias
+- **SPREAD**: Identifica mercados con desviaciones de precios, busca oportunidades de arbitraje
 
-## 所需技能
+## Habilidades requeridas
 
-- `web_search` 或 `web_fetch`（用于获取 Polymarket API 数据）
-- `postgres` 或 SQLite，用于交易日志和投资组合追踪
-- Discord 集成，用于每日报告
-- Cron job（定时任务），用于持续监控
-- Sub-agent（子智能体）生成，用于并行市场分析
+- `web_search` o `web_fetch` (para obtener datos de API de Polymarket)
+- `postgres` o SQLite, para registro de trades y seguimiento de portafolio
+- Integración con Discord, para reportes diarios
+- Cron job (tarea programada), para monitoreo continuo
+- Generación de Sub-agent (sub-agente), para análisis de mercado paralelo
 
-## 如何设置
+## Cómo configurar
 
-1. 设置用于模拟交易的数据库：
+1. Configurar base de datos para trading simulado:
 ```sql
 CREATE TABLE paper_trades (
   id SERIAL PRIMARY KEY,
@@ -57,9 +57,9 @@ CREATE TABLE portfolio (
 );
 ```
 
-2. 创建一个 Discord 频道用于更新（例如 #polymarket-autopilot）。
+2. Crear un canal de Discord para actualizaciones (por ejemplo #polymarket-autopilot).
 
-3. 向 OpenClaw 发送以下提示词：
+3. Enviar el siguiente prompt a OpenClaw:
 ```text
 You are a Polymarket paper trading autopilot. Run continuously (via cron every 15 minutes):
 
@@ -82,13 +82,13 @@ Use sub-agents to analyze multiple markets in parallel during high-volume period
 Never use real money. This is paper trading only.
 ```
 
-4. 根据表现迭代策略。调整阈值、添加新策略、对历史数据进行回测。
+4. Iterar estrategias basado en rendimiento. Ajustar umbrales, agregar nuevas estrategias, hacer backtesting en datos históricos.
 
-## 相关链接
+## Enlaces relacionados
 
-- [Polymarket API](https://docs.polymarket.com/)
-- [模拟交易最佳实践](https://www.investopedia.com/articles/trading/11/paper-trading.asp)
+- [API de Polymarket](https://docs.polymarket.com/)
+- [Mejores prácticas de trading simulado](https://www.investopedia.com/articles/trading/11/paper-trading.asp)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/polymarket-autopilot.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/polymarket-autopilot.md)

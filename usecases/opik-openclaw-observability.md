@@ -1,26 +1,26 @@
-# OpenClaw + Opik 可观测性追踪
+# Seguimiento de Observabilidad de OpenClaw + Opik
 
-当 OpenClaw 开始承载真实业务后，问题通常出在「看不见」：一次对话会触发 LLM 调用、工具调用、子智能体协作，但排障信息分散在不同日志里，定位成本很高。
+Después de que OpenClaw comienza a albergar negocios reales, los problemas generalmente surgen de lo "invisible": una conversación desencadena llamadas de LLM, llamadas de herramientas, colaboración de sub-agentes, pero la información de resolución de problemas está dispersa en diferentes registros, haciendo que la localización sea costosa.
 
-这个用例演示如何通过 `@opik/opik-openclaw` 把 OpenClaw 运行过程接入 Opik，实现统一追踪、错误排查和成本监控。
+Este caso de uso demuestra cómo conectar el proceso de ejecución de OpenClaw a Opik vía `@opik/opik-openclaw`, logrando seguimiento unificado, resolución de errores y monitoreo de costos.
 
-## 痛点
+## Dolor
 
-- **链路不可见**：很难把一次用户请求和后续全部执行步骤关联起来
-- **故障排查慢**：排查需要在网关日志、模型日志、工具日志之间来回切换
-- **成本不透明**：按任务/工作流观察 token 和成本的能力不足
+- **Pipeline invisible**: Es difícil correlacionar una solicitud de usuario con todos los pasos de ejecución subsiguientes
+- **Resolución de fallos lenta**: La resolución requiere cambiar entre registros de gateway, registros de modelos y registros de herramientas
+- **Costos poco transparentes**: Capacidad insuficiente para observar tokens y costos por tarea/flujo de trabajo
 
-## 功能说明
+## Descripción de funciones
 
-- 将 OpenClaw 事件导出为 Opik 中的 trace/span
-- 覆盖以下关键数据：
-  - LLM 请求与响应 span
-  - 工具调用 span（入参/结果/错误）
-  - 子智能体生命周期 span
-  - 运行结束元数据
-  - 用量与成本元数据
+- Exportar eventos de OpenClaw como trace/span en Opik
+- Cubre los siguientes datos clave:
+  - Span de solicitud y respuesta de LLM
+  - Span de llamadas de herramientas (parámetros de entrada/resultados/errores)
+  - Span de ciclo de vida de sub-agentes
+  - Metadatos al final de la ejecución
+  - Metadatos de uso y costos
 
-## 提示词（可直接复制）
+## Prompt (se puede copiar directamente)
 
 ```text
 请做一次网关健康检查，发送一条测试消息，并汇总今天 Opik 里所有失败的工具调用及错误原因。
@@ -30,42 +30,42 @@
 请统计最近 24 小时 Opik 追踪里 token 和成本最高的工作流，并给出每个工作流 1 条优化建议。
 ```
 
-## 所需技能
+## Habilidades requeridas
 
-- 基础 OpenClaw CLI 使用能力
-- 无需额外 OpenClaw skills
+- Habilidad básica de uso de CLI de OpenClaw
+- Sin skills adicionales de OpenClaw necesarios
 
-## 配置方法
+## Método de configuración
 
-1. 安装插件：
+1. Instalar plugin:
 
 ```bash
 openclaw plugins install @opik/opik-openclaw
 ```
 
-2. 运行配置向导：
+2. Ejecutar asistente de configuración:
 
 ```bash
 openclaw opik configure
 ```
 
-3. 检查生效配置：
+3. Verificar configuración efectiva:
 
 ```bash
 openclaw opik status
 ```
 
-4. 发送测试请求并生成追踪：
+4. Enviar solicitud de prueba y generar seguimiento:
 
 ```bash
 openclaw gateway run
 openclaw message send "hello from openclaw"
 ```
 
-5. 在 Opik 中确认 trace 与 span 正常入库。
+5. Confirmar que trace y span se almacenan normalmente en Opik.
 
-## 相关链接
+## Enlaces relacionados
 
-- [opik-openclaw 仓库](https://github.com/comet-ml/opik-openclaw)
-- [Opik 文档](https://www.comet.com/docs/opik/)
-- [OpenClaw 插件文档](https://docs.openclaw.ai/plugin)
+- [Repositorio de opik-openclaw](https://github.com/comet-ml/opik-openclaw)
+- [Documentación de Opik](https://www.comet.com/docs/opik/)
+- [Documentación de plugins de OpenClaw](https://docs.openclaw.ai/plugin)

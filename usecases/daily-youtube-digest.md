@@ -1,54 +1,54 @@
-# 每日 YouTube 摘要
+# Resumen Diario de YouTube
 
-每天以你最喜欢的 YouTube 频道的新视频个性化摘要开始新的一天 — 再也不会错过你真正想关注的创作者的内容。
+Comienza cada día con un resumen personalizado de nuevos videos de tus canales favoritos de YouTube — nunca más te pierdas el contenido de los creadores que realmente quieres seguir.
 
-## 痛点
+## Dolor
 
-YouTube 的通知不可靠。你订阅了频道，但它们的新视频从不出现在你的首页动态中。通知里也没有。它们就这样……消失了。这并不意味着你不想看到它们 — 而是 YouTube 的算法把它们埋没了。
+Las notificaciones de YouTube no son confiables. Te suscribes a canales, pero sus nuevos videos nunca aparecen en tu feed de inicio. Tampoco en las notificaciones. Simplemente... desaparecen. No es que no quieras verlos — es que el algoritmo de YouTube los entierra.
 
-此外：每天以精心策划的内容洞察开始新的一天，总比漫无目的地刷推荐信息流要有趣得多。
+Además: es mucho más divertido comenzar el día con información curada, que desplazarse sin rumbo por el feed de recomendaciones.
 
-## 功能介绍
+## Qué puede hacer
 
-- 从你最喜欢的频道列表中获取最新视频
-- 从每个视频的字幕（transcript）中总结或提取关键洞察
-- 每天（或按需）向你推送摘要
+- Obtener últimos videos de tu lista de canales favoritos
+- Resumir o extraer ideas clave de las transcripciones (subtítulos) de cada video
+- Enviarte el resumen diaria o bajo demanda
 
-## 所需技能
+## Habilidades requeridas
 
-安装 [youtube-full](https://clawhub.ai/therohitdas/youtube-full) 技能。
+Instalar el skill [youtube-full](https://clawhub.ai/therohitdas/youtube-full).
 
-只需告诉你的 OpenClaw：
+Solo dile a tu OpenClaw:
 
 ```text
 "Install the youtube-full skill and set it up for me"
 ```
-或者
+o
 
 ```bash
 npx clawhub@latest install youtube-full
 ```
 
-就是这样。代理会处理剩下的一切 — 包括账户创建和 API 密钥（API key）设置。注册即可获得 **100 个免费额度**，无需信用卡。
+Eso es todo. El agente maneja todo lo demás — incluyendo creación de cuenta y configuración de clave de API. Regístrate para obtener **100 créditos gratis**, sin tarjeta de crédito.
 
-> 注意：创建账户后，该技能会根据操作系统自动将 API 密钥安全存储在正确的位置，因此 API 可在所有环境中正常工作。
+> Nota: Después de crear la cuenta, este skill almacena de forma segura la clave de API en la ubicación correcta según el sistema operativo, por lo que la API funciona correctamente en todos los entornos.
 
-![youtube-full 技能安装](https://pub-15904f15a44a4ea69350737e87660b92.r2.dev/media/1770620159490-e41e7baa.png)
+![Instalación del skill youtube-full](https://pub-15904f15a44a4ea69350737e87660b92.r2.dev/media/1770620159490-e41e7baa.png)
 
-### 为什么选择 TranscriptAPI.com 而不是 yt-dlp？
+### ¿Por qué TranscriptAPI.com en lugar de yt-dlp?
 
-| CLI 工具（yt-dlp 等） | TranscriptAPI |
+| Herramienta CLI (yt-dlp, etc.) | TranscriptAPI |
 |--------------------------|---------------|
-| 冗长的日志会淹没代理上下文 | 简洁的 JSON 响应 |
-| 在 GCP/云端 OpenClaw 上无法使用 | 随处可用，速度快 |
-| 会被 YouTube 随机封锁 | 驱动 [YouTubeToTranscript.com](https://youtubetotranscript.com)，服务数百万用户。缓存且可靠。 |
-| 需要安装二进制文件 | 无需二进制文件，仅使用 HTTP |
+| Registros verbosos ahogan el contexto del agente | Respuestas JSON concisas |
+| No disponible en GCP/OpenClaw en la nube | Disponible en cualquier lugar, rápido |
+| Bloqueado aleatoriamente por YouTube | Impulsa [YouTubeToTranscript.com], sirve a millones de usuarios. Cacheado y confiable. |
+| Necesita instalar binarios | Sin binarios, solo usa HTTP |
 
-## 如何设置
+## Cómo configurar
 
-### 方案 1：基于频道的摘要
+### Esquema 1: Resumen basado en canales
 
-向 OpenClaw 发送以下提示：
+Enviar el siguiente prompt a OpenClaw:
 
 ```text
 Every morning at 8am, fetch the latest videos from these YouTube channels and give me a digest with key insights from each:
@@ -67,9 +67,9 @@ If a channel handle doesn't resolve, search for it and find the correct one.
 Save my channel list to memory so I can add/remove channels later.
 ```
 
-### 方案 2：基于关键词的摘要
+### Esquema 2: Resumen basado en palabras clave
 
-追踪关于特定主题的新视频：
+Rastrear nuevos videos sobre temas específicos:
 
 ```text
 Every day, search YouTube for new videos about "OpenClaw" (or "Claude Code", "AI agents", etc).
@@ -86,15 +86,15 @@ For each new video:
 Run this every morning at 9am.
 ```
 
-这样你就不会浪费额度重复获取已经看过的视频了。
+Así no desperdicias créditos obteniendo repetidamente videos que ya has visto.
 
-## 小贴士
+## Consejos
 
-- `channel/latest` 和 `channel/resolve` 是**免费的**（0 额度）— 检查新上传不花任何费用
-- 只有字幕提取每次消耗 1 个额度
-- 可以要求不同的摘要风格：关键要点、精彩引言、有趣片段的时间戳
-- 这个功能已经有现成的产品 - [Recapio - 每日 YouTube 回顾](https://recapio.com/features/daily-recaps)
+- `channel/latest` y `channel/resolve` son **gratis** (0 créditos) — verificar nuevas publicaciones no cuesta nada
+- Solo la extracción de transcripciones consume 1 crédito por vez
+- Puedes pedir diferentes estilos de resumen: puntos clave, citas memorables, timestamps de segmentos interesantes
+- Esta función ya tiene un producto listo - [Recapio - Resumen diario de YouTube](https://recapio.com/features/daily-recaps)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/daily-youtube-digest.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/daily-youtube-digest.md)

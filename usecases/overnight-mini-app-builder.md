@@ -1,34 +1,34 @@
-# 目标驱动的自主任务系统
+# Tareas Autónomas Dirigidas por Objetivos
 
-你的 AI 智能体（agent）功能强大，但本质上是被动的——只有你下达指令时它才会工作。如果它能了解你的目标，并每天主动提出推进目标的任务，而无需你开口呢？
+Tu agente de AI (agent) es poderoso, pero es esencialmente pasivo — solo trabaja cuando le das instrucciones. ¿Y si pudiera entender tus objetivos, y cada día proactivamente proponer tareas para avanzar hacia ellos, sin que necesites pedirlo?
 
-这个工作流将 OpenClaw 变成一个自主驱动的"员工"。你只需一次性倾倒你的所有目标，智能体就会自主生成、安排并完成推进这些目标的任务——甚至会在一夜之间为你构建惊喜小应用。
+Este flujo de trabajo convierte OpenClaw en un "empleado" autónomo. Solo necesitas volcar todos tus objetivos una vez, el agente generará autónomamente, programará y completará tareas para avanzar hacia estos objetivos — incluso puede construir pequeñas aplicaciones sorpresa para ti durante la noche.
 
-## 功能概述
+## Descripción general de funciones
 
-- 你将所有目标、使命和任务（个人和职业）一次性倾倒给 OpenClaw
-- 每天早上，智能体会自动生成 4-5 个可以在你的电脑上自主完成的任务
-- 任务不仅限于构建应用：还包括调研、编写脚本、开发功能、创建内容、分析竞品等
-- 智能体自行执行任务，并在它为你构建的自定义看板（Kanban board）上跟踪进度
-- 你还可以让它每晚为你构建一个惊喜小应用——一个新的 SaaS 创意、一个自动化你生活中无聊部分的工具，以 MVP（最小可行产品）的形式交付
+- Volcas todos tus objetivos, misiones y tareas (personales y profesionales) a OpenClaw de una vez
+- Cada mañana, el agente genera automáticamente 4-5 tareas que puede completar autónomamente en tu computadora
+- Las tareas no se limitan a construir aplicaciones: también incluyen investigación, escribir guiones, desarrollar funciones, crear contenido, analizar competidores, etc.
+- El agente ejecuta tareas por sí mismo, y rastrea el progreso en un tablero Kanban (Kanban board) personalizado que construyó para ti
+- También puedes pedirle que te construya una pequeña aplicación sorpresa cada noche — una nueva idea de SaaS, una herramienta que automatice partes aburridas de tu vida, entregada como un MVP (producto mínimo viable)
 
-## 痛点
+## Dolor
 
-大多数人有远大的目标，但难以将其分解为每日可执行的步骤。即使做到了，执行也会耗尽所有时间。这个系统将计划和执行都交给了你的 AI 智能体。你定义目的地，智能体规划每日路径并逐步执行。
+La mayoría de las personas tienen grandes objetivos, pero les cuesta dividirlos en pasos ejecutables diariamente. Incluso si lo logran, la ejecución consume todo el tiempo. Este sistema entrega tanto la planificación como la ejecución a tu agente de AI. Tú defines el destino, el agente planifica la ruta diaria y ejecuta paso a paso.
 
-## 所需技能
+## Habilidades requeridas
 
-- Telegram 或 Discord 集成
-- `sessions_spawn` / `sessions_send`，用于自主任务执行
-- Next.js 或类似框架（用于看板——OpenClaw 会为你构建）
+- Integración con Telegram o Discord
+- `sessions_spawn` / `sessions_send`, para ejecución autónoma de tareas
+- Next.js o marcos similares (para tablero Kanban — OpenClaw lo construirá para ti)
 
-## 如何设置
+## Cómo configurar
 
-### 第一步：倾倒你的目标
+### Primer paso: Volcar tus objetivos
 
-这是最重要的一步。把你想要实现的一切告诉 OpenClaw：
+Este es el paso más importante. Dile a OpenClaw todo lo que quieres lograr:
 
-提示 OpenClaw：
+Indicar a OpenClaw:
 
 ```text
 Here are my goals and missions. Remember all of this:
@@ -50,9 +50,9 @@ Business:
 Use this context for everything you do going forward.
 ```
 
-### 第二步：设置自主每日任务
+### Segundo paso: Configurar tareas diarias autónomas
 
-提示 OpenClaw：
+Indicar a OpenClaw:
 
 ```text
 Every morning at 8:00 AM, come up with 4-5 tasks that you can complete
@@ -69,9 +69,9 @@ Then schedule and complete those tasks yourself. Examples:
 Track all tasks on a Kanban board. Update the board as you complete them.
 ```
 
-### 第三步：构建看板（可选）
+### Tercer paso: Construir tablero Kanban (opcional)
 
-提示 OpenClaw：
+Indicar a OpenClaw:
 
 ```text
 Build me a Kanban board in Next.js where I can see all the tasks you're
@@ -79,23 +79,23 @@ working on. Show columns for To Do, In Progress, and Done. Update it
 in real-time as you complete tasks.
 ```
 
-## 关键洞察
+## Ideas clave
 
-- **目标倾倒是一切的基础**。你提供的目标上下文越丰富，智能体生成的每日任务就越好。不要有所保留。
-- 智能体会发现你自己想不到的任务。它会在你的各个目标之间建立联系，找到你可能错过的机会。
-- 看板将你的智能体变成一个可追踪的"员工"。你可以准确看到它一直在做什么，并及时调整方向。
-- 对于夜间应用构建：明确告诉它构建 MVP，不要过度复杂化。你每天早上醒来都会收到一个新惊喜。
-- 这个效果会随时间复利增长——智能体会学习哪类任务最有帮助，并自动调整。
+- **Volcado de objetivos es la base de todo**. Cuanto más rico sea el contexto de objetivos que proporciones, mejores serán las tareas diarias que genere el agente. No te guardes nada.
+- El agente descubrirá tareas que tú no pensarías. Establecerá conexiones entre tus diversos objetivos, encontrará oportunidades que podrías haber perdido.
+- El tablero Kanban convierte tu agente en un "empleado" rastreable. Puedes ver exactamente qué ha estado haciendo, y ajustar la dirección a tiempo.
+- Para construcción de aplicaciones nocturnas: dile explícitamente que construya MVP, no lo compliques demasiado. Te despertarás cada mañana con una nueva sorpresa.
+- Este efecto compounding crece con el tiempo — el agente aprenderá qué tipo de tareas son más útiles, y se ajustará automáticamente.
 
-## 灵感来源
+## Fuentes de inspiración
 
-受 [Alex Finn](https://www.youtube.com/watch?v=UTCi_q6iuCM&t=414s) 及其[关于改变生活的 OpenClaw 用例视频](https://www.youtube.com/watch?v=41_TNGDDnfQ)启发。
+Inspirado en [Alex Finn](https://www.youtube.com/watch?v=UTCi_q6iuCM&t=414s) y su [video sobre casos de uso de OpenClaw que cambian la vida](https://www.youtube.com/watch?v=41_TNGDDnfQ).
 
-## 相关链接
+## Enlaces relacionados
 
-- [OpenClaw 记忆系统](https://github.com/openclaw/openclaw)
-- [OpenClaw 子智能体文档](https://github.com/openclaw/openclaw)
+- [Sistema de memoria de OpenClaw](https://github.com/openclaw/openclaw)
+- [Documentación de sub-agentes de OpenClaw](https://github.com/openclaw/openclaw)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/overnight-mini-app-builder.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/overnight-mini-app-builder.md)

@@ -1,54 +1,54 @@
-# 动态仪表盘与子智能体生成
+# Panel Dinámico y Generación con Sub-Agentes
 
-静态仪表盘显示的是过时的数据，需要持续手动更新。你需要跨多个数据源的实时可见性，又不想构建自定义前端或触发 API 速率限制。
+Los paneles estáticos muestran datos obsoletos y requieren actualizaciones manuales continuas. Necesitas visibilidad en tiempo real a través de múltiples fuentes de datos, sin construir un frontend personalizado ni activar límites de tasa de API.
 
-这个工作流创建一个实时仪表盘，通过生成子智能体（sub-agent）并行获取和处理数据：
+Este flujo de trabajo crea un panel en tiempo real, genera sub-agentes (sub-agent) para obtener y procesar datos en paralelo:
 
-- 同时监控多个数据源（API、数据库、GitHub、社交媒体）
-- 为每个数据源生成子智能体，避免阻塞并分散 API 负载
-- 将结果聚合到统一的仪表盘中（文本、HTML 或 Canvas）
-- 每 N 分钟用最新数据更新
-- 当指标超过阈值时发送警报
-- 在数据库中维护历史趋势以供可视化
+- Monitorea múltiples fuentes de datos simultáneamente (API, base de datos, GitHub, redes sociales)
+- Genera un sub-agente por cada fuente de datos, evita bloqueos y distribuye carga de API
+- Agrega resultados a un panel unificado (texto, HTML o Canvas)
+- Actualiza cada N minutos con los datos más recientes
+- Envía alertas cuando las métricas exceden umbrales
+- Mantiene tendencias históricas en base de datos para visualización
 
-## 痛点
+## Dolor
 
-构建自定义仪表盘需要数周时间。等完成时，需求已经变了。顺序轮询多个 API 既慢又容易触及速率限制。你现在就需要洞察，而不是花一个周末写代码。
+Construir paneles personalizados toma semanas. Para cuando terminas, los requisitos han cambiado. Sondear múltiples APIs secuencialmente es lento y fácil de tocar límites de tasa. Necesitas información ahora, no gastar un fin de semana escribiendo código.
 
-## 功能介绍
+## Qué puede hacer
 
-你通过对话定义要监控的内容："跟踪 GitHub 星标、Twitter 提及、Polymarket 交易量和系统健康状况。" OpenClaw 生成子智能体并行获取每个数据源，聚合结果，并以格式化的仪表盘发送到 Discord 或生成 HTML 文件。更新按定时任务（cron job）自动运行。
+Defines qué rastrear vía conversación: "Rastrea estrellas de GitHub, menciones en Twitter, volumen de trading de Polymarket y salud del sistema." OpenClaw genera sub-agentes para obtener cada fuente de datos en paralelo, agrega resultados, y envía un panel formateado a Discord o genera un archivo HTML. Las actualizaciones se ejecutan automáticamente vía tareas programadas (cron jobs).
 
-仪表盘示例板块：
-- **GitHub**：星标、Fork、未关闭的 Issue、最近的提交
-- **社交媒体**：Twitter 提及、Reddit 讨论、Discord 活动
-- **市场**：Polymarket 交易量、预测趋势
-- **系统健康**：CPU、内存、磁盘使用率、服务状态
+Ejemplos de secciones del panel:
+- **GitHub**: Estrellas, Forks, Issues no cerrados, commits recientes
+- **Redes sociales**: Menciones en Twitter, discusiones en Reddit, actividad en Discord
+- **Mercados**: Volumen de Polymarket, tendencias de predicción
+- **Salud del sistema**: Uso de CPU, memoria, disco, estado de servicios
 
-## 所需技能
+## Habilidades requeridas
 
-- 子智能体生成用于并行执行
-- `github`（gh CLI）用于 GitHub 指标
-- `bird`（Twitter）用于社交数据
-- `web_search` 或 `web_fetch` 用于外部 API
-- `postgres` 用于存储历史指标
-- Discord 或 Canvas 用于渲染仪表盘
-- 定时任务（cron job）用于定期更新
+- Generación de sub-agentes para ejecución paralela
+- `github` (CLI gh) para métricas de GitHub
+- `bird` (Twitter) para datos sociales
+- `web_search` o `web_fetch` para APIs externas
+- `postgres` para almacenar métricas históricas
+- Discord o Canvas para renderizar el panel
+- Tareas programadas (cron job) para actualizaciones periódicas
 
-## 设置方法
+## Cómo configurar
 
-1. 设置指标数据库：
+1. Configurar base de datos de métricas:
 ```sql
--- 指标表
+-- Tabla de métricas
 CREATE TABLE metrics (
   id SERIAL PRIMARY KEY,
-  source TEXT, -- 例如 "github"、"twitter"、"polymarket"
+  source TEXT, -- por ejemplo "github", "twitter", "polymarket"
   metric_name TEXT,
   metric_value NUMERIC,
   timestamp TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 警报表
+-- Tabla de alertas
 CREATE TABLE alerts (
   id SERIAL PRIMARY KEY,
   source TEXT,
@@ -58,11 +58,11 @@ CREATE TABLE alerts (
 );
 ```
 
-2. 创建一个用于仪表盘更新的 Discord 频道（例如 #dashboard）。
+2. Crear un canal de Discord para actualizaciones del panel (por ejemplo #dashboard).
 
-3. 给 OpenClaw 设置提示词：
+3. Configurar prompt para OpenClaw:
 
-以下提示词让智能体每 15 分钟自动获取多源数据并生成仪表盘：
+El siguiente prompt hace que el agente obtenga datos multi-fuente cada 15 minutos y genere un panel:
 
 ```text
 You are my dynamic dashboard manager. Every 15 minutes, run a cron job to:
@@ -108,15 +108,15 @@ You are my dynamic dashboard manager. Every 15 minutes, run a cron job to:
 Store all metrics in the database for historical analysis.
 ```
 
-4. 可选：使用 Canvas 渲染包含图表的 HTML 仪表盘。
+4. Opcional: Usar Canvas para renderizar un panel HTML con gráficos.
 
-5. 查询历史数据："显示过去 30 天的 GitHub 星标增长情况。"
+5. Consultar datos históricos: "Muestra el crecimiento de estrellas de GitHub de los últimos 30 días."
 
-## 相关链接
+## Enlaces relacionados
 
-- [使用子智能体进行并行处理](https://docs.openclaw.ai/subagents)
-- [仪表盘设计原则](https://www.nngroup.com/articles/dashboard-design/)
+- [Procesamiento paralelo con sub-agentes](https://docs.openclaw.ai/subagents)
+- [Principios de diseño de paneles](https://www.nngroup.com/articles/dashboard-design/)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/dynamic-dashboard.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/dynamic-dashboard.md)

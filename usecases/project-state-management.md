@@ -1,73 +1,73 @@
-# 项目状态管理系统：替代看板的事件驱动方案
+# Sistema de Gestión de Estado de Proyectos: Esquema Impulsado por Eventos para Reemplazar Kanban
 
-传统看板（Kanban）是静态的，需要手动更新。你会忘记移动卡片，在不同会话之间丢失上下文，而且无法追踪状态变更背后的"原因"。项目在缺乏清晰可见性的情况下逐渐偏离轨道。
+Los tableros Kanban tradicionales son estáticos y requieren actualizaciones manuales. Olvidas mover tarjetas, pierdes contexto entre sesiones, y no puedes rastrear el "por qué" detrás de los cambios de estado. Los proyectos se descarrilan sin visibilidad clara.
 
-这个工作流用事件驱动（event-driven）系统替代看板，自动跟踪项目状态：
+Este flujo de trabajo reemplaza los tableros Kanban con un sistema impulsado por eventos (event-driven), rastrea automáticamente el estado del proyecto:
 
-- 将项目状态存储在数据库中，保留完整历史记录
-- 捕获上下文：决策、阻塞项、下一步计划、关键洞察
-- 事件驱动更新："刚完成 X，被 Y 阻塞" -> 自动状态转换
-- 自然语言查询："[项目]的状态是什么？"、"我们为什么在[功能]上转向了？"
-- 每日站会摘要：昨天做了什么，今天计划什么，什么被阻塞了
-- Git 集成：将提交记录链接到项目事件，实现可追溯性
+- Almacena el estado del proyecto en una base de datos, mantiene historial completo
+- Captura contexto: decisiones, elementos bloqueados, próximos pasos, ideas clave
+- Actualización impulsada por eventos: "Acabo de completar X, bloqueado por Y" -> conversión automática de estado
+- Consultas en lenguaje natural: "¿Cuál es el estado de [proyecto]?", "¿Por qué cambiamos de dirección en [función]?"
+- Resumen de reunión diaria de pie: qué se hizo ayer, qué está planeado para hoy, qué está bloqueado
+- Integración con Git: vincula commits a eventos del proyecto,实现 trazabilidad
 
-## 痛点
+## Dolor
 
-看板容易过时。你把时间浪费在更新卡片上，而不是做实际工作。上下文会丢失——三个月后，你已经想不起当初为什么做了一个关键决策。代码变更和项目进展之间没有自动关联。
+Los tableros Kanban se vuelven obsoletos fácilmente. Gastas tiempo actualizando tarjetas en lugar de hacer trabajo real. El contexto se pierde — después de tres meses, ya no recuerdas por qué tomaste una decisión clave. No hay asociación automática entre cambios de código y progreso del proyecto.
 
-## 功能介绍
+## Qué puede hacer
 
-你不再需要拖动卡片，而是直接和助手对话："完成了认证流程，开始做仪表盘。" 系统会记录事件、更新项目状态并保留上下文。当你问"仪表盘进展如何？"时，它会给你完整的故事：什么已完成、下一步是什么、什么在阻塞你，以及原因。
+En lugar de arrastrar tarjetas, simplemente hablas con tu asistente: "Completé el flujo de autenticación, comenzando el dashboard." El sistema registra eventos, actualiza el estado del proyecto y retiene contexto. Cuando preguntas "¿Cómo va el dashboard?" te da la historia completa: qué está completado, cuáles son los próximos pasos, qué te está bloqueando, y por qué.
 
-Git 提交记录会被自动扫描并关联到项目。你的每日站会摘要会自动生成。
+Los commits de Git se escanean automáticamente y vinculan a proyectos. Tu resumen de reunión diaria de pie se genera automáticamente.
 
-## 所需技能
+## Habilidades requeridas
 
-- `postgres` 或 SQLite 用于项目状态数据库
-- `github`（gh CLI）用于提交记录跟踪
-- Discord 或 Telegram 用于更新和查询
-- 定时任务（cron job）用于每日摘要
-- 子智能体（sub-agent）用于并行项目分析
+- `postgres` o SQLite para base de datos de estado de proyectos
+- `github` (CLI gh) para seguimiento de commits
+- Discord o Telegram para actualizaciones y consultas
+- Tareas programadas (cron job) para resúmenes diarios
+- Sub-agentes (sub-agent) para análisis paralelo de proyectos
 
-## 设置方法
+## Cómo configurar
 
-1. 设置项目状态数据库：
+1. Configurar base de datos de estado de proyectos:
 ```sql
--- 项目表
+-- Tabla de proyectos
 CREATE TABLE projects (
   id SERIAL PRIMARY KEY,
   name TEXT UNIQUE,
-  status TEXT, -- 例如 "active"（进行中）、"blocked"（阻塞）、"completed"（已完成）
+  status TEXT, -- por ejemplo "active" (en progreso), "blocked" (bloqueado), "completed" (completado)
   current_phase TEXT,
   last_update TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 事件表
+-- Tabla de eventos
 CREATE TABLE events (
   id SERIAL PRIMARY KEY,
   project_id INTEGER REFERENCES projects(id),
-  event_type TEXT, -- 例如 "progress"（进展）、"blocker"（阻塞）、"decision"（决策）、"pivot"（转向）
+  event_type TEXT, -- por ejemplo "progress" (progreso), "blocker" (bloqueo), "decision" (decisión), "pivot" (cambio de dirección)
   description TEXT,
   context TEXT,
   timestamp TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 阻塞项表
+-- Tabla de elementos bloqueados
 CREATE TABLE blockers (
   id SERIAL PRIMARY KEY,
   project_id INTEGER REFERENCES projects(id),
   blocker_text TEXT,
-  status TEXT DEFAULT 'open', -- "open"（未解决）、"resolved"（已解决）
+  status TEXT DEFAULT 'open', -- "open" (no resuelto), "resolved" (resuelto)
   created_at TIMESTAMPTZ DEFAULT NOW(),
   resolved_at TIMESTAMPTZ
 );
 ```
 
-2. 创建一个用于项目更新的 Discord 频道（例如 #project-state）。
+2. Crear un canal de Discord para actualizaciones de proyectos (por ejemplo #project-state).
 
-3. 给 OpenClaw 设置提示词：
+3. Configurar prompt para OpenClaw:
 
-以下提示词告诉智能体如何根据你的对话自动管理项目状态：
+El siguiente prompt le dice al agente cómo gestionar automáticamente el estado de proyectos según tu conversación:
 
 ```text
 You are my project state manager. Instead of Kanban, I'll tell you what I'm working on conversationally.
@@ -95,13 +95,13 @@ Every morning at 9 AM, run a cron job to:
 When I'm planning a sprint, spawn a sub-agent to analyze each project's state and suggest priorities.
 ```
 
-4. 集成到你的工作流中：只需自然地和助手聊你正在做的事情，系统会自动捕获一切。
+4. Integrar en tu flujo de trabajo: simplemente habla naturalmente con tu asistente sobre en qué estás trabajando, el sistema capturará todo automáticamente.
 
-## 相关链接
+## Enlaces relacionados
 
-- [事件溯源模式（Event Sourcing Pattern）](https://martinfowler.com/eaaDev/EventSourcing.html)
-- [为什么看板不适合独立开发者](https://blog.nuclino.com/why-kanban-doesnt-work-for-me)
+- [Patrón de Event Sourcing](https://martinfowler.com/eaaDev/EventSourcing.html)
+- [Por qué Kanban no funciona para desarrolladores independientes](https://blog.nuclino.com/why-kanban-doesnt-work-for-me)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/project-state-management.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/project-state-management.md)

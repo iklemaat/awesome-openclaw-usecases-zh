@@ -1,26 +1,26 @@
-# 使用子智能体（Sub-agent）进行自主项目管理
+# Gestión Autónoma de Proyectos con Sub-Agentes
 
-管理包含多个并行工作流的复杂项目令人精疲力竭。你不得不频繁切换上下文、在不同工具间追踪状态，并手动协调任务交接。
+Gestionar proyectos complejos con múltiples flujos de trabajo paralelos es agotador. Tienes que cambiar de contexto frecuentemente, rastrear estados en diferentes herramientas, y coordinar manualmente las transiciones de tareas.
 
-本用例实现了一种去中心化的项目管理模式，其中子智能体（sub-agent）自主处理任务，通过共享状态文件而非中央调度器进行协调。
+Este caso de uso implementa un patrón de gestión de proyectos descentralizado, donde sub-agentes (sub-agent) manejan tareas autónomamente, coordinándose a través de archivos de estado compartidos en lugar de un planificador central.
 
-## 痛点
+## Dolor
 
-传统的调度器模式会造成瓶颈——主智能体变成了"交通警察"。对于复杂项目（多仓库重构、研究冲刺、内容管道），你需要能够并行工作且无需持续监督的智能体。
+El patrón de planificador tradicional crea cuellos de botella — el agente principal se convierte en un "policía de tráfico". Para proyectos complejos (refactorización de múltiples repositorios, sprints de investigación, pipelines de contenido), necesitas agentes que puedan trabajar en paralelo sin supervisión continua.
 
-## 功能概述
+## Descripción general de funciones
 
-- **去中心化协调**：智能体通过共享的 `STATE.yaml` 文件进行读写协调
-- **并行执行**：多个子智能体同时处理独立任务
-- **无调度器开销**：主会话保持精简（CEO 模式——仅负责策略）
-- **自文档化**：所有任务状态持久化在版本控制文件中
+- **Coordinación descentralizada**: Los agentes leen y escriben en un archivo `STATE.yaml` compartido para coordinarse
+- **Ejecución paralela**: Múltiples sub-agentes manejan tareas independientes simultáneamente
+- **Sin sobrecarga de planificador**: La sesión principal permanece精简 (modo CEO — solo estrategia)
+- **Auto-documentación**: Todo el estado de tareas se persiste en archivos bajo control de versiones
 
-## 核心模式：STATE.yaml
+## Patrón central: STATE.yaml
 
-每个项目维护一个 `STATE.yaml` 文件作为唯一的事实来源：
+Cada proyecto mantiene un archivo `STATE.yaml` como única fuente de verdad:
 
 ```yaml
-# STATE.yaml - 项目协调文件
+# STATE.yaml - Archivo de coordinación de proyectos
 project: website-redesign
 updated: 2026-02-10T14:30:00Z
 
@@ -48,21 +48,21 @@ next_actions:
   - "pm-frontend: Review hero with design team"
 ```
 
-## 工作原理
+## Cómo funciona
 
-1. **主智能体接收任务** → 生成具有特定范围的子智能体
-2. **子智能体读取 STATE.yaml** → 找到分配给自己的任务
-3. **子智能体自主工作** → 更新 STATE.yaml 中的进度
-4. **其他智能体轮询 STATE.yaml** → 认领已解除阻塞的工作
-5. **主智能体定期检查** → 审查状态，调整优先级
+1. **Agente principal recibe tarea** → Genera sub-agentes con alcance específico
+2. **Sub-agente lee STATE.yaml** → Encuentra tareas asignadas a sí mismo
+3. **Sub-agente trabaja autónomamente** → Actualiza progreso en STATE.yaml
+4. **Otros agentes monitorean STATE.yaml** → Reclaman trabajo desbloqueado
+5. **Agente principal verifica periódicamente** → Revisa estado, ajusta prioridades
 
-## 所需技能
+## Habilidades requeridas
 
-- `sessions_spawn` / `sessions_send` 用于子智能体管理
-- 文件系统访问以操作 STATE.yaml
-- Git 用于状态版本控制（可选但推荐）
+- `sessions_spawn` / `sessions_send` para gestión de sub-agentes
+- Acceso a sistema de archivos para manipular STATE.yaml
+- Git para versionado de estado (opcional pero recomendado)
 
-## 设置：AGENTS.md 配置
+## Configuración: AGENTS.md
 
 ```text
 ## PM 委派模式
@@ -84,9 +84,9 @@ next_actions:
 - 所有状态变更提交到 git
 ```
 
-## 示例：生成一个 PM
+## Ejemplo: Generar un PM
 
-以下是一个用户请求和智能体响应的示例：
+El siguiente es un ejemplo de solicitud de usuario y respuesta del agente:
 
 ```text
 User: "Refactor the auth module and update the docs"
@@ -106,22 +106,22 @@ PM subagent:
 4. Reports completion to main
 ```
 
-## 关键洞察
+## Ideas clave
 
-- **STATE.yaml 优于调度器**：基于文件的协调比消息传递更具扩展性
-- **Git 作为审计日志**：提交 STATE.yaml 的变更以获得完整历史记录
-- **标签命名规范很重要**：使用 `pm-{project}-{scope}` 格式便于追踪
-- **精简主会话**：主智能体做得越少，响应就越快
+- **STATE.yaml es mejor que un planificador**: La coordinación basada en archivos es más escalable que el paso de mensajes
+- **Git como registro de auditoría**: Confirmar cambios de STATE.yaml para obtener historial completo
+- **La convención de nombres de etiquetas importa**: Usa formato `pm-{project}-{scope}` para rastreo fácil
+- **Sesión principal精简**: Cuanto menos hace el agente principal, más rápidas son las respuestas
 
-## 灵感来源
+## Fuentes de inspiración
 
-该模式受到 [Nicholas Carlini 的方法](https://nicholas.carlini.com/)启发——让智能体自我组织，而非微观管理它们。
+Este patrón está inspirado en el [método de Nicholas Carlini](https://nicholas.carlini.com/) — dejar que los agentes se auto-organicen, en lugar de micro-gestionarlos.
 
-## 相关链接
+## Enlaces relacionados
 
-- [OpenClaw 子智能体文档](https://github.com/openclaw/openclaw)
-- [Anthropic：构建高效智能体](https://www.anthropic.com/research/building-effective-agents)
+- [Documentación de sub-agentes de OpenClaw](https://github.com/openclaw/openclaw)
+- [Anthropic: Construcción de agentes eficientes](https://www.anthropic.com/research/building-effective-agents)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/autonomous-project-management.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/autonomous-project-management.md)

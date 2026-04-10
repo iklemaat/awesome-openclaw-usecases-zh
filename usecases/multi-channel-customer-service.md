@@ -1,46 +1,46 @@
-# 多渠道 AI 客户服务平台
+# Plataforma de Servicio al Cliente IA Multicanal
 
-> 含国内适配：企业微信 / 抖音 / 小红书
+> Incluye adaptación local: WeCom / Douyin / Xiaohongshu
 
-小型企业需要在多个应用间同时处理 WhatsApp、Instagram 私信、电子邮件和 Google 评价。客户期望全天候即时响应，但雇佣员工进行 24/7 覆盖成本高昂。
+Las pequeñas empresas necesitan manejar WhatsApp, mensajes directos de Instagram, correos electrónicos y reseñas de Google simultáneamente en múltiples aplicaciones. Los clientes esperan respuesta instantánea 24/7, pero contratar personal para cobertura 24/7 es costoso.
 
-本用例将所有客户触点整合到一个由 AI 驱动的统一收件箱中，代表你进行智能回复。
+Este caso de uso integra todos los puntos de contacto con clientes en una bandeja de entrada unificada impulsada por AI, que responde en tu nombre.
 
-## 功能概述
+## Descripción general de funciones
 
-- **统一收件箱**：WhatsApp Business、Instagram 私信、Gmail 和 Google 评价集于一处
-- **AI 自动回复**：自动处理常见问题、预约请求和一般咨询
-- **人工交接**：将复杂问题升级或标记以供审核
-- **测试模式**：在不影响真实客户的情况下向客户演示系统
-- **业务上下文**：基于你的服务内容、定价和政策进行训练
+- **Bandeja de entrada unificada**: WhatsApp Business, mensajes directos de Instagram, Gmail y reseñas de Google en un solo lugar
+- **Respuestas automáticas de AI**: Maneja automáticamente consultas frecuentes, solicitudes de citas y consultas generales
+- **Escalado humano**: Escala problemas complejos o marca para revisión
+- **Modo de prueba**: Demuestra el sistema a clientes sin afectar clientes reales
+- **Contexto de negocios**: Entrenado en tus servicios, precios y políticas
 
-## 真实商业案例
+## Caso comercial real
 
-在 Futurist Systems，我们为本地服务企业（餐厅、诊所、美容院）部署此方案。一家餐厅将响应时间从 4 小时以上缩短到 2 分钟以内，80% 的咨询实现自动处理。
+En Futurist Systems, desplegamos esta solución para empresas de servicio local (restaurantes, clínicas, salones de belleza). Un restaurante redujo el tiempo de respuesta de más de 4 horas a menos de 2 minutos, el 80% de las consultas se manejan automáticamente.
 
-## 所需技能
+## Habilidades requeridas
 
-- WhatsApp Business API 集成
-- Instagram Graph API（通过 Meta Business）
-- `gog` CLI 用于 Gmail
-- Google Business Profile API 用于评价管理
-- 在 AGENTS.md 中配置消息路由逻辑
+- Integración con API de WhatsApp Business
+- API Graph de Instagram (vía Meta Business)
+- CLI `gog` para Gmail
+- API de Perfil de Negocio de Google para gestión de reseñas
+- Configurar lógica de enrutamiento de mensajes en AGENTS.md
 
-## 如何设置
+## Cómo configurar
 
-1. **通过 OpenClaw 配置连接各渠道**：
-   - WhatsApp Business API（通过 360dialog 或官方 API）
-   - Instagram（通过 Meta Business Suite）
-   - Gmail（通过 `gog` OAuth）
-   - Google Business Profile API 令牌
+1. **Conectar canales vía configuración de OpenClaw**:
+   - API de WhatsApp Business (vía 360dialog o API oficial)
+   - Instagram (vía Meta Business Suite)
+   - Gmail (vía OAuth de `gog`)
+   - Token de API de Perfil de Negocio de Google
 
-2. **创建业务知识库**：
-   - 服务内容和定价
-   - 营业时间和地址
-   - 常见问题回复
-   - 升级触发条件（如投诉、退款请求）
+2. **Crear base de conocimientos de negocios**:
+   - Servicios y precios
+   - Horarios de atención y dirección
+   - Respuestas a preguntas frecuentes
+   - Condiciones de escalado (como quejas, solicitudes de reembolso)
 
-3. **在 AGENTS.md 中配置路由逻辑**：
+3. **Configurar lógica de enrutamiento en AGENTS.md**:
 
 ```text
 ## 客户服务模式
@@ -66,7 +66,7 @@
 - 记录日志但不发送到真实渠道
 ```
 
-4. **设置心跳检测（heartbeat）** 用于响应监控：
+4. **Configurar detección de latido (heartbeat) para monitoreo de respuesta**:
 
 ```text
 ## 心跳检测：客户服务检查
@@ -77,81 +77,81 @@
 - 记录每日响应指标
 ```
 
-## 关键洞察
+## Ideas clave
 
-- **语言检测很重要**：自动检测并使用客户的语言回复
-- **测试模式必不可少**：客户需要在上线前看到系统运行效果
-- **交接规则**：定义清晰的升级触发条件，避免 AI 越权
-- **回复模板**：为敏感话题（退款、投诉）预先审批模板
+- **Detección de lenguaje es importante**: Detecta y responde automáticamente en el idioma del cliente
+- **Modo de prueba es esencial**: Los clientes necesitan ver el sistema en acción antes de lanzar
+- **Reglas de escalado**: Define condiciones claras de escalado para evitar que la AI exceda autoridad
+- **Plantillas de respuesta**: Pre-aprueba plantillas para temas sensibles (reembolsos, quejas)
 
-## 相关链接
+## Enlaces relacionados
 
-- [WhatsApp Business API](https://developers.facebook.com/docs/whatsapp)
-- [Instagram Messaging API](https://developers.facebook.com/docs/instagram-api/guides/messaging)
-- [Google Business Profile API](https://developers.google.com/my-business)
+- [API de WhatsApp Business](https://developers.facebook.com/docs/whatsapp)
+- [API de Mensajería de Instagram](https://developers.facebook.com/docs/instagram-api/guides/messaging)
+- [API de Perfil de Negocio de Google](https://developers.google.com/my-business)
 
-## 中国用户适配
+## Adaptación para usuarios de China
 
-国内企业的客户触达渠道与海外完全不同。以下是针对国内主流渠道的适配方案。
+Los canales de alcance al cliente de empresas nacionales son completamente diferentes de los extranjeros. Los siguientes son esquemas de adaptación para canales nacionales principales.
 
-### 渠道对照表
+### Tabla de comparación de canales
 
-| 原版渠道 | 国内替代 | 可行性 |
+| Canal original | Reemplazo nacional | Viabilidad |
 |---------|---------|--------|
-| WhatsApp Business | 企业微信客服 | 已验证可行 |
-| Instagram DM | 抖音企业号私信 | 理论可行，需企业资质 |
-| Gmail | 企业邮箱 | 直接可用，无需适配 |
-| Google 评价 | 美团/大众点评 | 暂不可行（API 未开放） |
+| WhatsApp Business | Servicio al cliente de WeCom | Verificado viable |
+| Mensajes directos de Instagram | Mensajes privados de cuenta empresarial de Douyin | Teóricamente viable, necesita calificación empresarial |
+| Gmail | Correo empresarial | Directamente usable, sin adaptación necesaria |
+| Reseñas de Google | Reseñas de Meituan/Dianping | Temporalmente no viable (API no abierta) |
 
-### P0 核心渠道：企业微信客服 API（已验证可行）
+### Canal núcleo P0: API de servicio al cliente de WeCom (verificado viable)
 
-企业微信开放平台提供完整的客服消息 API，支持消息接收、主动回复和被动回复。本案例库已有详细的企业微信接入教程：
+La plataforma abierta de WeCom proporciona una API completa de mensajes de servicio al cliente, soporta recepción de mensajes, respuestas activas y respuestas pasivas. Esta biblioteca de casos tiene un tutorial detallado de acceso a WeCom:
 
-**前置条件**：参考 [企业微信 AI 助手](cn-wecom-ai-assistant.md) 完成基础接入。
+**Pre-requisitos**: Referir a [Asistente IA de WeCom](cn-wecom-ai-assistant.md) para completar el acceso básico.
 
-**配置要点**：
+**Puntos clave de configuración**:
 
-1. 在企业微信管理后台创建自建应用，获取 Token 和 EncodingAESKey
-2. 配置回调 URL 指向 OpenClaw 服务地址
-3. 支持文本、图片、视频、文件等多种消息类型
-4. 风险等级：低，使用官方 API
+1. Crear aplicación auto-construida en el backend de administración de WeCom, obtener Token y EncodingAESKey
+2. Configurar URL de callback apuntando a la dirección del servicio OpenClaw
+3. Soporta múltiples tipos de mensajes como texto, imagen, video, archivo
+4. Nivel de riesgo: Bajo, usa API oficial
 
-### P1 扩展渠道：抖音企业号私信（理论可行，需验证）
+### Canal de extensión P1: Mensajes privados de cuenta empresarial de Douyin (teóricamente viable, necesita verificación)
 
-抖音开放平台提供企业号私信自动回复接口，可用于客服场景。
+La plataforma abierta de Douyin proporciona una interfaz de respuesta automática de mensajes privados de cuentas empresariales, se puede usar en escenarios de servicio al cliente.
 
-**关键限制**：
+**Limitaciones clave**:
 
-- 仅支持企业号，个人号不支持
-- 回复私信不能发送链接
-- 客户最后沟通后 48 小时内才能发消息
-- 欢迎语每小时最多触发一次
+- Solo soporta cuentas empresariales, cuentas personales no soportadas
+- Las respuestas a mensajes privados no pueden enviar enlaces
+- Solo se pueden enviar mensajes dentro de las 48 horas después de la última comunicación del cliente
+- Los mensajes de bienvenida solo se pueden activar una vez por hora
 
-### P1 扩展渠道：小红书私信通（理论可行，需验证）
+### Canal de extensión P1: Plataforma de gestión de mensajes privados Xiaohongshu (teóricamente viable, necesita verificación)
 
-小红书官方提供一站式线索经营平台[私信通](https://sxt.xiaohongshu.com/)。
+Xiaohongshu oficialmente proporciona una plataforma de gestión de leads一站式 [Mensajes Privados](https://sxt.xiaohongshu.com/).
 
-**关键限制**：
+**Limitaciones clave**:
 
-- 需已认证的企业号 + 聚光平台认证
-- 蓝 V 每日限 20 个陌生人主动消息，每人最多 3 条
+- Necesita cuenta empresarial certificada + certificación de plataforma JuGuang
+- Los mensajes activos de extraños para cuentas Blue-V están limitados a 20 por día, máximo 3 por persona
 
-### 暂不可行：美团/大众点评评价回复
+### Temporalmente no viable: Respuesta a reseñas de Meituan/Dianping
 
-美团开放平台支持查询评价，但评价自动回复 API 未公开。不满足"真实跑通"准入门槛，暂不收录。
+La plataforma abierta de Meituan soporta consultar reseñas, pero la API de respuesta automática a reseñas no es pública. No cumple con el umbral de entrada de "ejecutado exitosamente", temporalmente no se incluye.
 
-### 多渠道参考实现
+### Implementación de referencia multicanal
 
-- **[ChatGPT-On-CS](https://github.com/cs-lazy-tools/ChatGPT-On-CS)**（开源 AGPL-3.0）：已支持微信/拼多多/千牛/B 站/抖音/小红书/知乎等多平台客服自动回复，可作为 OpenClaw 集成的技术参考
+- **[ChatGPT-On-CS](https://github.com/cs-lazy-tools/ChatGPT-On-CS)** (open source AGPL-3.0): Ya soporta respuesta automática de servicio al cliente multi-plataforma WeChat/Pinduoduo/Qianniu/Bilibili/Douyin/Xiaohongshu/Zhihu, se puede usar como referencia técnica para integración de OpenClaw
 
-### 安全提醒
+### Recordatorio de seguridad
 
-- 企业微信 API 凭证（Token、EncodingAESKey）通过环境变量配置，不要硬编码
-- 抖音/小红书回复内容需遵守平台社区规范，避免触发风控
-- 自动回复建议设置人工兜底机制，复杂问题及时转人工
+- Las credenciales de API de WeCom (Token, EncodingAESKey) se configuran vía variables de entorno, no hardcodear
+- El contenido de respuesta de Douyin/Xiaohongshu necesita cumplir con las normas de comunidad de la plataforma, evitar activar control de viento
+- Se recomienda configurar mecanismo de respaldo humano para respuestas automáticas, escalar a humano oportunamente para problemas complejos
 
-> **安全提示**：所有平台的 API 密钥和 Token 属于敏感信息，请通过环境变量或 `.env` 文件配置，确保 `.env` 已加入 `.gitignore`。
+> **Consejo de seguridad**: Las claves de API y Tokens de todas las plataformas son información sensible, por favor configura vía variables de entorno o archivo `.env`, asegura que `.env` se agregue a `.gitignore`.
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/multi-channel-customer-service.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/multi-channel-customer-service.md)

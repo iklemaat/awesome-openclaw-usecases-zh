@@ -1,28 +1,28 @@
-# YouTube 内容管线
+# Pipeline de Contenido de YouTube
 
-作为一名日更的 YouTube 创作者，在网络和 X/Twitter 上寻找新鲜、及时的视频创意非常耗时。追踪已经覆盖过的内容可以避免重复，并帮助你保持领先趋势。
+Como creador de YouTube que publica diariamente, encontrar ideas de contenido frescas y oportunas en la web y X/Twitter consume mucho tiempo. Rastrear contenido ya cubierto evita repetir temas y te ayuda a mantener la delantera de las tendencias.
 
-这个工作流自动化了整个内容搜集和调研管线：
+Este flujo de trabajo automatiza toda la pipeline de búsqueda e investigación de contenido:
 
-- 每小时定时任务（cron job）扫描突发 AI 新闻（网络 + X/Twitter），并将视频创意推送到 Telegram
-- 维护一个 90 天的视频目录，包含播放量和主题分析，避免重复覆盖话题
-- 将所有创意存储在 SQLite 数据库中，并使用向量嵌入（vector embeddings）进行语义去重（这样你永远不会收到重复的创意推荐）
-- 当你在 Slack 中分享一个链接时，OpenClaw 会调研该话题、在 X 上搜索相关帖子、查询你的知识库，并在 Asana 中创建一个包含完整大纲的任务卡
+- Tarea programada cada hora (cron job) escanea noticias repentinas de AI (web + X/Twitter), y envía ideas de video a Telegram
+- Mantiene un directorio de videos de 90 días, con análisis de vistas y temas, para evitar repetir temas
+- Almacena todas las ideas en una base de datos SQLite, y usa embedding vectorial para desduplicación semántica (así nunca recibirás recomendaciones de ideas duplicadas)
+- Cuando compartes un enlace en Slack, OpenClaw investiga el tema, busca publicaciones relacionadas en X, consulta tu base de conocimientos, y crea una tarjeta de tarea en Asana con un esquema completo
 
-## 所需技能
+## Habilidades requeridas
 
-- `web_search`（内置）
-- [x-research-v2](https://clawhub.ai) 或自定义 X/Twitter 搜索技能
-- [knowledge-base](https://clawhub.ai) 技能，用于 RAG（检索增强生成）
-- Asana 集成（或 Todoist）
-- `gog` CLI，用于 YouTube Analytics 数据
-- Telegram 话题，用于接收创意推送
+- `web_search` (integrado)
+- Skill [x-research-v2](https://clawhub.ai) o skill personalizado de búsqueda de X/Twitter
+- Skill [knowledge-base](https://clawhub.ai), para RAG (generación aumentada por recuperación)
+- Integración con Asana (o Todoist)
+- CLI `gog`, para datos de YouTube Analytics
+- Tema de Telegram, para recibir envíos de ideas
 
-## 如何设置
+## Cómo configurar
 
-1. 在 Telegram 中设置一个视频创意话题，并在 OpenClaw 中配置。
-2. 安装 knowledge-base 技能和 x-research 技能。
-3. 创建用于创意追踪的 SQLite 数据库：
+1. Configurar un tema de ideas de video en Telegram, y configurar en OpenClaw.
+2. Instalar el skill knowledge-base y el skill x-research.
+3. Crear la base de datos SQLite para seguimiento de ideas:
 
 ```sql
 CREATE TABLE pitches (
@@ -34,7 +34,7 @@ CREATE TABLE pitches (
 );
 ```
 
-4. 提示 OpenClaw：
+4. Indicar a OpenClaw:
 
 ```text
 Run an hourly cron job to:
@@ -52,4 +52,4 @@ Also: when I share a link in Slack #ai_trends, automatically:
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/youtube-content-pipeline.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/youtube-content-pipeline.md)

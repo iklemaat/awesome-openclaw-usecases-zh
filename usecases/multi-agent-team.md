@@ -1,28 +1,28 @@
-# 多智能体专业团队（独立创始人配置）
+# Equipo Profesional Multi-Agente (Configuración para Fundadores Independientes)
 
-独立创始人身兼数职——战略、开发、营销、销售、运营。在这些角色之间频繁切换会破坏深度工作。招聘既昂贵又缓慢。如果你能启动一个小型的专业 AI 智能体团队，每个智能体都有独特的角色和个性，全部通过单一聊天界面控制呢？
+Los fundadores independientes juegan múltiples roles — estrategia, desarrollo, marketing, ventas, operaciones. Cambiar frecuentemente entre estos roles destruye el trabajo profundo. Contratar es caro y lento. ¿Y si pudieras iniciar un pequeño equipo de agentes de AI profesionales, cada uno con un rol y personalidad únicos, todo controlado a través de una única interfaz de chat?
 
-这个用例设置多个 OpenClaw 智能体作为一个协调团队，每个智能体专注于一个领域，通过共享记忆进行通信，并通过 Telegram 控制。
+Este caso de uso configura múltiples agentes de OpenClaw como un equipo coordinado, cada agente se enfoca en un dominio, se comunica a través de memoria compartida, y se controla vía Telegram.
 
-## 痛点
+## Dolor
 
-- **单一智能体无法胜任所有工作**：当同时处理战略、代码、营销研究和业务分析时，单个智能体的上下文窗口（context window）很快就会填满
-- **缺乏专业化**：通用提示词产生通用输出——编码智能体不应该同时撰写营销文案
-- **独立创始人的倦怠**：你需要的是一个团队，而不是又一个需要管理的工具。智能体应该在后台工作并呈现结果，而不是需要持续监管
-- **知识孤岛**：营销研究的洞察不会自动影响开发优先级，除非你手动桥接它们
+- **Un solo agente no puede hacer todo**: Cuando manejas estrategia, código, investigación de marketing y análisis de negocios simultáneamente, la ventana de contexto de un solo agente se llena rápidamente
+- **Falta de especialización**: Los prompts genéricos producen resultados genéricos — los agentes de codificación no deberían escribir copy de marketing simultáneamente
+- **Agotamiento del fundador independiente**: Necesitas un equipo, no otra herramienta que gestionar. Los agentes deberían trabajar en segundo plano y presentar resultados, no requerir supervisión continua
+- **Islas de conocimiento**: Las ideas de investigación de marketing no afectan automáticamente las prioridades de desarrollo, a menos que las puentes manualmente
 
-## 功能介绍
+## Qué puede hacer
 
-- **专业化智能体**：每个智能体都有独特的角色、个性和针对其领域优化的模型
-- **共享记忆**：项目文档、目标和关键决策对所有智能体可访问——不会丢失任何信息
-- **私有上下文**：每个智能体还维护自己的对话历史和领域特定笔记
-- **统一控制面板**：所有智能体通过一个 Telegram 群组聊天访问——@标记你需要的智能体
-- **每日定时任务**：智能体无需被要求即可主动工作——内容建议、竞品监控、指标跟踪
-- **并行执行**：多个智能体可以同时处理独立任务
+- **Agentes especializados**: Cada agente tiene un rol único, personalidad y modelo optimizado para su dominio
+- **Memoria compartida**: Documentos de proyecto, objetivos y decisiones clave son accesibles para todos los agentes — nada se pierde
+- **Contexto privado**: Cada agente también mantiene su propio historial de conversaciones y notas específicas de dominio
+- **Panel de control unificado**: Todos los agentes se acceden a través de un solo grupo de chat de Telegram — @mencionas el agente que necesitas
+- **Tareas programadas diarias**: Los agentes trabajan proactivamente sin que se lo pidan — sugerencias de contenido, monitoreo de competencia, seguimiento de métricas
+- **Ejecución paralela**: Múltiples agentes pueden manejar tareas independientes simultáneamente
 
-## 团队配置示例
+## Configuración de equipo de ejemplo
 
-### 智能体 1：Milo（战略负责人）
+### Agente 1: Milo (Líder de estrategia)
 
 ```text
 ## SOUL.md — Milo
@@ -43,7 +43,7 @@ Daily tasks:
 - 6:00 PM: End-of-day recap with progress toward weekly goals
 ```
 
-### 智能体 2：Josh（业务与增长）
+### Agente 2: Josh (Negocios y crecimiento)
 
 ```text
 ## SOUL.md — Josh
@@ -64,7 +64,7 @@ Daily tasks:
 - Track competitor pricing changes weekly
 ```
 
-### 智能体 3：营销智能体
+### Agente 3: Agente de marketing
 
 ```text
 ## SOUL.md — Marketing Agent
@@ -86,7 +86,7 @@ Daily tasks:
 - Weekly content calendar draft
 ```
 
-### 智能体 4：开发智能体
+### Agente 4: Agente de desarrollo
 
 ```text
 ## SOUL.md — Dev Agent
@@ -108,35 +108,35 @@ Daily tasks:
 - Flag technical debt items
 ```
 
-## 所需技能
+## Habilidades requeridas
 
-- `telegram` 技能用于共享控制界面
-- `sessions_spawn` / `sessions_send` 用于多智能体协调
-- 共享文件系统或笔记工具用于团队记忆
-- 不同模型提供商的独立 API 密钥（如果使用混合模型）
-- 一台 VPS 或始终在线的机器来运行智能体
+- Skill `telegram` para interfaz de control compartida
+- `sessions_spawn` / `sessions_send` para coordinación multi-agente
+- Sistema de archivos compartido o herramienta de notas para memoria de equipo
+- Claves de API independientes de diferentes proveedores de modelos (si usas modelos híbridos)
+- Una VPS o máquina siempre activa para ejecutar los agentes
 
-## 设置方法
+## Cómo configurar
 
-### 1. 共享记忆结构
+### 1. Estructura de memoria compartida
 
 ```text
 team/
-├── GOALS.md           # 当前 OKR 和优先级（所有智能体可读）
-├── DECISIONS.md       # 关键决策日志（仅追加）
-├── PROJECT_STATUS.md  # 当前项目状态（所有智能体更新）
+├── GOALS.md           # OKR y prioridades actuales (legible por todos los agentes)
+├── DECISIONS.md       # Registro de decisiones clave (solo agregar)
+├── PROJECT_STATUS.md  # Estado actual de proyectos (todos los agentes actualizan)
 ├── agents/
-│   ├── milo/          # Milo 的私有上下文和笔记
-│   ├── josh/          # Josh 的私有上下文
-│   ├── marketing/     # 营销智能体的研究资料
-│   └── dev/           # 开发智能体的技术笔记
+│   ├── milo/          # Contexto y notas privadas de Milo
+│   ├── josh/          # Contexto privado de Josh
+│   ├── marketing/     # Material de investigación del agente de marketing
+│   └── dev/           # Notas técnicas del agente de desarrollo
 ```
 
-### 2. Telegram 路由
+### 2. Enrutamiento de Telegram
 
-配置一个所有智能体监听的 Telegram 群组，但每个智能体只在被 @标记时响应：
+Configurar un grupo de Telegram que todos los agentes escuchan, pero cada agente solo responde cuando es @mencionado:
 
-以下提示词配置 Telegram 群组中的智能体路由规则：
+El siguiente prompt configura reglas de enrutamiento de agentes en el grupo de Telegram:
 
 ```text
 ## AGENTS.md — Telegram Routing
@@ -159,9 +159,9 @@ Each agent:
 5. Updates shared files if the response involves a decision or status change
 ```
 
-### 3. 定时任务
+### 3. Tareas programadas
 
-以下提示词设置团队的每日和每周自动化任务：
+El siguiente prompt configura tareas automatizadas diarias y semanales del equipo:
 
 ```text
 ## HEARTBEAT.md — Team Schedule
@@ -182,27 +182,27 @@ Weekly:
 - Friday: Josh compiles weekly metrics report
 ```
 
-## 关键洞察
+## Ideas clave
 
-- **个性比你想象的更重要**：赋予智能体独特的名字和沟通风格，使得"与你的团队对话"变得自然，而不是与通用 AI 搏斗
-- **共享记忆 + 私有上下文**：这种组合至关重要——智能体需要共同基础（目标、决策），但也需要自己的空间来积累领域专业知识
-- **为正确的工作选择正确的模型**：不要用昂贵的推理模型来做关键词监控。将模型能力与任务复杂度匹配
-- **定时任务是飞轮**：真正的价值在于智能体主动呈现洞察，而不是等你提问
-- **从 2 个开始，而不是 4 个**：先配置一个负责人加一个专家，然后在发现瓶颈时再添加智能体
+- **La personalidad es más importante de lo que crees**: Dar a los agentes nombres únicos y estilos de comunicación hace que "conversar con tu equipo" sea natural, en lugar de luchar con una AI genérica
+- **Memoria compartida + contexto privado**: Esta combinación es crucial — los agentes necesitan una base común (objetivos, decisiones), pero también necesitan su propio espacio para acumular experiencia de dominio
+- **Elegir el modelo correcto para el trabajo correcto**: No uses un modelo de razonamiento costoso para monitoreo de palabras clave. Empareja capacidades del modelo con complejidad de tareas
+- **Las tareas programadas son el volante**: El verdadero valor está en que los agentes presenten insights proactivamente, no en esperar a que preguntes
+- **Comienza con 2, no con 4**: Configura un líder más un experto primero, luego agrega agentes cuando descubras cuellos de botella
 
-## 灵感来源
+## Fuentes de inspiración
 
-这个模式由 [Trebuh 在 X 上](https://x.com/iamtrebuh/status/2011260468975771862)描述，他是一位独立创始人，设置了 4 个 OpenClaw 智能体——Milo（战略负责人）、Josh（业务）、营销智能体和开发智能体——全部通过 VPS 上的单一 Telegram 聊天控制。每个智能体都有自己的个性、模型和定时任务，同时共享项目记忆。他将其描述为"一个 7x24 小时可用的真正小团队"。
+Este patrón fue descrito por [Trebuh en X](https://x.com/iamtrebuh/status/2011260468975771862), un fundador independiente que configuró 4 agentes de OpenClaw — Milo (líder de estrategia), Josh (negocios), agente de marketing y agente de desarrollo — todos controlados vía un solo chat de Telegram en una VPS. Cada agente tiene su propia personalidad, modelo y tareas programadas, mientras comparte memoria de proyectos. Lo describió como "un verdadero pequeño equipo disponible 24/7".
 
-这个模式在 [OpenClaw Showcase](https://openclaw.ai/showcase) 上也得到了验证，`@jdrhyne` 报告运行"15+ 个智能体，3 台机器，1 个 Discord 服务器——IT 基本上都是通过聊天构建的"，`@nateliason` 描述了一个多模型流水线（原型 -> 总结 -> 优化 -> 实现 -> 重复），在每个阶段使用不同的模型。另一位用户 `@danpeguine` 在同一个 WhatsApp 群组中运行两个不同的 OpenClaw 实例进行协作。
+Este patrón también fue verificado en [OpenClaw Showcase](https://openclaw.ai/showcase), `@jdrhyne` reportó ejecutar "15+ agentes, 3 máquinas, 1 servidor de Discord — básicamente todo IT se construye vía chat", `@nateliason` describió una pipeline multi-modelo (prototipo -> resumen -> optimización -> implementación -> repetir) usando diferentes modelos en cada etapa. Otro usuario `@danpeguine` ejecuta dos instancias diferentes de OpenClaw en el mismo grupo de WhatsApp para colaboración.
 
-## 相关链接
+## Enlaces relacionados
 
-- [OpenClaw 子智能体文档](https://github.com/openclaw/openclaw)
-- [OpenClaw Telegram 技能](https://github.com/openclaw/openclaw)
+- [Documentación de sub-agentes de OpenClaw](https://github.com/openclaw/openclaw)
+- [Skill de Telegram de OpenClaw](https://github.com/openclaw/openclaw)
 - [OpenClaw Showcase](https://openclaw.ai/showcase)
-- [Anthropic：构建有效的智能体](https://www.anthropic.com/research/building-effective-agents)
+- [Anthropic: Construcción de agentes eficientes](https://www.anthropic.com/research/building-effective-agents)
 
 ---
 
-**原文链接**：[English Version](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/multi-agent-team.md)
+**Enlace original**: [Versión en inglés](https://github.com/AlexAnys/awesome-openclaw-usecases/blob/main/usecases/multi-agent-team.md)
