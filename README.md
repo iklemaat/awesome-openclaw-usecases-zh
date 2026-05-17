@@ -16,6 +16,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 [![GitHub](https://img.shields.io/badge/Repo-Principal-GitHub-black?style=flat-square&logo=github)](https://github.com/AlexAnys/awesome-openclaw-usecases-zh)
 [![AtomGit](https://img.shields.io/badge/Hosting-China-AtomGit-orange?style=flat-square)](https://atomgit.com/alex_anys/awesome-openclaw-usecases-zh)
+[![NHS Agentic Readiness](https://nothumansearch.ai/badge/xquik.com.svg)](https://nothumansearch.ai/site/xquik.com)
 
 **[Inicio Rápido](#-guía-de-inicio-rápido)** · **[Directorio de Casos](#-directorio)** · **[Guía de Contribución](CONTRIBUTING.md)**
 
